@@ -1,4 +1,3 @@
 import 'users.dart';
-class admin extends User {
-  
-}
+
+class Admin extends User {}

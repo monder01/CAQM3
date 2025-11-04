@@ -2,29 +2,29 @@ import 'dart:io';
 import 'admins.dart';
 import 'patients.dart';
 import 'doctors.dart';
-import 'users.dart';
+//import 'users.dart';
 
 int choice() {
   int? ch;
-  print("TO INSERT A PATIENT  PRESS (1) : ");
-  print("TO INSERT A DOCTOR   PRESS (2) : ");
-  print("TO INSERT AN ADMIN   PRESS (3) : ");
-  print("TO DISPLAY A PATIENT PRESS (4) : ");
-  print("TO DISPLAY A DOCTOR  PRESS (5) : ");
-  print("TO DISPLAY AN ADMIN  PRESS (6) : ");
-  print("TO EXIT THE PROGRAM  PRESS (7) : ");
+  stdout.writeln("TO INSERT A PATIENT  PRESS (1) : ");
+  stdout.writeln("TO INSERT A DOCTOR   PRESS (2) : ");
+  stdout.writeln("TO INSERT AN ADMIN   PRESS (3) : ");
+  stdout.writeln("TO DISPLAY A PATIENT PRESS (4) : ");
+  stdout.writeln("TO DISPLAY A DOCTOR  PRESS (5) : ");
+  stdout.writeln("TO DISPLAY AN ADMIN  PRESS (6) : ");
+  stdout.writeln("TO EXIT THE PROGRAM  PRESS (7) : ");
   ch = int.parse(stdin.readLineSync()!);
   return ch;
 }
 
 Map<String?, dynamic> signup() {
-  print("Enter your full name : ");
+  stdout.writeln("Enter your full name : ");
   String? name = stdin.readLineSync();
-  print("Enter your password : ");
+  stdout.writeln("Enter your password : ");
   String? password = stdin.readLineSync();
-  print("Enter your email : ");
+  stdout.writeln("Enter your email : ");
   String? email = stdin.readLineSync();
-  print("Enter your phone number : ");
+  stdout.writeln("Enter your phone number : ");
   int? phonenum = int.parse(stdin.readLineSync()!);
   return {
     "name": name,
@@ -36,10 +36,10 @@ Map<String?, dynamic> signup() {
 
 void main() {
   String? role;
-  patient p = patient();
+  Patient p = Patient();
   Doctor d = Doctor();
-  User u = User();
-  admin a = admin();
+  //User u = User();
+  Admin a = Admin();
   int ch = 0;
   while (ch != 7) {
     ch = choice();
@@ -87,7 +87,7 @@ void main() {
         a.displayu();
         break;
       default:
-        print("WRONG INPUT!!!");
+        stdout.writeln("WRONG INPUT!!!");
         break;
     }
   }

@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'main.dart';
+//import 'main.dart';
 
 class User {
   String? _name, _role, _password, _email;
@@ -19,9 +19,9 @@ class User {
 
   //-----------------------------------------------------
   void displayu() {
-    print("Name : $_name");
-    print("Email : $_email");
-    print("Name : $_phonenum");
-    print("Name : $_role");
+    stdout.writeln("Name : $_name");
+    stdout.writeln("Email : $_email");
+    stdout.writeln("Name : $_phonenum");
+    stdout.writeln("Name : $_role");
   }
 }
