@@ -1,0 +1,29 @@
+{
+    "project_info": {
+        "project_number": "793127235395",
+        "project_id": "caqm-cs438",
+        "storage_bucket": "caqm-cs438.firebasestorage.app"
+    },
+    "client": [
+        {
+            "client_info": {
+                "mobilesdk_app_id": "1:793127235395:android:ded42fabb143941e5c09f6",
+                "android_client_info": {
+                    "package_name": "com.example.try1"
+                }
+            },
+            "oauth_client": [],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyDAQeC4sB9Xm6imieGAN_lf8ya7nHWa-Pw"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": []
+                }
+            }
+        }
+    ],
+    "configuration_version": "1"
+}
