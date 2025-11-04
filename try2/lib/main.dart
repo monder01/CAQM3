@@ -4,49 +4,90 @@ import 'patients.dart';
 import 'doctors.dart';
 import 'users.dart';
 
-int choice()
-{
+int choice() {
   int? ch;
-  print("TO INSERT A PATIENT PRESS (1) : ");
-  print("TO INSERT A DOCTOR  PRESS (2) : ");
-  print("TO INSERT AN ADMIN  PRESS (3) : ");
+  print("TO INSERT A PATIENT  PRESS (1) : ");
+  print("TO INSERT A DOCTOR   PRESS (2) : ");
+  print("TO INSERT AN ADMIN   PRESS (3) : ");
+  print("TO DISPLAY A PATIENT PRESS (4) : ");
+  print("TO DISPLAY A DOCTOR  PRESS (5) : ");
+  print("TO DISPLAY AN ADMIN  PRESS (6) : ");
+  print("TO EXIT THE PROGRAM  PRESS (7) : ");
   ch = int.parse(stdin.readLineSync()!);
   return ch;
 }
-void signup(String? name, String? password, String? email, int? phonenum)
-  {
-    print("Enter your full name : ");
-    name = stdin.readLineSync();
-    print("Enter your password : ");
-    password = stdin.readLineSync();
-    print("Enter your email : ");
-    email = stdin.readLineSync();
-    print("Enter your phone number : ");
-    phonenum = int.parse(stdin.readLineSync()!);
-  }
-void main()
-{
-  String? name, password, email, role; int? phonenum; 
+
+Map<String?, dynamic> signup() {
+  print("Enter your full name : ");
+  String? name = stdin.readLineSync();
+  print("Enter your password : ");
+  String? password = stdin.readLineSync();
+  print("Enter your email : ");
+  String? email = stdin.readLineSync();
+  print("Enter your phone number : ");
+  int? phonenum = int.parse(stdin.readLineSync()!);
+  return {
+    "name": name,
+    "password": password,
+    "email": email,
+    "phonenum": phonenum,
+  };
+}
+
+void main() {
+  String? role;
   patient p = patient();
   Doctor d = Doctor();
   User u = User();
   admin a = admin();
-  int ch=0;
-  while (ch!=3) {
-    ch=choice();
+  int ch = 0;
+  while (ch != 7) {
+    ch = choice();
     switch (ch) {
       case 1:
-      role = "Patiant";
-      p.read();
+        var info = signup();
+        role = "Patiant";
+        p.setinfo(
+          info["name"],
+          role,
+          info["password"],
+          info["email"],
+          info["phonenum"],
+        );
         break;
       case 2:
-        p.display();
+        var info = signup();
+        role = "Doctor";
+        d.setinfo(
+          info["name"],
+          role,
+          info["password"],
+          info["email"],
+          info["phonenum"],
+        );
         break;
       case 3:
-        print("Thank You For Your Time :)");
+        var info = signup();
+        role = "Admin";
+        a.setinfo(
+          info["name"],
+          role,
+          info["password"],
+          info["email"],
+          info["phonenum"],
+        );
+        break;
+      case 4:
+        p.displayu();
+        break;
+      case 5:
+        d.displayu();
+        break;
+      case 6:
+        a.displayu();
         break;
       default:
-      print("WRONG INPUT!!!");
+        print("WRONG INPUT!!!");
         break;
     }
   }

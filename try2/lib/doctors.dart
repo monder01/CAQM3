@@ -1,3 +1,4 @@
-class Doctor {
+import 'users.dart';
+class Doctor extends User {
   
 }
