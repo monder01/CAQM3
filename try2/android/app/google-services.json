@@ -1,21 +1,21 @@
 {
     "project_info": {
-        "project_number": "793127235395",
-        "project_id": "caqm-cs438",
-        "storage_bucket": "caqm-cs438.firebasestorage.app"
+        "project_number": "597363942795",
+        "project_id": "caqm1-422b3",
+        "storage_bucket": "caqm1-422b3.firebasestorage.app"
     },
     "client": [
         {
             "client_info": {
-                "mobilesdk_app_id": "1:793127235395:android:ded42fabb143941e5c09f6",
+                "mobilesdk_app_id": "1:597363942795:android:7ac66a20a12a2d6f4dbb8e",
                 "android_client_info": {
-                    "package_name": "com.example.try1"
+                    "package_name": "com.example.try2"
                 }
             },
             "oauth_client": [],
             "api_key": [
                 {
-                    "current_key": "AIzaSyDAQeC4sB9Xm6imieGAN_lf8ya7nHWa-Pw"
+                    "current_key": "AIzaSyDGLNp9rA95Ul2Nr1u0gqdIpuY06xwbxa8"
                 }
             ],
             "services": {
