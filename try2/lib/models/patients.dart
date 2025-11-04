@@ -1,4 +1,4 @@
-import '../user.dart';
+import 'Users.dart';
 
 class Patient extends User {
   // يمكنك إضافة خصائص خاصة بالمريض هنا مثل تاريخ الميلاد، ملاحظات، إلخ

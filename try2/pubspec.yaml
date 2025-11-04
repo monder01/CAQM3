@@ -1,4 +1,4 @@
-name: caqmmoon
+name: caqm
 description: "A new Flutter project."
 publish_to: 'none'
 version: 1.0.0+1
@@ -28,7 +28,4 @@ flutter_icons:
   image_path: "assets/logo1.png"
 
 flutter:
-  assets:
-    - assets/logo1.png
-    - assets/logo.json
   uses-material-design: true

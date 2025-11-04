@@ -1,4 +1,4 @@
-import '../user.dart';
+import 'Users.dart';
 
 class Admin extends User {
   Admin({

@@ -1,4 +1,4 @@
-import '../user.dart';
+import 'Users.dart';
 
 class Doctor extends User {
   final String specialty; // تخصص الطبيب
