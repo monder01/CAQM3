@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/Admins.dart';
+import '../models/admins.dart';
 import '../services/auth_service.dart';
 
 class AdminHome extends StatelessWidget {

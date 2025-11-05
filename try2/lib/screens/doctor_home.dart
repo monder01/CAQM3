@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/Doctors.dart';
+import '../models/doctors.dart';
 import '../services/auth_service.dart';
 
 class DoctorHome extends StatelessWidget {

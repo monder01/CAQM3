@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../models/patients.dart';
-import '../models/Doctors.dart';
-import '../models/Admins.dart';
+import '../models/doctors.dart';
+import '../models/admins.dart';
 import 'patient_home.dart';
 import 'doctor_home.dart';
 import 'admin_home.dart';

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/patients.dart';
-import '../models/appointment.dart';
 import '../services/auth_service.dart';
 
 class PatientHome extends StatefulWidget {
-  final Patient user; // تأكد أننا نستقبل Patient مباشرة
+  final Patient user;
   const PatientHome({super.key, required this.user});
 
   @override
@@ -12,50 +12,172 @@ class PatientHome extends StatefulWidget {
 }
 
 class _PatientHomeState extends State<PatientHome> {
-  final TextEditingController doctorNameC = TextEditingController();
-  final TextEditingController notesC = TextEditingController();
-  DateTime? selectedDate;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  List<Map<String, dynamic>> appointments = [];
+  bool loadingAppointments = false;
 
-  void _addAppointment() async {
-    if (doctorNameC.text.isEmpty || selectedDate == null) return;
-
-    await widget.user.addAppointment(
-      doctorNameC.text.trim(),
-      selectedDate!,
-      notesC.text.trim(),
-    );
-
-    doctorNameC.clear();
-    notesC.clear();
-    setState(() {
-      selectedDate = null;
-    });
+  @override
+  void initState() {
+    super.initState();
+    _loadAppointments();
   }
 
-  void _deleteAppointment(String id) async {
-    await widget.user.deleteAppointment(id);
+  Future<void> _loadAppointments() async {
+    setState(() => loadingAppointments = true);
+    QuerySnapshot snapshot = await _firestore
+        .collection('appointments')
+        .where('patientId', isEqualTo: widget.user.userId)
+        .get();
+
+    appointments = snapshot.docs
+        .map((doc) => doc.data() as Map<String, dynamic>)
+        .toList();
+
+    setState(() => loadingAppointments = false);
   }
 
-  void _pickDate(BuildContext context) async {
-    final now = DateTime.now();
-    final date = await showDatePicker(
+  Future<void> _addAppointmentDialog() async {
+    String? selectedDoctor;
+    DateTime? selectedDateTime;
+    TextEditingController noteC = TextEditingController();
+
+    List<QueryDocumentSnapshot> doctorDocs =
+        (await _firestore
+                .collection('users')
+                .where('role', isEqualTo: 'doctor')
+                .get())
+            .docs;
+
+    await showDialog(
       context: context,
-      initialDate: now,
-      firstDate: now,
-      lastDate: DateTime(now.year + 2),
+      builder: (context) {
+        return AlertDialog(
+          title: Text("إضافة موعد جديد"),
+          content: StatefulBuilder(
+            builder: (context, setDialogState) {
+              return SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    DropdownButtonFormField<String>(
+                      value: selectedDoctor,
+                      hint: Text("اختر الطبيب"),
+                      items: doctorDocs.map((doc) {
+                        final data = doc.data() as Map<String, dynamic>;
+                        return DropdownMenuItem(
+                          value: doc.id,
+                          child: Text(
+                            "${data['firstName']} ${data['lastName']}",
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setDialogState(() => selectedDoctor = value);
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    TextField(
+                      controller: noteC,
+                      decoration: InputDecoration(
+                        labelText: "ملاحظة (اختياري)",
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () async {
+                        DateTime? picked = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime(2100),
+                        );
+                        if (picked != null) {
+                          TimeOfDay? time = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.now(),
+                          );
+                          if (time != null) {
+                            setDialogState(() {
+                              selectedDateTime = DateTime(
+                                picked.year,
+                                picked.month,
+                                picked.day,
+                                time.hour,
+                                time.minute,
+                              );
+                            });
+                          }
+                        }
+                      },
+                      child: Text(
+                        selectedDateTime == null
+                            ? "اختر التاريخ والوقت"
+                            : "${selectedDateTime!.day}/${selectedDateTime!.month}/${selectedDateTime!.year} - ${selectedDateTime!.hour}:${selectedDateTime!.minute.toString().padLeft(2, '0')}",
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("إلغاء"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                if (selectedDoctor != null && selectedDateTime != null) {
+                  await _firestore.collection('appointments').add({
+                    'patientId': widget.user.userId,
+                    'patientName': widget.user.fullName,
+                    'doctorId': selectedDoctor,
+                    'note': noteC.text,
+                    'dateTime': selectedDateTime,
+                  });
+                  Navigator.pop(context);
+                  _loadAppointments();
+                }
+              },
+              child: Text("حفظ"),
+            ),
+          ],
+        );
+      },
     );
-    if (date != null) {
-      setState(() {
-        selectedDate = date;
-      });
+  }
+
+  Widget _buildAppointmentsList() {
+    if (loadingAppointments) {
+      return Center(child: CircularProgressIndicator());
     }
+    if (appointments.isEmpty) {
+      return Center(child: Text("لا توجد مواعيد بعد"));
+    }
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: appointments.length,
+      itemBuilder: (context, index) {
+        final a = appointments[index];
+        final date = (a['dateTime'] as Timestamp).toDate();
+        return Card(
+          margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+          child: ListTile(
+            title: Text("مع الطبيب: ${a['doctorId']}"),
+            subtitle: Text(
+              "التاريخ: ${date.day}/${date.month}/${date.year} - ${date.hour}:${date.minute.toString().padLeft(2, '0')}\nملاحظة: ${a['note'] ?? 'لا توجد'}",
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Patient Home'),
+        title: Text('الصفحة الرئيسية للمريض'),
         actions: [
           IconButton(
             icon: Icon(Icons.logout),
@@ -66,75 +188,26 @@ class _PatientHomeState extends State<PatientHome> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16),
         child: Column(
           children: [
             Text(
-              'Welcome ${widget.user.fullName}',
-              style: TextStyle(fontSize: 20),
+              'مرحبًا ${widget.user.fullName}',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16),
-            TextField(
-              controller: doctorNameC,
-              decoration: InputDecoration(labelText: 'Doctor Name'),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _addAppointmentDialog,
+              child: Text("إضافة موعد جديد"),
             ),
-            TextField(
-              controller: notesC,
-              decoration: InputDecoration(labelText: 'Notes'),
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: _loadAppointments,
+              child: Text("عرض مواعيدي"),
             ),
-            SizedBox(height: 8),
-            Row(
-              children: [
-                ElevatedButton(
-                  onPressed: () => _pickDate(context),
-                  child: Text(
-                    selectedDate == null
-                        ? 'Pick Date'
-                        : selectedDate!.toLocal().toString().split(' ')[0],
-                  ),
-                ),
-                SizedBox(width: 16),
-                ElevatedButton(
-                  onPressed: _addAppointment,
-                  child: Text('Add Appointment'),
-                ),
-              ],
-            ),
-            SizedBox(height: 16),
-            Expanded(
-              child: StreamBuilder<List<Appointment>>(
-                stream: widget.user.getAppointments(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  }
-                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(child: Text('No Appointments'));
-                  }
-
-                  final appointments = snapshot.data!;
-                  return ListView.builder(
-                    itemCount: appointments.length,
-                    itemBuilder: (context, index) {
-                      final appt = appointments[index];
-                      return Card(
-                        child: ListTile(
-                          title: Text('Dr. ${appt.doctorName}'),
-                          subtitle: Text(
-                            '${appt.dateTime.toLocal()} \n${appt.notes}',
-                          ),
-                          trailing: IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () => _deleteAppointment(appt.id),
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ),
+            SizedBox(height: 20),
+            _buildAppointmentsList(),
           ],
         ),
       ),
