@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
-import '../models/Users.dart';
+import '../models/patients.dart';
+import '../models/Doctors.dart';
+import '../models/Admins.dart';
 import 'patient_home.dart';
 import 'doctor_home.dart';
 import 'admin_home.dart';
@@ -14,6 +16,7 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final AuthService _auth = AuthService();
+
   final TextEditingController firstNameC = TextEditingController();
   final TextEditingController secondNameC = TextEditingController();
   final TextEditingController lastNameC = TextEditingController();
@@ -22,6 +25,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController phoneC = TextEditingController();
   final TextEditingController specialtyC =
       TextEditingController(); // للطبيب فقط
+
   String role = 'patient';
   String? error;
   bool loading = false;
@@ -33,7 +37,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     });
 
     try {
-      User user = await _auth.signUp(
+      final user = await _auth.signUp(
         firstName: firstNameC.text.trim(),
         secondName: secondNameC.text.trim(),
         lastName: lastNameC.text.trim(),
@@ -44,31 +48,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
         specialty: role == 'doctor' ? specialtyC.text.trim() : null,
       );
 
-      // التوجيه حسب الدور مباشرة بعد التسجيل
+      // التوجيه حسب الدور بدون شرط النوع
       if (user.role == 'patient') {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => PatientHome(user: user)),
+          MaterialPageRoute(builder: (_) => PatientHome(user: user as Patient)),
         );
       } else if (user.role == 'doctor') {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => DoctorHome(user: user)),
+          MaterialPageRoute(builder: (_) => DoctorHome(user: user as Doctor)),
         );
       } else if (user.role == 'admin') {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => AdminHome(user: user)),
+          MaterialPageRoute(builder: (_) => AdminHome(user: user as Admin)),
         );
       }
     } catch (e) {
-      setState(() {
-        error = e.toString();
-      });
+      setState(() => error = e.toString());
     } finally {
-      setState(() {
-        loading = false;
-      });
+      setState(() => loading = false);
     }
   }
 
@@ -117,16 +117,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 DropdownMenuItem(value: 'doctor', child: Text('Doctor')),
                 DropdownMenuItem(value: 'admin', child: Text('Admin')),
               ],
-              onChanged: (v) => setState(() {
-                role = v!;
-              }),
+              onChanged: (v) => setState(() => role = v!),
             ),
             if (error != null)
-              Text(error!, style: TextStyle(color: Colors.red)),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text(error!, style: TextStyle(color: Colors.red)),
+              ),
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: loading ? null : register,
-              child: Text('Signup'),
+              child: loading ? CircularProgressIndicator() : Text('Signup'),
             ),
           ],
         ),

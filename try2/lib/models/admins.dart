@@ -1,4 +1,3 @@
-
 import 'Users.dart';
 
 class Admin extends User {
@@ -10,8 +9,6 @@ class Admin extends User {
     required super.email,
     required super.phoneNumber,
   }) : super(role: 'admin');
-  void addapointement() {}
-  void updateapointement() {}
-  void deleteapointement() {}
-  void displayappointement() {}
+
+  // يمكنك إضافة دوال لإدارة المستخدمين أو المواعيد لاحقًا
 }

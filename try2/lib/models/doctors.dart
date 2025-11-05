@@ -11,7 +11,7 @@ class Doctor extends User {
     required super.email,
     required super.phoneNumber,
     required this.specialty,
-  }) : super(
-         role: 'doctor',
-       );
+  }) : super(role: 'doctor');
+
+  // يمكنك إضافة دوال لإدارة المرضى أو المواعيد لاحقًا إذا أردت
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
-import '../models/Users.dart';
+import '../models/patients.dart';
+import '../models/Doctors.dart';
+import '../models/Admins.dart';
 import 'patient_home.dart';
 import 'doctor_home.dart';
 import 'admin_home.dart';
@@ -26,43 +28,37 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      User? user = await _auth.signIn(
+      final user = await _auth.signIn(
         email: emailC.text.trim(),
         password: passwordC.text.trim(),
       );
 
       if (user == null) {
-        setState(() {
-          error = 'User not found';
-        });
+        setState(() => error = 'User not found');
         return;
       }
 
-      // التوجيه حسب الدور
+      // التوجيه حسب الدور بدون شرط النوع
       if (user.role == 'patient') {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => PatientHome(user: user)),
+          MaterialPageRoute(builder: (_) => PatientHome(user: user as Patient)),
         );
       } else if (user.role == 'doctor') {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => DoctorHome(user: user)),
+          MaterialPageRoute(builder: (_) => DoctorHome(user: user as Doctor)),
         );
       } else if (user.role == 'admin') {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => AdminHome(user: user)),
+          MaterialPageRoute(builder: (_) => AdminHome(user: user as Admin)),
         );
       }
     } catch (e) {
-      setState(() {
-        error = e.toString();
-      });
+      setState(() => error = e.toString());
     } finally {
-      setState(() {
-        loading = false;
-      });
+      setState(() => loading = false);
     }
   }
 
@@ -84,11 +80,14 @@ class _LoginScreenState extends State<LoginScreen> {
               obscureText: true,
             ),
             if (error != null)
-              Text(error!, style: TextStyle(color: Colors.red)),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text(error!, style: TextStyle(color: Colors.red)),
+              ),
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: loading ? null : login,
-              child: Text('Login'),
+              child: loading ? CircularProgressIndicator() : Text('Login'),
             ),
           ],
         ),
