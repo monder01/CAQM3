@@ -3,19 +3,13 @@ import 'Users.dart';
 class Patient extends User {
   // يمكنك إضافة خصائص خاصة بالمريض هنا مثل تاريخ الميلاد، ملاحظات، إلخ
   Patient({
-    required String userId,
-    required String firstName,
-    required String secondName,
-    required String lastName,
-    required String email,
-    required String phoneNumber,
+    required super.userId,
+    required super.firstName,
+    required super.secondName,
+    required super.lastName,
+    required super.email,
+    required super.phoneNumber,
   }) : super(
-         userId: userId,
-         firstName: firstName,
-         secondName: secondName,
-         lastName: lastName,
-         email: email,
-         phoneNumber: phoneNumber,
          role: 'patient',
        );
 }

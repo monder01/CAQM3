@@ -1,20 +1,18 @@
+import 'dart:ui';
+
 import 'Users.dart';
 
 class Admin extends User {
   Admin({
-    required String userId,
-    required String firstName,
-    required String secondName,
-    required String lastName,
-    required String email,
-    required String phoneNumber,
-  }) : super(
-         userId: userId,
-         firstName: firstName,
-         secondName: secondName,
-         lastName: lastName,
-         email: email,
-         phoneNumber: phoneNumber,
-         role: 'admin',
-       );
+    required super.userId,
+    required super.firstName,
+    required super.secondName,
+    required super.lastName,
+    required super.email,
+    required super.phoneNumber,
+  }) : super(role: 'admin');
+  void addapointement() {}
+  void updateapointement() {}
+  void deleteapointement() {}
+  void displayappointement() {}
 }
