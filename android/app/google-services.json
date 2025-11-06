@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "753203336186",
+    "project_id": "mycaqm",
+    "storage_bucket": "mycaqm.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:753203336186:android:65dff4f7f5cec72a07ca43",
+        "android_client_info": {
+          "package_name": "com.example.caqm1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2y2B8oVofEc6JHHT2R3Z4J5YnoD93IMY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
