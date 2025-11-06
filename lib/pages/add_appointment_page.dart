@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../tappointment.dart';
 import '../services/appointment_service.dart';
 
@@ -13,18 +13,41 @@ class AddAppointmentPage extends StatefulWidget {
 
 class _AddAppointmentPageState extends State<AddAppointmentPage> {
   final AppointmentService _appointmentService = AppointmentService();
-  final _formKey = GlobalKey<FormState>();
-
   String? _selectedDoctorId;
   String? _selectedDoctorName;
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
-
   bool _loading = false;
+  List<Map<String, dynamic>> _doctors = [];
 
-  // 🔹 جلب قائمة الأطباء من قاعدة البيانات
-  Stream<QuerySnapshot> getDoctorsStream() {
-    return FirebaseFirestore.instance.collection('doctors').snapshots();
+  @override
+  void initState() {
+    super.initState();
+    _fetchDoctors();
+  }
+
+  // 🔹 جلب الأطباء من مجموعة users حسب الدور
+  Future<void> _fetchDoctors() async {
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('role', isEqualTo: 'doctor')
+          .get();
+
+      setState(() {
+        _doctors = querySnapshot.docs
+            .map(
+              (doc) => {
+                'id': doc.id,
+                'fullname': doc['fullname'] ?? 'بدون اسم',
+                'specialization': doc['specialization'] ?? 'غير محدد',
+              },
+            )
+            .toList();
+      });
+    } catch (e) {
+      debugPrint('خطأ في جلب الأطباء: $e');
+    }
   }
 
   // 🔹 اختيار التاريخ
@@ -36,16 +59,20 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
       firstDate: now,
       lastDate: DateTime(now.year + 1),
     );
-    if (picked != null) setState(() => _selectedDate = picked);
+    if (picked != null) {
+      setState(() => _selectedDate = picked);
+    }
   }
 
   // 🔹 اختيار الوقت
   Future<void> _pickTime() async {
     final picked = await showTimePicker(
       context: context,
-      initialTime: const TimeOfDay(hour: 10, minute: 0),
+      initialTime: TimeOfDay.now(),
     );
-    if (picked != null) setState(() => _selectedTime = picked);
+    if (picked != null) {
+      setState(() => _selectedTime = picked);
+    }
   }
 
   // 🔹 حفظ الموعد
@@ -54,7 +81,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
         _selectedDate == null ||
         _selectedTime == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('يرجى اختيار الطبيب، التاريخ والوقت')),
+        const SnackBar(content: Text('يرجى اختيار الطبيب، التاريخ، والوقت')),
       );
       return;
     }
@@ -63,37 +90,34 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
 
     try {
       final user = FirebaseAuth.instance.currentUser;
-      if (user == null) throw Exception('User not logged in');
+      if (user == null) throw Exception('لم يتم تسجيل الدخول');
 
-      final DateTime fullDateTime = DateTime(
-        _selectedDate!.year,
-        _selectedDate!.month,
-        _selectedDate!.day,
-        _selectedTime!.hour,
-        _selectedTime!.minute,
-      );
-
-      final appointment = Appointment(
-        appointmentId: '',
-        patientId: user.uid,
-        doctorId: _selectedDoctorId!,
-        appointmentDate: fullDateTime,
-        appointmentTime:
-            "${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}",
-        status: 'Pending',
-      );
+      final appointment = Appointment()
+        ..appointmentId = DateTime.now().millisecondsSinceEpoch.toString()
+        ..patientId = user.uid
+        ..doctorId = _selectedDoctorId
+        ..appointmentDate = DateTime(
+          _selectedDate!.year,
+          _selectedDate!.month,
+          _selectedDate!.day,
+          _selectedTime!.hour,
+          _selectedTime!.minute,
+        )
+        ..appointmentTime =
+            '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
+        ..status = 'قيد الانتظار';
 
       await _appointmentService.addAppointment(appointment);
 
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('تمت إضافة الموعد بنجاح')));
+      ).showSnackBar(const SnackBar(content: Text('تم حجز الموعد بنجاح')));
 
       Navigator.pop(context);
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('حدث خطأ: $e')));
+      ).showSnackBar(SnackBar(content: Text('حدث خطأ أثناء حفظ الموعد: $e')));
     } finally {
       setState(() => _loading = false);
     }
@@ -103,94 +127,101 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('إضافة موعد جديد')),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(16),
-              child: Form(
-                key: _formKey,
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: _loading
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 🔸 قائمة الأطباء
-                    StreamBuilder<QuerySnapshot>(
-                      stream: getDoctorsStream(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-
-                        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                          return const Text('لا يوجد أطباء متاحون حالياً');
-                        }
-
-                        final doctors = snapshot.data!.docs;
-
-                        return DropdownButtonFormField<String>(
-                          decoration: const InputDecoration(
-                            labelText: 'اختر الطبيب',
-                          ),
-                          initialValue: _selectedDoctorId,
-                          items: doctors.map((doc) {
-                            final data = doc.data() as Map<String, dynamic>;
-                            return DropdownMenuItem<String>(
-                              value: doc.id,
-                              child: Text(data['fullname'] ?? 'بدون اسم'),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            final selected = doctors.firstWhere(
-                              (doc) => doc.id == value,
-                              orElse: () => doctors.first,
-                            );
-                            final data =
-                                selected.data() as Map<String, dynamic>;
-                            setState(() {
-                              _selectedDoctorId = value;
-                              _selectedDoctorName = data['fullname'];
-                            });
-                          },
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 16),
-
-                    // 🔸 اختيار التاريخ
-                    ListTile(
-                      title: Text(
-                        _selectedDate == null
-                            ? 'اختر التاريخ'
-                            : 'التاريخ: ${_selectedDate!.toLocal().toString().split(" ")[0]}',
-                      ),
-                      trailing: const Icon(Icons.calendar_today),
-                      onTap: _pickDate,
+                    const Text(
+                      'اختر الطبيب:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
-
-                    // 🔸 اختيار الوقت
-                    ListTile(
-                      title: Text(
-                        _selectedTime == null
-                            ? 'اختر الوقت'
-                            : 'الوقت: ${_selectedTime!.format(context)}',
-                      ),
-                      trailing: const Icon(Icons.access_time),
-                      onTap: _pickTime,
+                    _doctors.isEmpty
+                        ? const Text('لا يوجد أطباء متاحون')
+                        : DropdownButtonFormField<String>(
+                            value: _selectedDoctorId,
+                            hint: const Text('اختر الطبيب'),
+                            onChanged: (value) {
+                              setState(() {
+                                _selectedDoctorId = value;
+                                _selectedDoctorName = _doctors.firstWhere(
+                                  (d) => d['id'] == value,
+                                  orElse: () => {'fullname': ''},
+                                )['fullname'];
+                              });
+                            },
+                            items: _doctors
+                                .map(
+                                  (doctor) => DropdownMenuItem<String>(
+                                    value: doctor['id'],
+                                    child: Text(
+                                      '${doctor['fullname']} - ${doctor['specialization']}',
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'اختر التاريخ:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(height: 24),
-
-                    ElevatedButton.icon(
-                      icon: const Icon(Icons.check),
-                      label: const Text('تأكيد الموعد'),
-                      onPressed: _saveAppointment,
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Text(
+                          _selectedDate == null
+                              ? 'لم يتم اختيار تاريخ'
+                              : _selectedDate!.toLocal().toString().split(
+                                  ' ',
+                                )[0],
+                        ),
+                        const Spacer(),
+                        ElevatedButton(
+                          onPressed: _pickDate,
+                          child: const Text('اختر التاريخ'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'اختر الوقت:',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Text(
+                          _selectedTime == null
+                              ? 'لم يتم اختيار الوقت'
+                              : _selectedTime!.format(context),
+                        ),
+                        const Spacer(),
+                        ElevatedButton(
+                          onPressed: _pickTime,
+                          child: const Text('اختر الوقت'),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 32),
+                    Center(
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.save),
+                        label: const Text('حفظ الموعد'),
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 50),
+                        ),
+                        onPressed: _saveAppointment,
+                      ),
                     ),
                   ],
                 ),
               ),
-            ),
+      ),
     );
   }
 }

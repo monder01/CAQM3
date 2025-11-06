@@ -2,43 +2,72 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../tappointment.dart';
 
 class AppointmentService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final String collectionName = 'appointments';
+  final CollectionReference _appointmentsCollection = FirebaseFirestore.instance
+      .collection('appointments');
 
-  // 🟢 إضافة موعد جديد
+  // 🔹 إضافة موعد جديد
   Future<void> addAppointment(Appointment appointment) async {
-    final docRef = _firestore.collection(collectionName).doc();
-    appointment.appointmentId = docRef.id;
-
-    await docRef.set(appointment.toMap());
+    await _appointmentsCollection.doc(appointment.appointmentId).set({
+      'appointmentId': appointment.appointmentId,
+      'patientId': appointment.patientId,
+      'doctorId': appointment.doctorId,
+      'appointmentDate': appointment.appointmentDate?.toIso8601String(),
+      'appointmentTime': appointment.appointmentTime,
+      'status': appointment.status,
+    });
   }
 
-  // 🟡 تحديث موعد موجود
-  Future<void> updateAppointment(Appointment appointment) async {
-    if (appointment.appointmentId == null) {
-      throw Exception('Appointment ID is required to update');
-    }
-
-    await _firestore
-        .collection(collectionName)
-        .doc(appointment.appointmentId)
-        .update(appointment.toMap());
-  }
-
-  // 🔴 حذف موعد
-  Future<void> deleteAppointment(String appointmentId) async {
-    await _firestore.collection(collectionName).doc(appointmentId).delete();
-  }
-
-  // 🔵 جلب جميع المواعيد لمريض محدد
+  // 🔹 جلب المواعيد الخاصة بمريض معين
   Future<List<Appointment>> getAppointmentsByPatient(String patientId) async {
-    QuerySnapshot snapshot = await _firestore
-        .collection(collectionName)
+    final snapshot = await _appointmentsCollection
         .where('patientId', isEqualTo: patientId)
         .get();
 
-    return snapshot.docs
-        .map((doc) => Appointment.fromMap(doc.data() as Map<String, dynamic>))
-        .toList();
+    return snapshot.docs.map((doc) {
+      final data = doc.data() as Map<String, dynamic>;
+      return Appointment()
+        ..appointmentId = data['appointmentId']
+        ..patientId = data['patientId']
+        ..doctorId = data['doctorId']
+        ..appointmentDate = data['appointmentDate'] != null
+            ? DateTime.parse(data['appointmentDate'])
+            : null
+        ..appointmentTime = data['appointmentTime']
+        ..status = data['status'];
+    }).toList();
+  }
+
+  // 🔹 تحديث موعد
+  Future<void> updateAppointment(Appointment appointment) async {
+    await _appointmentsCollection.doc(appointment.appointmentId).update({
+      'appointmentDate': appointment.appointmentDate?.toIso8601String(),
+      'appointmentTime': appointment.appointmentTime,
+      'status': appointment.status,
+    });
+  }
+
+  // 🔹 حذف موعد
+  Future<void> deleteAppointment(String appointmentId) async {
+    await _appointmentsCollection.doc(appointmentId).delete();
+  }
+
+  // 🔹 جلب المواعيد الخاصة بطبيب (اختياري لاحقًا)
+  Future<List<Appointment>> getAppointmentsByDoctor(String doctorId) async {
+    final snapshot = await _appointmentsCollection
+        .where('doctorId', isEqualTo: doctorId)
+        .get();
+
+    return snapshot.docs.map((doc) {
+      final data = doc.data() as Map<String, dynamic>;
+      return Appointment()
+        ..appointmentId = data['appointmentId']
+        ..patientId = data['patientId']
+        ..doctorId = data['doctorId']
+        ..appointmentDate = data['appointmentDate'] != null
+            ? DateTime.parse(data['appointmentDate'])
+            : null
+        ..appointmentTime = data['appointmentTime']
+        ..status = data['status'];
+    }).toList();
   }
 }

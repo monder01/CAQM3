@@ -1,39 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'add_appointment_page.dart';
 import 'manage_appointments_page.dart';
+import 'login_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
-  Future<void> _logout(BuildContext context) async {
-    await FirebaseAuth.instance.signOut();
-    Navigator.pushReplacementNamed(context, '/login');
-  }
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('الصفحة الرئيسية'),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () => _logout(context),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => const LoginPage()),
+              );
+            },
           ),
         ],
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(height: 20),
             Text(
-              'مرحبًا، ${user?.email ?? "مستخدم"}',
+              'مرحبًا، ${user?.email ?? "مستخدم"} 👋',
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 30),
-
+            const SizedBox(height: 40),
+            ElevatedButton.icon(
+              icon: const Icon(Icons.add_circle_outline),
+              label: const Text('إضافة موعد جديد'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const AddAppointmentPage()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+              ),
+            ),
+            const SizedBox(height: 20),
             ElevatedButton.icon(
               icon: const Icon(Icons.calendar_month),
               label: const Text('إدارة المواعيد'),
@@ -45,15 +68,9 @@ class HomePage extends StatelessWidget {
                   ),
                 );
               },
-            ),
-            const SizedBox(height: 15),
-
-            ElevatedButton.icon(
-              icon: const Icon(Icons.add),
-              label: const Text('إضافة موعد جديد'),
-              onPressed: () {
-                Navigator.pushNamed(context, '/add_appointment');
-              },
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+              ),
             ),
           ],
         ),

@@ -122,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
               TextButton(
                 onPressed: () => Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (_) => const SignUpPage()),
+                  MaterialPageRoute(builder: (_) => const SignupPage()),
                 ),
                 child: const Text('ليس لديك حساب؟ إنشاء حساب'),
               ),

@@ -16,7 +16,7 @@ class AppRoutes {
   // تعريف جميع الصفحات داخل خريطة
   static Map<String, WidgetBuilder> routes = {
     login: (context) => const LoginPage(),
-    signup: (context) => const SignUpPage(),
+    signup: (context) => const SignupPage(),
     home: (context) => const HomePage(),
     addAppointment: (context) => const AddAppointmentPage(),
     manageAppointments: (context) => const ManageAppointmentsPage(),

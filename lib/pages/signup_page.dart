@@ -1,89 +1,91 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../tuser.dart';
 import '../tdoctor.dart';
 import '../tpatient.dart';
-import '../tadmin.dart';
+import '../tuser.dart';
 import 'login_page.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+class SignupPage extends StatefulWidget {
+  const SignupPage({super.key});
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<SignupPage> createState() => _SignupPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final _auth = FirebaseAuth.instance;
 
-  // Controllers
-  final TextEditingController _fullnameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _specializationController =
-      TextEditingController();
+  String? fullname;
+  String? email;
+  String? phone;
+  String? password;
+  String? role = 'patient';
+  String? specialization;
 
-  String _selectedRole = 'patient';
   bool _loading = false;
 
-  Future<void> _signUp() async {
+  Future<void> _signup() async {
     if (!_formKey.currentState!.validate()) return;
+
+    _formKey.currentState!.save();
 
     setState(() => _loading = true);
 
     try {
       // إنشاء المستخدم في Firebase Auth
-      UserCredential result = await _auth.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
+      UserCredential userCredential = await _auth
+          .createUserWithEmailAndPassword(email: email!, password: password!);
 
-      User? user = result.user;
-      if (user == null) throw Exception("فشل إنشاء الحساب");
+      String userId = userCredential.user!.uid;
 
-      // إنشاء كائن مستخدم بناءً على الدور
-      dynamic newUser;
-      switch (_selectedRole) {
-        case 'doctor':
-          newUser = Doctor(
-            fullname: _fullnameController.text.trim(),
-            email: _emailController.text.trim(),
-            phoneNumber: _phoneController.text.trim(),
-            role: _selectedRole,
-            userId: user.uid,
-            specialization: _specializationController.text.trim(),
-          );
-          break;
-        case 'admin':
-          newUser = Admin(
-            fullname: _fullnameController.text.trim(),
-            email: _emailController.text.trim(),
-            phoneNumber: _phoneController.text.trim(),
-            role: _selectedRole,
-            userId: user.uid,
-          );
-          break;
-        default:
-          newUser = Patient(
-            fullname: _fullnameController.text.trim(),
-            email: _emailController.text.trim(),
-            phoneNumber: _phoneController.text.trim(),
-            role: _selectedRole,
-            userId: user.uid,
-          );
+      Users newUser;
+
+      // 🔹 إذا كان طبيب
+      if (role == 'doctor') {
+        Doctor newDoctor = Doctor()
+          ..fullname = fullname
+          ..email = email
+          ..phoneNumber = phone
+          ..role = role
+          ..userId = userId
+          ..doctorId =
+              userId // ✅ مهم جدًا
+          ..specialization = specialization;
+
+        newUser = newDoctor;
+
+        await FirebaseFirestore.instance.collection('users').doc(userId).set({
+          'fullname': newDoctor.fullname,
+          'email': newDoctor.email,
+          'phoneNumber': newDoctor.phoneNumber,
+          'role': newDoctor.role,
+          'userId': newDoctor.userId,
+          'doctorId': newDoctor.doctorId,
+          'specialization': newDoctor.specialization,
+        });
+      }
+      // 🔹 إذا كان مريض
+      else {
+        Patient newPatient = Patient()
+          ..fullname = fullname
+          ..email = email
+          ..phoneNumber = phone
+          ..role = role
+          ..userId = userId;
+
+        newUser = newPatient;
+
+        await FirebaseFirestore.instance.collection('users').doc(userId).set({
+          'fullname': newPatient.fullname,
+          'email': newPatient.email,
+          'phoneNumber': newPatient.phoneNumber,
+          'role': newPatient.role,
+          'userId': newPatient.userId,
+        });
       }
 
-      // حفظ البيانات في Firestore
-      await _firestore
-          .collection('users')
-          .doc(user.uid)
-          .set(newUser.toMap(), SetOptions(merge: true));
-
-      // بعد التسجيل الناجح
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('تم إنشاء الحساب بنجاح!')));
@@ -95,7 +97,7 @@ class _SignUpPageState extends State<SignUpPage> {
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('خطأ: ${e.message}')));
+      ).showSnackBar(SnackBar(content: Text('حدث خطأ: ${e.message}')));
     } finally {
       setState(() => _loading = false);
     }
@@ -104,84 +106,78 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('إنشاء حساب جديد')),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _fullnameController,
-                decoration: const InputDecoration(labelText: 'الاسم الكامل'),
-                validator: (v) =>
-                    v!.isEmpty ? 'الرجاء إدخال الاسم الكامل' : null,
-              ),
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'البريد الإلكتروني',
-                ),
-                validator: (v) =>
-                    v!.isEmpty ? 'الرجاء إدخال البريد الإلكتروني' : null,
-              ),
-              TextFormField(
-                controller: _phoneController,
-                decoration: const InputDecoration(labelText: 'رقم الهاتف'),
-              ),
-              TextFormField(
-                controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'كلمة المرور'),
-                obscureText: true,
-                validator: (v) => v!.length < 6
-                    ? 'كلمة المرور يجب أن تكون 6 أحرف على الأقل'
-                    : null,
-              ),
-              const SizedBox(height: 16),
-
-              // اختيار الدور
-              DropdownButtonFormField<String>(
-                initialValue: _selectedRole,
-                decoration: const InputDecoration(labelText: 'الدور'),
-                items: const [
-                  DropdownMenuItem(value: 'patient', child: Text('مريض')),
-                  DropdownMenuItem(value: 'doctor', child: Text('طبيب')),
-                  DropdownMenuItem(value: 'admin', child: Text('مدير')),
-                ],
-                onChanged: (value) {
-                  setState(() => _selectedRole = value!);
-                },
-              ),
-
-              // إذا كان طبيب، أضف التخصص
-              if (_selectedRole == 'doctor') ...[
-                const SizedBox(height: 12),
+      appBar: AppBar(title: const Text('إنشاء حساب')),
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
                 TextFormField(
-                  controller: _specializationController,
-                  decoration: const InputDecoration(labelText: 'التخصص'),
-                  validator: (v) => v!.isEmpty ? 'أدخل التخصص' : null,
+                  decoration: const InputDecoration(labelText: 'الاسم الكامل'),
+                  onSaved: (val) => fullname = val,
+                  validator: (val) =>
+                      val!.isEmpty ? 'يرجى إدخال الاسم الكامل' : null,
                 ),
-              ],
-
-              const SizedBox(height: 24),
-              _loading
-                  ? const CircularProgressIndicator()
-                  : ElevatedButton(
-                      onPressed: _signUp,
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 50),
-                      ),
-                      child: const Text('إنشاء الحساب'),
+                TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'البريد الإلكتروني',
+                  ),
+                  onSaved: (val) => email = val,
+                  validator: (val) =>
+                      val!.isEmpty ? 'يرجى إدخال البريد الإلكتروني' : null,
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'رقم الهاتف'),
+                  onSaved: (val) => phone = val,
+                  validator: (val) =>
+                      val!.isEmpty ? 'يرجى إدخال رقم الهاتف' : null,
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: 'كلمة المرور'),
+                  obscureText: true,
+                  onSaved: (val) => password = val,
+                  validator: (val) =>
+                      val!.length < 6 ? 'كلمة المرور قصيرة جدًا' : null,
+                ),
+                const SizedBox(height: 15),
+                DropdownButtonFormField<String>(
+                  value: role,
+                  items: const [
+                    DropdownMenuItem(value: 'patient', child: Text('مريض')),
+                    DropdownMenuItem(value: 'doctor', child: Text('طبيب')),
+                  ],
+                  onChanged: (val) {
+                    setState(() => role = val);
+                  },
+                  decoration: const InputDecoration(labelText: 'الدور'),
+                ),
+                if (role == 'doctor')
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'التخصص الطبي',
                     ),
-              const SizedBox(height: 12),
-              TextButton(
-                onPressed: () => Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (_) => const LoginPage()),
-                ),
-                child: const Text('هل لديك حساب؟ تسجيل الدخول'),
-              ),
-            ],
+                    onSaved: (val) => specialization = val,
+                    validator: (val) {
+                      if (role == 'doctor' && (val == null || val.isEmpty)) {
+                        return 'يرجى إدخال التخصص';
+                      }
+                      return null;
+                    },
+                  ),
+                const SizedBox(height: 25),
+                _loading
+                    ? const CircularProgressIndicator()
+                    : ElevatedButton(
+                        onPressed: _signup,
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 50),
+                        ),
+                        child: const Text('تسجيل'),
+                      ),
+              ],
+            ),
           ),
         ),
       ),
