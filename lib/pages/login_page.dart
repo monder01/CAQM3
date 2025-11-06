@@ -46,8 +46,9 @@ class _LoginPageState extends State<LoginPage> {
           .doc(user.uid)
           .get();
 
-      if (!snapshot.exists)
+      if (!snapshot.exists) {
         throw Exception("لم يتم العثور على بيانات المستخدم");
+      }
 
       final data = snapshot.data() as Map<String, dynamic>;
       String role = data['role'] ?? 'patient';

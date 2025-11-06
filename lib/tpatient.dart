@@ -6,20 +6,16 @@ class Patient extends Users {
   String? insuranceNumber;
 
   Patient({
-    String? fullname,
-    String? email,
-    String? phoneNumber,
+    super.fullname,
+    super.email,
+    super.phoneNumber,
     String? role,
-    String? userId,
+    super.userId,
     this.patientId,
     this.medicalHistory,
     this.insuranceNumber,
   }) : super(
-         fullname: fullname,
-         email: email,
-         phoneNumber: phoneNumber,
          role: role ?? 'patient',
-         userId: userId,
        );
 
   @override

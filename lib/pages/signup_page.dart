@@ -141,7 +141,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
               // اختيار الدور
               DropdownButtonFormField<String>(
-                value: _selectedRole,
+                initialValue: _selectedRole,
                 decoration: const InputDecoration(labelText: 'الدور'),
                 items: const [
                   DropdownMenuItem(value: 'patient', child: Text('مريض')),

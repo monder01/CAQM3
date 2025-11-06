@@ -4,18 +4,14 @@ class Admin extends Users {
   String? adminId;
 
   Admin({
-    String? fullname,
-    String? email,
-    String? phoneNumber,
+    super.fullname,
+    super.email,
+    super.phoneNumber,
     String? role,
-    String? userId,
+    super.userId,
     this.adminId,
   }) : super(
-         fullname: fullname,
-         email: email,
-         phoneNumber: phoneNumber,
          role: role ?? 'admin',
-         userId: userId,
        );
 
   @override

@@ -5,19 +5,15 @@ class Doctor extends Users {
   String? doctorId;
 
   Doctor({
-    String? fullname,
-    String? email,
-    String? phoneNumber,
+    super.fullname,
+    super.email,
+    super.phoneNumber,
     String? role,
-    String? userId,
+    super.userId,
     this.specialization,
     this.doctorId,
   }) : super(
-         fullname: fullname,
-         email: email,
-         phoneNumber: phoneNumber,
          role: role ?? 'doctor',
-         userId: userId,
        );
 
   @override

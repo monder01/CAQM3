@@ -133,7 +133,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                           decoration: const InputDecoration(
                             labelText: 'اختر الطبيب',
                           ),
-                          value: _selectedDoctorId,
+                          initialValue: _selectedDoctorId,
                           items: doctors.map((doc) {
                             final data = doc.data() as Map<String, dynamic>;
                             return DropdownMenuItem<String>(
