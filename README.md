@@ -1,20 +1,73 @@
-HEAD
-# caqm1
+# 🏥 CAQM - Clinic Appointment & Queue Management System
 
-A new Flutter project.
+## 📘 Overview
+CAQM is a **smart mobile system** designed to manage **clinic appointments and queues** efficiently.  
+It helps patients book appointments, track their queue position, and receive reminders — while giving doctors and admins full control over scheduling.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 🚀 Features
 
-A few resources to get you started if this is your first Flutter project:
+### 👤 User Management
+- Register & Login (Email / Google)
+- Manage user roles (Patient, Doctor, Admin)
+- Secure authentication and role-based access
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### 📅 Appointment Management
+- Book, modify, or cancel appointments
+- Real-time appointment status
+- Virtual consultations (Teleconsultation)
+- Appointment statistics & reports
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### ⏳ Queue Management
+- Real-time queue tracking for patients
+- Dynamic updates when patients arrive or miss appointments
+- Automatic notifications
 
-# CAQM3
-c21137c4f232a791c1d80905c17e7be5ba4a1315
+### 🔔 Notification System
+- Push notifications for reminders and updates (via FCM)
+- SMS/Email optional fallback
+
+### 📄 Form Management
+- Fill and submit electronic forms (Medical History, Insurance, Consent)
+- Validate and store securely in Firestore
+
+---
+
+## 🧰 Tech Stack
+
+| Layer | Technology |
+|-------|-------------|
+| **Frontend** | Flutter (Android & iOS) |
+| **Backend / DB** | Firebase Firestore |
+| **Auth** | Firebase Authentication |
+| **Notifications** | Firebase Cloud Messaging |
+| **Hosting** | Firebase Hosting |
+| **Team Tools** | Microsoft Teams, Telegram |
+
+---
+
+## 🗄️ Firestore Structure
+
+---
+
+## ⚙️ Installation & Run
+
+```bash
+# Clone the repository
+git clone https://github.com/<your-username>/CAQM.git
+
+# Navigate to project directory
+cd CAQM
+
+# Get dependencies
+flutter pub get
+
+# Run the app
+flutter run
+
+
+---
+
+هل ترغب أن أجهّز **README** هذا باللغتين (عربي + إنجليزي) في ملف Markdown جاهز للتحميل (`README.md`)؟  
+أم تفضل أن أضع النسخة **العربية فقط** مع تنسيق كامل لعرضها على GitHub؟
