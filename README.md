@@ -155,7 +155,7 @@ flutter pub get
 flutter run
 
 ---
-🧩 Future Enhancements
+## 🧩 Future Enhancements
 
 -Multi-clinic and multi-branch support
 
@@ -167,7 +167,7 @@ flutter run
 
 -Admin analytics dashboard
 
-👨‍💻 Authors
+## 👨‍💻 Authors
 
 Milad Al-Azhar Zgheirah
 
