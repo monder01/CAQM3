@@ -155,6 +155,3 @@ flutter pub get
 flutter run
 
 ---
-
-✅ Copy **everything above (starting from the first \`\`\`markdown)** and paste it directly into your `README.md`.  
-GitHub will render it perfectly.
