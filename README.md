@@ -1,8 +1,8 @@
 # 🏥 CAQM - Clinic Appointment & Queue Management System
 
 ## 📘 Overview
-CAQM is a **smart mobile system** designed to manage **clinic appointments and queues** efficiently.  
-It helps patients book appointments, track their queue position, and receive reminders — while giving doctors and admins full control over scheduling.
+**CAQM (Clinic Appointment & Queue Management)** is a smart system designed to manage **appointments and patient queues** for clinics and medical centers.  
+It helps reduce waiting times, improve patient experience, and organize doctor schedules through a modern Flutter + Firebase architecture.
 
 ---
 
@@ -10,27 +10,29 @@ It helps patients book appointments, track their queue position, and receive rem
 
 ### 👤 User Management
 - Register & Login (Email / Google)
-- Manage user roles (Patient, Doctor, Admin)
-- Secure authentication and role-based access
+- Role-based access: Patient, Doctor, Admin
+- Secure authentication via Firebase Auth
 
 ### 📅 Appointment Management
-- Book, modify, or cancel appointments
-- Real-time appointment status
-- Virtual consultations (Teleconsultation)
-- Appointment statistics & reports
+- Book, update, or cancel appointments
+- View past and upcoming appointments
+- Teleconsultation (virtual video appointments)
+- Appointment statistics and analytics for admins
 
 ### ⏳ Queue Management
-- Real-time queue tracking for patients
-- Dynamic updates when patients arrive or miss appointments
-- Automatic notifications
+- Real-time queue tracking inside clinics
+- Dynamic updates for arrivals and absences
+- Automatic notification when the patient’s turn approaches
 
 ### 🔔 Notification System
-- Push notifications for reminders and updates (via FCM)
-- SMS/Email optional fallback
+- Push notifications for reminders and changes (via Firebase Cloud Messaging)
+- Optional Email or SMS alerts
+- Supports message status (Read / Unread)
 
 ### 📄 Form Management
-- Fill and submit electronic forms (Medical History, Insurance, Consent)
-- Validate and store securely in Firestore
+- Digital medical forms (Insurance, Medical History, Consent)
+- Pre-fill and submit before appointment
+- Validation and storage in Firestore
 
 ---
 
@@ -38,36 +40,23 @@ It helps patients book appointments, track their queue position, and receive rem
 
 | Layer | Technology |
 |-------|-------------|
-| **Frontend** | Flutter (Android & iOS) |
+| **Frontend** | Flutter (Android / iOS) |
 | **Backend / DB** | Firebase Firestore |
-| **Auth** | Firebase Authentication |
-| **Notifications** | Firebase Cloud Messaging |
+| **Authentication** | Firebase Auth (Email / Google Login) |
+| **Notifications** | Firebase Cloud Messaging (FCM) |
 | **Hosting** | Firebase Hosting |
-| **Team Tools** | Microsoft Teams, Telegram |
+| **Team Collaboration** | Microsoft Teams, Telegram |
 
 ---
 
-## 🗄️ Firestore Structure
+## 🧠 System Architecture
+- **Modular OOP design** following SOLID principles.  
+- **Low coupling / High cohesion** for scalability and maintainability.  
+- **Real-time updates** via Firestore Streams and FCM.  
+- **Role-based access control (RBAC)** for secure user management.
 
 ---
 
-## ⚙️ Installation & Run
+## 🗄️ Firestore Database Structure
 
-```bash
-# Clone the repository
-git clone https://github.com/<your-username>/CAQM.git
-
-# Navigate to project directory
-cd CAQM
-
-# Get dependencies
-flutter pub get
-
-# Run the app
-flutter run
-
-
----
-
-هل ترغب أن أجهّز **README** هذا باللغتين (عربي + إنجليزي) في ملف Markdown جاهز للتحميل (`README.md`)؟  
-أم تفضل أن أضع النسخة **العربية فقط** مع تنسيق كامل لعرضها على GitHub؟
+### 🔹 Collections Overview
