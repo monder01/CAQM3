@@ -147,15 +147,6 @@ Queue (1) → Tokens
 Form (M) → Patient  
 Notification (M) → User
 
-## ⚙️ Installation & Run
-```bash
-git clone https://github.com/<your-username>/CAQM.git
-cd CAQM
-flutter pub get
-flutter run
-
----
-
 ## 🧩 Future Enhancements
 
 - Multi-clinic and multi-branch support
@@ -169,3 +160,14 @@ flutter run
 ## 👨‍💻 Authors
 - Milad Al-Azhar Zgheirah
 - Monder Massoud Araboub
+
+## ⚙️ Installation & Run
+```bash
+git clone https://github.com/<your-username>/CAQM.git
+cd CAQM
+flutter pub get
+flutter run
+
+---
+
+
