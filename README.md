@@ -155,6 +155,7 @@ flutter pub get
 flutter run
 
 ---
+
 ## 🧩 Future Enhancements
 
 -Multi-clinic and multi-branch support
@@ -166,6 +167,8 @@ flutter run
 -Offline mode and caching
 
 -Admin analytics dashboard
+
+---
 
 ## 👨‍💻 Authors
 
