@@ -155,3 +155,20 @@ flutter pub get
 flutter run
 
 ---
+🧩 Future Enhancements
+
+-Multi-clinic and multi-branch support
+
+-Integration with health insurance APIs
+
+-AI-based appointment suggestions
+
+-Offline mode and caching
+
+-Admin analytics dashboard
+
+👨‍💻 Authors
+
+Milad Al-Azhar Zgheirah
+
+Monder Massoud Araboub
