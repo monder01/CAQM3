@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:st1/appointmentsListPage.dart';
+import 'package:st1/appointmentsPages.dart';
+import 'package:st1/homePage.dart';
 import 'users.dart';
 
 class Signin extends StatefulWidget {
@@ -48,6 +51,12 @@ class _SigninState extends State<Signin> {
                     await FirebaseAuth.instance.signInWithEmailAndPassword(
                       email: user.email!,
                       password: user.password!,
+                    );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyAppointmentsPage(),
+                      ),
                     );
                     print("✅ Login successful!");
                   } catch (e) {

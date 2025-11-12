@@ -1,6 +1,7 @@
 //signup.dart
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:st1/homePage.dart';
 import 'users.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -83,6 +84,10 @@ class _SignupState extends State<Signup> {
                           'Phone Number': users.phoneNumber,
                           'Role': users.role,
                         });
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Homepage()),
+                    );
                     print(
                       "✅ Account created successfully for ${users.fullname}",
                     );
