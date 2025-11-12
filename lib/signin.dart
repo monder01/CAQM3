@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:st1/adminPage.dart';
+import 'package:st1/appointmentsListPage.dart';
+import 'package:st1/appointmentsPages.dart';
+import 'package:st1/homePage.dart';
 import 'users.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Signin extends StatefulWidget {
   const Signin({super.key});
@@ -45,11 +50,36 @@ class _SigninState extends State<Signin> {
                   user.email = user.emailController.text;
                   user.password = user.passwordController.text;
                   try {
-                    await FirebaseAuth.instance.signInWithEmailAndPassword(
-                      email: user.email!,
-                      password: user.password!,
-                    );
-                    print("✅ Login successful!");
+                    UserCredential userCredential = await FirebaseAuth.instance
+                        .signInWithEmailAndPassword(
+                          email: user.email!,
+                          password: user.password!,
+                        );
+
+                    // 🔹 جلب بيانات المستخدم من Firestore
+                    var doc = await FirebaseFirestore.instance
+                        .collection('users') // أو 'Doctors' حسب قاعدة بياناتك
+                        .doc(userCredential.user!.uid)
+                        .get();
+
+                    String role = doc['Role']; // "Patient" أو "Admin"
+
+                    // 🔹 الانتقال حسب الدور
+                    if (role == 'Admin') {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => Admin()),
+                      );
+                    } else {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MyAppointmentsPage(),
+                        ),
+                      );
+                    }
+
+                    print("✅ Login successful! Role: $role");
                   } catch (e) {
                     print("❌ Error: $e");
                   }
