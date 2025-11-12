@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 class Appointmentspage extends StatefulWidget {
   const Appointmentspage({super.key});
 
@@ -16,7 +15,6 @@ class _AppointmentspageState extends State<Appointmentspage> {
 
   List<String> availableDays = [];
   List<String> availableTimes = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +35,7 @@ class _AppointmentspageState extends State<Appointmentspage> {
               builder: (context, snapshot) {
                 if (!snapshot.hasData) return CircularProgressIndicator();
                 var docs = snapshot.data!.docs;
-
+                
                 return DropdownButtonFormField<String>(
                   decoration: InputDecoration(labelText: "Select Doctor"),
                   items: docs.map((doc) {
@@ -88,7 +86,7 @@ class _AppointmentspageState extends State<Appointmentspage> {
                 },
                 initialValue: selectedDay,
               ),
-
+              
             SizedBox(height: 20),
 
             // 🔸 اختيار الوقت
