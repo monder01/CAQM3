@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "753203336186",
-    "project_id": "mycaqm",
-    "storage_bucket": "mycaqm.firebasestorage.app"
+    "project_number": "995560112843",
+    "project_id": "mycaqm-f73f3",
+    "storage_bucket": "mycaqm-f73f3.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:753203336186:android:65dff4f7f5cec72a07ca43",
+        "mobilesdk_app_id": "1:995560112843:android:6f52683a1b139b48d9514e",
         "android_client_info": {
-          "package_name": "com.example.caqm1"
+          "package_name": "com.example.st1"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyB2y2B8oVofEc6JHHT2R3Z4J5YnoD93IMY"
+          "current_key": "AIzaSyABb6TYHCUuGZopcO0kEkGsyW_xeFDB-vA"
         }
       ],
       "services": {
