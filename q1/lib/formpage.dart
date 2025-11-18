@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -11,8 +10,7 @@ class Formpage extends StatefulWidget {
 }
 
 class _FormpageState extends State<Formpage> {
-  File? selectedFile;
-  String? fileName;
+  PlatformFile? selectedFile;
   String? downloadUrl;
 
   @override
@@ -23,19 +21,14 @@ class _FormpageState extends State<Formpage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(fileName ?? "No file selected"),
-
+            Text(selectedFile?.name ?? "No file selected"),
             SizedBox(height: 20),
-
             ElevatedButton(onPressed: pickFile, child: Text("Select File")),
-
             SizedBox(height: 20),
-
             ElevatedButton(
               onPressed: selectedFile == null ? null : uploadFile,
               child: Text("Upload to Firebase"),
             ),
-
             if (downloadUrl != null) ...[
               SizedBox(height: 20),
               Text("Uploaded!"),
@@ -55,26 +48,24 @@ class _FormpageState extends State<Formpage> {
 
     if (result != null) {
       setState(() {
-        selectedFile = File(result.files.single.path!);
-        fileName = result.files.single.name;
+        selectedFile = result.files.first;
       });
     }
   }
 
   Future<void> uploadFile() async {
     try {
-      final ref = FirebaseStorage.instance
-          .ref()
-          .child("Forms")
-          .child("${DateTime.now().millisecondsSinceEpoch}-$fileName");
+      final ref = FirebaseStorage.instance.ref().child(
+        "Forms/${DateTime.now().millisecondsSinceEpoch}-${selectedFile!.name}",
+      );
 
-      UploadTask task = ref.putFile(selectedFile!);
+      // رفع الملفات على الويب باستخدام bytes
+      UploadTask task = ref.putData(selectedFile!.bytes!);
 
       TaskSnapshot snap = await task;
       downloadUrl = await snap.ref.getDownloadURL();
 
       setState(() {});
-
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("Uploaded Successfully")));
