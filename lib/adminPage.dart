@@ -1,5 +1,6 @@
 //adminPage.dart
 import 'package:flutter/material.dart';
+import 'package:st1/AdminFormsPage.dart';
 import 'addDoctorPage.dart';
 import 'doctors.dart';
 import 'users.dart';
@@ -21,17 +22,34 @@ class _AdminState extends State<Admin> {
         title: Text("Admin Page"),
         backgroundColor: Colors.amberAccent[200],
       ),
-      body: Center(
-        child: FloatingActionButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Adddoctorpage()),
-            );
-          },
-          tooltip: "Add Doctor",
-          child: Icon(Icons.add),
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Adddoctorpage()),
+              );
+            },
+            label: Text("Add Doctor"),
+            icon: Icon(Icons.add),
+          ),
+
+          SizedBox(height: 20),
+
+          FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AdminFormsPage()),
+              );
+            },
+            label: Text("View Patient Forms"),
+            icon: Icon(Icons.file_present),
+            backgroundColor: Colors.blue,
+          ),
+        ],
       ),
     );
   }

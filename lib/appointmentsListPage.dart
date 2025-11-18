@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:st1/editAppointmentPage.dart';
 import 'package:st1/appointmentsPages.dart';
+import 'package:st1/formpage.dart';
 
 class MyAppointmentsPage extends StatefulWidget {
   const MyAppointmentsPage({super.key});
@@ -112,15 +114,27 @@ class _MyAppointmentsPageState extends State<MyAppointmentsPage> {
       ),
 
       // ✅ الزر العائم لإضافة موعد جديد
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.amberAccent[200],
-        child: Icon(Icons.add, color: Colors.black),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Appointmentspage()),
-          );
-        },
+      floatingActionButton: SpeedDial(
+        icon: Icons.menu,
+        activeIcon: Icons.close,
+        children: [
+          SpeedDialChild(
+            child: Icon(Icons.add),
+            label: "Add Appointment",
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Appointmentspage()),
+            ),
+          ),
+          SpeedDialChild(
+            child: Icon(Icons.note_add),
+            label: "Form Page",
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Forms()),
+            ),
+          ),
+        ],
       ),
     );
   }
