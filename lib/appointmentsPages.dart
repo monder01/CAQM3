@@ -13,7 +13,6 @@ class _AppointmentspageState extends State<Appointmentspage> {
   String? selectedDoctorId;
   String? selectedDay;
   String? selectedTime;
-
   List<String> availableDays = [];
   List<String> availableTimes = [];
   @override

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:st1/adminPage.dart';
 import 'package:st1/appointmentsListPage.dart';
-import 'package:st1/appointmentsPages.dart';
-import 'package:st1/homePage.dart';
 import 'users.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -58,7 +56,7 @@ class _SigninState extends State<Signin> {
 
                     // 🔹 جلب بيانات المستخدم من Firestore
                     var doc = await FirebaseFirestore.instance
-                        .collection('users') // أو 'Doctors' حسب قاعدة بياناتك
+                        .collection('users') // أو 'Admin' حسب قاعدة بياناتك
                         .doc(userCredential.user!.uid)
                         .get();
 
