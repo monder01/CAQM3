@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'AdminFormsPage.dart';
 import 'addDoctorPage.dart';
-import 'doctors.dart';
-import 'users.dart';
+import 'oobclass/doctors.dart';
+import 'oobclass/users.dart';
 
 class Admin extends StatefulWidget {
   const Admin({super.key});
