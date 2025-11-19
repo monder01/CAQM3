@@ -1,5 +1,6 @@
 //adminPage.dart
 import 'package:flutter/material.dart';
+import 'package:q3/appointmentManage.dart';
 import 'AdminFormsPage.dart';
 import 'addDoctorPage.dart';
 import 'oobclass/doctors.dart';
@@ -48,6 +49,22 @@ class _AdminState extends State<Admin> {
             label: Text("View Patient Forms"),
             icon: Icon(Icons.file_present),
             backgroundColor: Colors.blue,
+          ),
+
+          SizedBox(height: 20),
+
+          FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AdminPatientAppointmentsPage(),
+                ),
+              );
+            },
+            label: Text("Manage appointments"),
+            icon: Icon(Icons.manage_history),
+            backgroundColor: Colors.amberAccent,
           ),
         ],
       ),
