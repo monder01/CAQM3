@@ -18,69 +18,95 @@ class EditAppointmentPage extends StatefulWidget {
 }
 
 class _EditAppointmentPageState extends State<EditAppointmentPage> {
-  final List<String> availableDays = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-  ];
-
-  final List<String> availableTimes = [
-    "08:00-08:30",
-    "09:00-09:30",
-    "10:00-10:30",
-    "11:00-11:30",
-    "12:00-12:30",
-    "13:00-13:30",
-    "14:00-14:30",
-    "15:00-15:30",
-  ];
-
   String? selectedDay;
   String? selectedTime;
+
+  List<String> availableDays = [];
+  List<String> availableTimes = [];
+
+  bool loading = true;
 
   @override
   void initState() {
     super.initState();
-    selectedDay = widget.currentDay;
-    selectedTime = widget.currentTime;
+    loadDoctorData();
+  }
+
+  Future<void> loadDoctorData() async {
+    // Load the appointment first
+    var appointment = await FirebaseFirestore.instance
+        .collection('Appointments')
+        .doc(widget.appointmentId)
+        .get();
+
+    String doctorId = appointment['doctorId'];
+
+    // Load doctor data
+    var doctor = await FirebaseFirestore.instance
+        .collection('Doctors')
+        .doc(doctorId)
+        .get();
+
+    availableDays = List<String>.from(doctor['availableDays']);
+    availableTimes = List<String>.from(doctor['availableTimes']);
+
+    // Validate current values against available items
+    selectedDay = availableDays.contains(widget.currentDay)
+        ? widget.currentDay
+        : null;
+
+    selectedTime = availableTimes.contains(widget.currentTime)
+        ? widget.currentTime
+        : null;
+
+    setState(() => loading = false);
   }
 
   @override
   Widget build(BuildContext context) {
+    if (loading) {
+      return Scaffold(
+        appBar: AppBar(title: Text("Edit Appointment")),
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Edit Appointment"),
         backgroundColor: Colors.amberAccent[200],
       ),
       body: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             DropdownButtonFormField<String>(
+              value: selectedDay,
               decoration: InputDecoration(labelText: "Select Day"),
-              initialValue: selectedDay,
-              items: availableDays.map((day) {
-                return DropdownMenuItem(value: day, child: Text(day));
-              }).toList(),
-              onChanged: (value) => setState(() => selectedDay = value),
+              items: availableDays
+                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                  .toList(),
+              onChanged: (v) => setState(() => selectedDay = v),
             ),
+
             SizedBox(height: 20),
+
             DropdownButtonFormField<String>(
+              value: selectedTime,
               decoration: InputDecoration(labelText: "Select Time"),
-              initialValue: selectedTime,
-              items: availableTimes.map((time) {
-                return DropdownMenuItem(value: time, child: Text(time));
-              }).toList(),
-              onChanged: (value) => setState(() => selectedTime = value),
+              items: availableTimes
+                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                  .toList(),
+              onChanged: (v) => setState(() => selectedTime = v),
             ),
+
             SizedBox(height: 30),
+
             ElevatedButton(
               onPressed: () async {
                 if (selectedDay == null || selectedTime == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("⚠️ Please select both fields")),
+                    SnackBar(content: Text("Please select day and time")),
                   );
                   return;
                 }
@@ -88,19 +114,15 @@ class _EditAppointmentPageState extends State<EditAppointmentPage> {
                 await FirebaseFirestore.instance
                     .collection('Appointments')
                     .doc(widget.appointmentId)
-                    .update({
-                      'day': selectedDay,
-                      'time': selectedTime,
-                      'updatedAt': DateTime.now(),
-                    });
+                    .update({'day': selectedDay, 'time': selectedTime});
 
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("✅ Appointment updated")),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text("Updated successfully")));
 
                 Navigator.pop(context);
               },
-              child: Text("Save Changes"),
+              child: Text("Save"),
             ),
           ],
         ),

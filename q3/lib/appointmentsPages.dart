@@ -1,9 +1,11 @@
-//appointmentsPages.dart
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 class Appointmentspage extends StatefulWidget {
-  const Appointmentspage({super.key});
+  final String? patientId;
+
+  const Appointmentspage({super.key, this.patientId});
 
   @override
   State<Appointmentspage> createState() => _AppointmentspageState();
@@ -15,27 +17,29 @@ class _AppointmentspageState extends State<Appointmentspage> {
   String? selectedTime;
   List<String> availableDays = [];
   List<String> availableTimes = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Book Appointment"),
+        title: Text("Add Appointment"),
         backgroundColor: Colors.amberAccent[200],
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 🔸 اختيار الدكتور
             StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection('Doctors')
                   .snapshots(),
               builder: (context, snapshot) {
-                if (!snapshot.hasData) return CircularProgressIndicator();
+                if (!snapshot.hasData)
+                  return Center(child: CircularProgressIndicator());
+
                 var docs = snapshot.data!.docs;
-                
+
                 return DropdownButtonFormField<String>(
                   decoration: InputDecoration(labelText: "Select Doctor"),
                   items: docs.map((doc) {
@@ -53,106 +57,76 @@ class _AppointmentspageState extends State<Appointmentspage> {
                       availableTimes = [];
                     });
 
-                    // بعد اختيار الدكتور، نجيب أيامه وأوقاته
-                    var doctorDoc = await FirebaseFirestore.instance
+                    var d = await FirebaseFirestore.instance
                         .collection('Doctors')
                         .doc(value)
                         .get();
 
                     setState(() {
-                      availableDays = List<String>.from(
-                        doctorDoc['availableDays'] ?? [],
-                      );
-                      availableTimes = List<String>.from(
-                        doctorDoc['availableTimes'] ?? [],
-                      );
+                      availableDays = List<String>.from(d['availableDays']);
+                      availableTimes = List<String>.from(d['availableTimes']);
                     });
                   },
                 );
               },
             ),
 
-            SizedBox(height: 20),
+            SizedBox(height: 15),
 
-            // 🔸 اختيار اليوم
             if (availableDays.isNotEmpty)
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(labelText: "Select Day"),
-                items: availableDays.map((day) {
-                  return DropdownMenuItem(value: day, child: Text(day));
-                }).toList(),
-                onChanged: (value) {
-                  setState(() => selectedDay = value);
-                },
-                initialValue: selectedDay,
+                items: availableDays
+                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                    .toList(),
+                onChanged: (v) => setState(() => selectedDay = v),
               ),
-              
-            SizedBox(height: 20),
 
-            // 🔸 اختيار الوقت
+            SizedBox(height: 15),
+
             if (availableTimes.isNotEmpty)
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(labelText: "Select Time"),
-                items: availableTimes.map((time) {
-                  return DropdownMenuItem(value: time, child: Text(time));
-                }).toList(),
-                onChanged: (value) {
-                  setState(() => selectedTime = value);
-                },
-                initialValue: selectedTime,
+                items: availableTimes
+                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                    .toList(),
+                onChanged: (v) => setState(() => selectedTime = v),
               ),
 
             SizedBox(height: 30),
 
-            // 🔸 زر الحجز
-            Center(
-              child: ElevatedButton(
-                onPressed: () async {
-                  if (selectedDoctorId == null ||
-                      selectedDay == null ||
-                      selectedTime == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Please select all fields")),
-                    );
-                    return;
-                  }
+            ElevatedButton(
+              onPressed: () async {
+                if (selectedDoctorId == null ||
+                    selectedDay == null ||
+                    selectedTime == null) {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text("Fill all fields")));
+                  return;
+                }
 
-                  // 🔸 الحصول على user الحالي
-                  User? currentUser = FirebaseAuth.instance.currentUser;
+                final userId =
+                    widget.patientId ?? FirebaseAuth.instance.currentUser!.uid;
 
-                  if (currentUser == null) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("User not logged in")),
-                    );
-                    return;
-                  }
+                await FirebaseFirestore.instance
+                    .collection('Appointments')
+                    .add({
+                      'doctorId': selectedDoctorId,
+                      'userId': userId,
+                      'day': selectedDay,
+                      'time': selectedTime,
+                      'status': 'pending',
+                      'createdAt': DateTime.now(),
+                    });
 
-                  // 🔸 حفظ الموعد في قاعدة البيانات مع userId
-                  await FirebaseFirestore.instance
-                      .collection('Appointments')
-                      .add({
-                        'doctorId': selectedDoctorId,
-                        'userId': currentUser.uid, // ✅ هنا الإضافة المهمة
-                        'day': selectedDay,
-                        'time': selectedTime,
-                        'status': 'pending',
-                        'createdAt': DateTime.now(),
-                      });
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text("Appointment added")));
 
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("✅ Appointment booked successfully"),
-                    ),
-                  );
-
-                  setState(() {
-                    selectedDoctorId = null;
-                    selectedDay = null;
-                    selectedTime = null;
-                  });
-                },
-                child: Text("Book Appointment"),
-              ),
+                Navigator.pop(context);
+              },
+              child: Text("Add Appointment"),
             ),
           ],
         ),
