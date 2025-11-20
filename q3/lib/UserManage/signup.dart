@@ -106,7 +106,13 @@ class _SignupState extends State<Signup> {
                       MaterialPageRoute(builder: (context) => Homepage()),
                     );
                     // الانتقال إلى الصفحة الرئيسية بعد نجاح إنشاء الحساب
-
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "✅ Account created successfully for ${users.email}",
+                        ),
+                      ),
+                    );
                     print(
                       "✅ Account created successfully for ${users.fullname}", // طباعة رسالة نجاح
                     );

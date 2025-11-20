@@ -34,7 +34,7 @@ class _AppointmentsListPageState extends State<AppointmentsListPage> {
         stream: FirebaseFirestore.instance
             .collection('Appointments')
             .where('userId', isEqualTo: currentUser.uid)
-            .snapshots(), // تم إزالة orderBy لتجنب مشاكل index
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
