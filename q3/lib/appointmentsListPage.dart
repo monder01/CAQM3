@@ -1,4 +1,3 @@
-//appointmentsListPage.dart
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,17 +6,24 @@ import 'editAppointmentPage.dart';
 import 'appointmentsPages.dart';
 import 'formpage.dart';
 
-class MyAppointmentsPage extends StatefulWidget {
-  const MyAppointmentsPage({super.key});
+class AppointmentsListPage extends StatefulWidget {
+  const AppointmentsListPage({super.key});
 
   @override
-  State<MyAppointmentsPage> createState() => _MyAppointmentsPageState();
+  State<AppointmentsListPage> createState() => _AppointmentsListPageState();
 }
 
-class _MyAppointmentsPageState extends State<MyAppointmentsPage> {
+class _AppointmentsListPageState extends State<AppointmentsListPage> {
   @override
   Widget build(BuildContext context) {
     User? currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser == null) {
+      return Scaffold(
+        appBar: AppBar(title: Text("My Appointments")),
+        body: Center(child: Text("User not logged in")),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -27,9 +33,13 @@ class _MyAppointmentsPageState extends State<MyAppointmentsPage> {
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('Appointments')
-            .where('userId', isEqualTo: currentUser?.uid)
-            .snapshots(),
+            .where('userId', isEqualTo: currentUser.uid)
+            .snapshots(), // تم إزالة orderBy لتجنب مشاكل index
         builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text("Error: ${snapshot.error}"));
+          }
+
           if (!snapshot.hasData) {
             return Center(child: CircularProgressIndicator());
           }
@@ -44,9 +54,18 @@ class _MyAppointmentsPageState extends State<MyAppointmentsPage> {
             itemCount: appointments.length,
             itemBuilder: (context, index) {
               var appointment = appointments[index];
-              String doctorId = appointment['doctorId'];
+              final data = appointment.data() as Map<String, dynamic>;
+              final token = data['token'] ?? '-';
+              final status = data['status'] ?? '-';
+              final doctorId = data['doctorId'] ?? '';
 
-              // ✅ نستخدم FutureBuilder لجلب اسم الدكتور من Firestore
+              bool isNext =
+                  status == 'pending' &&
+                  !appointments.take(index).any((d2) {
+                    final m = d2.data() as Map<String, dynamic>;
+                    return m['status'] == 'pending';
+                  });
+
               return FutureBuilder<DocumentSnapshot>(
                 future: FirebaseFirestore.instance
                     .collection('Doctors')
@@ -64,11 +83,13 @@ class _MyAppointmentsPageState extends State<MyAppointmentsPage> {
                       doctorData['Full Name'] ?? 'Unknown Doctor';
 
                   return Card(
+                    color: isNext ? Colors.green[50] : null,
                     margin: EdgeInsets.all(10),
                     child: ListTile(
+                      leading: CircleAvatar(child: Text('$token')),
                       title: Text("Doctor: $doctorName"),
                       subtitle: Text(
-                        "Day: ${appointment['day']}\nTime: ${appointment['time']}",
+                        "Day: ${data['day']}\nTime: ${data['time']}\nStatus: $status",
                       ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -81,8 +102,8 @@ class _MyAppointmentsPageState extends State<MyAppointmentsPage> {
                                 MaterialPageRoute(
                                   builder: (context) => EditAppointmentPage(
                                     appointmentId: appointment.id,
-                                    currentDay: appointment['day'],
-                                    currentTime: appointment['time'],
+                                    currentDay: data['day'],
+                                    currentTime: data['time'],
                                   ),
                                 ),
                               );
@@ -113,7 +134,6 @@ class _MyAppointmentsPageState extends State<MyAppointmentsPage> {
         },
       ),
 
-      // ✅ الزر العائم لإضافة موعد جديد
       floatingActionButton: SpeedDial(
         icon: Icons.menu,
         activeIcon: Icons.close,

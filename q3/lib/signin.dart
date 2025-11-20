@@ -72,7 +72,7 @@ class _SigninState extends State<Signin> {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => MyAppointmentsPage(),
+                          builder: (context) => AppointmentsListPage(),
                         ),
                       );
                     }
