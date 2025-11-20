@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+// صفحة إضافة موعد جديد
 class Appointmentspage extends StatefulWidget {
-  final String? patientId; // يستخدم إذا كان الإداري يضيف موعد لمريض
+  final String? patientId; // يُستخدم إذا كان الأدمن يضيف موعد لمريض آخر
 
   const Appointmentspage({super.key, this.patientId});
 
@@ -12,23 +13,26 @@ class Appointmentspage extends StatefulWidget {
 }
 
 class _AppointmentspageState extends State<Appointmentspage> {
+  // المتغيرات التي سيختارها المستخدم
   String? selectedDoctorId;
   String? selectedDay;
   String? selectedTime;
 
+  // الأيام والأوقات المتاحة للدكتور
   List<String> availableDays = [];
   List<String> availableTimes = [];
 
-  bool saving = false;
+  bool saving = false; // لمعرفة إذا كان الحفظ جارٍ
 
   final db = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
-    // نحدد userId الصحيح
+    // تحديد رقم المريض: إذا تم تمريره من الأدمن، نأخذه، وإلا نستخدم المستخدم الحالي
     final String patientId =
         widget.patientId ?? FirebaseAuth.instance.currentUser?.uid ?? '';
 
+    // إذا لم يكن هناك مستخدم مسجّل دخول
     if (patientId.isEmpty) {
       return Scaffold(
         appBar: AppBar(title: Text("Add Appointment")),
@@ -39,30 +43,35 @@ class _AppointmentspageState extends State<Appointmentspage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Add Appointment"),
-        backgroundColor: Colors.amberAccent[200],
+        backgroundColor: Colors.amberAccent[200], // لون شريط العنوان
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // 🔵 اختيار الدكتور
+            //  اختيار الدكتور من قاعدة البيانات
             StreamBuilder<QuerySnapshot>(
               stream: db.collection('Doctors').snapshots(),
               builder: (context, snapshot) {
+                // أثناء تحميل بيانات الأطباء
                 if (!snapshot.hasData) {
                   return Center(child: CircularProgressIndicator());
                 }
 
                 var docs = snapshot.data!.docs;
 
+                // قائمة اختيار الدكتور
                 return DropdownButtonFormField<String>(
                   decoration: InputDecoration(labelText: "Select Doctor"),
                   items: docs.map((doc) {
                     return DropdownMenuItem(
-                      value: doc.id,
+                      value: doc.id, // id الخاص بالدكتور
                       child: Text(doc['Full Name']),
                     );
                   }).toList(),
+
+                  // عند اختيار الدكتور
                   onChanged: (value) async {
                     setState(() {
                       selectedDoctorId = value;
@@ -75,6 +84,7 @@ class _AppointmentspageState extends State<Appointmentspage> {
                     if (value == null) return;
 
                     try {
+                      // جلب الأيام والأوقات المتاحة للدكتور
                       var d = await db.collection('Doctors').doc(value).get();
                       setState(() {
                         availableDays = List<String>.from(
@@ -85,6 +95,7 @@ class _AppointmentspageState extends State<Appointmentspage> {
                         );
                       });
                     } catch (e) {
+                      // خطأ أثناء تحميل بيانات الدكتور
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text("Error loading doctor data: $e"),
@@ -98,7 +109,7 @@ class _AppointmentspageState extends State<Appointmentspage> {
 
             SizedBox(height: 20),
 
-            // 🔵 اختيار اليوم
+            //  اختيار اليوم
             if (availableDays.isNotEmpty)
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(labelText: "Select Day"),
@@ -111,7 +122,7 @@ class _AppointmentspageState extends State<Appointmentspage> {
 
             SizedBox(height: 20),
 
-            // 🔵 اختيار الوقت
+            //  اختيار الوقت
             if (availableTimes.isNotEmpty)
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(labelText: "Select Time"),
@@ -124,11 +135,12 @@ class _AppointmentspageState extends State<Appointmentspage> {
 
             SizedBox(height: 30),
 
-            // 🔵 زر إضافة الموعد
+            //  زر حفظ الموعد داخل قاعدة البيانات
             ElevatedButton(
               onPressed: saving
-                  ? null
+                  ? null // إيقاف الضغط أثناء الحفظ
                   : () async {
+                      // التحقق من إدخال جميع الحقول
                       if (selectedDoctorId == null ||
                           selectedDay == null ||
                           selectedTime == null) {
@@ -141,11 +153,13 @@ class _AppointmentspageState extends State<Appointmentspage> {
                       setState(() => saving = true);
 
                       try {
+                        // تنفيذ معاملة لحفظ الموعد وزيادة التوكن (token)
                         await db.runTransaction((tx) async {
                           final queueRef = db.collection('Queue').doc('main');
 
                           final queueSnap = await tx.get(queueRef);
 
+                          // قراءة آخر توكن
                           int tokenCounter = queueSnap.exists
                               ? queueSnap['tokenCounter'] ?? 0
                               : 0;
@@ -156,13 +170,13 @@ class _AppointmentspageState extends State<Appointmentspage> {
 
                           int newToken = tokenCounter + 1;
 
-                          // تحديث الطابور
+                          // تحديث بيانات الطابور (Token)
                           tx.set(queueRef, {
                             'tokenCounter': newToken,
                             'tokenDone': tokenDone,
                           }, SetOptions(merge: true));
 
-                          // إنشاء الموعد
+                          // إضافة موعد جديد
                           final appRef = db.collection('Appointments').doc();
 
                           tx.set(appRef, {
@@ -176,12 +190,14 @@ class _AppointmentspageState extends State<Appointmentspage> {
                           });
                         });
 
+                        // رسالة نجاح
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(content: Text("Appointment added ✅")),
                         );
 
-                        Navigator.pop(context);
+                        Navigator.pop(context); // الرجوع للصفحة السابقة
                       } catch (e) {
+                        // في حال حدوث خطأ أثناء إضافة الموعد
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text("Error adding appointment: $e"),
@@ -191,6 +207,7 @@ class _AppointmentspageState extends State<Appointmentspage> {
                         setState(() => saving = false);
                       }
                     },
+
               child: saving
                   ? CircularProgressIndicator(color: Colors.white)
                   : Text("Add Appointment"),

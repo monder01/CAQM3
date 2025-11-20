@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:q3/AppointmentManage/AdminFindPatientPage.dart';
-import 'package:q3/adminQueuePage.dart';
+import 'package:q3/Queue/adminQueuePage.dart';
 import 'addDoctorPage.dart';
 import 'doctors.dart';
 import 'users.dart';

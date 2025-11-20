@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'appointmentsPages.dart';
 import 'editAppointmentPage.dart';
-import '../adminQueuePage.dart';
+import '../Queue/adminQueuePage.dart';
 
 class AdminPatientAppointmentsPage extends StatefulWidget {
   final String
