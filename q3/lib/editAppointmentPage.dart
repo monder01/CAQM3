@@ -81,7 +81,7 @@ class _EditAppointmentPageState extends State<EditAppointmentPage> {
           children: [
             // 🔵 اختيار اليوم
             DropdownButtonFormField<String>(
-              value: selectedDay,
+              initialValue: selectedDay,
               decoration: const InputDecoration(labelText: "Select Day"),
               items: availableDays
                   .map((e) => DropdownMenuItem(value: e, child: Text(e)))
@@ -93,7 +93,7 @@ class _EditAppointmentPageState extends State<EditAppointmentPage> {
 
             // 🔵 اختيار الوقت
             DropdownButtonFormField<String>(
-              value: selectedTime,
+              initialValue: selectedTime,
               decoration: const InputDecoration(labelText: "Select Time"),
               items: availableTimes
                   .map((e) => DropdownMenuItem(value: e, child: Text(e)))

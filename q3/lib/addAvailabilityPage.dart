@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddAvailabilityPage extends StatefulWidget {
-  final String doctorId; // نرسل ID الدكتور من الصفحة السابقة
+  final String doctorId; // نرسل معرّف الدكتور من الصفحة السابقة لتحديد السجلات
 
   const AddAvailabilityPage({super.key, required this.doctorId});
 
@@ -12,6 +12,7 @@ class AddAvailabilityPage extends StatefulWidget {
 }
 
 class _AddAvailabilityPageState extends State<AddAvailabilityPage> {
+  // قائمة أيام الأسبوع المتاحة للاختيار
   final List<String> days = [
     "Saturday",
     "Sunday",
@@ -22,6 +23,7 @@ class _AddAvailabilityPageState extends State<AddAvailabilityPage> {
     "Friday",
   ];
 
+  // قائمة الفترات الزمنية المتاحة لكل يوم
   final List<String> timeSlots = [
     "08:00-08:30",
     "08:30-09:00",
@@ -41,60 +43,70 @@ class _AddAvailabilityPageState extends State<AddAvailabilityPage> {
     "15:30-16:00",
   ];
 
-  List<String> selectedDays = [];
-  List<String> selectedTimes = [];
+  List<String> selectedDays = []; // لتخزين الأيام التي يحددها الطبيب
+  List<String> selectedTimes = []; // لتخزين الفترات الزمنية المختارة
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add Availability"),
+        title: Text("Add Availability"), // عنوان الصفحة
         backgroundColor: Colors.amberAccent[200],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(12.0), // مسافة حول عناصر الصفحة
         child: Column(
           children: [
             Text(
-              "Select Available Days:",
+              "Select Available Days:", // عنوان قسم اختيار الأيام
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             Wrap(
-              spacing: 8,
+              spacing: 8, // المسافة بين عناصر FilterChip
               children: days.map((day) {
                 final isSelected = selectedDays.contains(day);
+                // التحقق مما إذا كان اليوم محدد مسبقاً
                 return FilterChip(
-                  label: Text(day),
-                  selected: isSelected,
+                  label: Text(day), // عرض اسم اليوم
+                  selected: isSelected, // حالة الاختيار
                   onSelected: (selected) {
                     setState(() {
                       if (selected) {
-                        selectedDays.add(day);
+                        selectedDays.add(
+                          day,
+                        ); // إضافة اليوم إلى القائمة عند الاختيار
                       } else {
-                        selectedDays.remove(day);
+                        selectedDays.remove(
+                          day,
+                        ); // إزالة اليوم عند إلغاء الاختيار
                       }
                     });
                   },
                 );
               }).toList(),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 20), // مسافة فاصلة
+
             Text(
-              "Select Available Times:",
+              "Select Available Times:", // عنوان قسم اختيار الفترات الزمنية
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
             ),
             Expanded(
               child: ListView(
                 children: timeSlots.map((slot) {
                   return CheckboxListTile(
-                    title: Text(slot),
-                    value: selectedTimes.contains(slot),
+                    title: Text(slot), // عرض الفترة الزمنية
+                    value: selectedTimes.contains(slot), // حالة الاختيار
                     onChanged: (bool? value) {
                       setState(() {
                         if (value == true) {
-                          selectedTimes.add(slot);
+                          selectedTimes.add(
+                            slot,
+                          ); // إضافة الفترة إلى القائمة عند الاختيار
                         } else {
-                          selectedTimes.remove(slot);
+                          selectedTimes.remove(
+                            slot,
+                          ); // إزالة الفترة عند إلغاء الاختيار
                         }
                       });
                     },
@@ -102,8 +114,10 @@ class _AddAvailabilityPageState extends State<AddAvailabilityPage> {
                 }).toList(),
               ),
             ),
+
             ElevatedButton(
               onPressed: () async {
+                // التحقق من اختيار يوم واحد على الأقل وفترة واحدة على الأقل
                 if (selectedDays.isEmpty || selectedTimes.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
@@ -115,6 +129,7 @@ class _AddAvailabilityPageState extends State<AddAvailabilityPage> {
                   return;
                 }
 
+                // تحديث بيانات الطبيب في Firestore بحقل الأيام والفترات الزمنية المتاحة
                 await FirebaseFirestore.instance
                     .collection("Doctors")
                     .doc(widget.doctorId)
@@ -123,13 +138,14 @@ class _AddAvailabilityPageState extends State<AddAvailabilityPage> {
                       "availableTimes": selectedTimes,
                     });
 
+                // عرض رسالة نجاح العملية
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text("Availability added successfully ✅")),
                 );
 
-                Navigator.pop(context);
+                Navigator.pop(context); // العودة إلى الصفحة السابقة بعد الحفظ
               },
-              child: Text("Save Availability"),
+              child: Text("Save Availability"), // نص الزر
             ),
           ],
         ),

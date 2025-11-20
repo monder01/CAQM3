@@ -4,15 +4,21 @@ import 'homePage.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized(); // التأكد من تهيئة ربط فلاتر قبل تنفيذ أي عمليات غير متزامنة
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(MyApp());
+  // تهيئة خدمات فايربيز باستخدام الإعدادات الخاصة بالمنصة الحالية
+  runApp(MyApp()); // تشغيل التطبيق وإرسال الواجهة الأساسية إليه
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: "My Clinc", home: Homepage());
+    return MaterialApp(
+      title: "My Clinc", // تعيين عنوان التطبيق
+      home:
+          Homepage(), // تحديد الصفحة الرئيسية التي يتم عرضها عند بدء تشغيل التطبيق
+    );
   }
 }

@@ -102,7 +102,7 @@ class _AppointmentspageState extends State<Appointmentspage> {
             if (availableDays.isNotEmpty)
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(labelText: "Select Day"),
-                value: selectedDay,
+                initialValue: selectedDay,
                 items: availableDays
                     .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                     .toList(),
@@ -115,7 +115,7 @@ class _AppointmentspageState extends State<Appointmentspage> {
             if (availableTimes.isNotEmpty)
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(labelText: "Select Time"),
-                value: selectedTime,
+                initialValue: selectedTime,
                 items: availableTimes
                     .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                     .toList(),

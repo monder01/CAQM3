@@ -12,33 +12,40 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
-  Users users = Users();
-  final TextEditingController fullNamecon = TextEditingController();
-  final TextEditingController emailcon = TextEditingController();
-  final TextEditingController passwordcon = TextEditingController();
-  final TextEditingController phoneNumcon = TextEditingController();
+  Users users = Users(); // إنشاء كائن مستخدم لتخزين البيانات المدخلة وإدارتها
+  final TextEditingController fullNamecon =
+      TextEditingController(); // متحكم لحقل الاسم الكامل
+  final TextEditingController emailcon =
+      TextEditingController(); // متحكم لحقل البريد الإلكتروني
+  final TextEditingController passwordcon =
+      TextEditingController(); // متحكم لحقل كلمة المرور
+  final TextEditingController phoneNumcon =
+      TextEditingController(); // متحكم لحقل رقم الهاتف
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Sign Up"),
-        backgroundColor: Colors.amberAccent[200],
+        title: Text("Sign Up"), // عنوان صفحة إنشاء الحساب
+        backgroundColor: Colors.amberAccent[200], // تعيين لون شريط العنوان
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(
+            20.0,
+          ), // إضافة مسافة داخلية حول عناصر الصفحة
           child: Column(
             children: [
               TextField(
-                controller: fullNamecon,
+                controller: fullNamecon, // ربط الحقل بمتحكم الاسم الكامل
                 decoration: InputDecoration(
-                  labelText: "Full name",
-                  border: OutlineInputBorder(),
+                  labelText: "Full name", // تسمية الحقل
+                  border: OutlineInputBorder(), // إطار الحقل
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 10), // مسافة فاصلة بين الحقول
               TextField(
-                controller: emailcon,
+                controller: emailcon, // ربط الحقل بمتحكم البريد الإلكتروني
                 decoration: InputDecoration(
                   labelText: "Email",
                   border: OutlineInputBorder(),
@@ -46,8 +53,9 @@ class _SignupState extends State<Signup> {
               ),
               SizedBox(height: 10),
               TextField(
-                controller: passwordcon,
-                obscureText: true,
+                controller:
+                    passwordcon, // ربط حقل كلمة المرور بالمتحكم الخاص به
+                obscureText: true, // إخفاء النص المدخل حفاظاً على الخصوصية
                 decoration: InputDecoration(
                   labelText: "Password",
                   border: OutlineInputBorder(),
@@ -55,7 +63,7 @@ class _SignupState extends State<Signup> {
               ),
               SizedBox(height: 10),
               TextField(
-                controller: phoneNumcon,
+                controller: phoneNumcon, // ربط الحقل بمتحكم رقم الهاتف
                 decoration: InputDecoration(
                   labelText: "Phone Number",
                   border: OutlineInputBorder(),
@@ -64,38 +72,51 @@ class _SignupState extends State<Signup> {
               SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () async {
-                  users.fullname = fullNamecon.text;
-                  users.email = emailcon.text;
-                  users.password = passwordcon.text;
-                  users.phoneNumber = phoneNumcon.text;
-                  users.role = "Patient";
+                  users.fullname =
+                      fullNamecon.text; // تخزين الاسم في كائن المستخدم
+                  users.email = emailcon.text; // تخزين البريد الإلكتروني
+                  users.password = passwordcon.text; // تخزين كلمة المرور
+                  users.phoneNumber = phoneNumcon.text; // تخزين رقم الهاتف
+                  users.role =
+                      "Patient"; // تحديد الدور الافتراضي للمستخدم الجديد
+
                   try {
                     UserCredential userinfo = await FirebaseAuth.instance
                         .createUserWithEmailAndPassword(
                           email: users.email!,
                           password: users.password!,
                         );
+                    // إنشاء حساب جديد باستخدام فايربيز مصادقة
+
                     await FirebaseFirestore.instance
-                        .collection('users')
-                        .doc(userinfo.user!.uid)
+                        .collection('users') // اختيار مجموعة المستخدمين
+                        .doc(
+                          userinfo.user!.uid,
+                        ) // إنشاء وثيقة للمستخدم بمعرّف uid
                         .set({
                           'Full Name': users.fullname,
                           'Email': users.email,
                           'Phone Number': users.phoneNumber,
                           'Role': users.role,
                         });
+                    // تخزين بيانات المستخدم في فايرستور
+
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => Homepage()),
                     );
+                    // الانتقال إلى الصفحة الرئيسية بعد نجاح إنشاء الحساب
+
                     print(
-                      "✅ Account created successfully for ${users.fullname}",
+                      "✅ Account created successfully for ${users.fullname}", // طباعة رسالة نجاح
                     );
                   } catch (e) {
-                    print("❌ Error: $e");
+                    print(
+                      "❌ Error: $e",
+                    ); // طباعة الخطأ إن حدثت مشكلة أثناء إنشاء الحساب
                   }
                 },
-                child: Text("Sign Up"),
+                child: Text("Sign Up"), // نص زر إنشاء الحساب
               ),
             ],
           ),

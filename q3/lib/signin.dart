@@ -13,62 +13,75 @@ class Signin extends StatefulWidget {
 }
 
 class _SigninState extends State<Signin> {
-  Users user = Users();
+  Users user =
+      Users(); // إنشاء كائن من فئة المستخدم لتخزين البيانات والسيطرة على المدخلات
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Sign in"),
-        backgroundColor: Colors.amberAccent[200],
+        title: Text("Sign in"), // عنوان صفحة تسجيل الدخول
+        backgroundColor: Colors.amberAccent[200], // تغيير لون شريط العنوان
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(20.0), // هامش داخلي حول محتوى الصفحة
           child: Column(
             children: [
               TextField(
-                controller: user.emailController,
+                controller: user
+                    .emailController, // حقل إدخال البريد الإلكتروني المرتبط بالمتحكم
                 decoration: InputDecoration(
-                  labelText: "Email",
-                  border: OutlineInputBorder(),
+                  labelText: "Email", // نص يظهر فوق الحقل للدلالة على نوعه
+                  border: OutlineInputBorder(), // إطار حول الحقل
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 20), // مساحة فارغة للفصل بين العناصر
               TextField(
-                controller: user.passwordController,
-                obscureText: true,
+                controller: user.passwordController, // حقل إدخال كلمة المرور
+                obscureText: true, // إخفاء النص المدخل لزيادة الأمان
                 decoration: InputDecoration(
-                  labelText: "Password",
-                  border: OutlineInputBorder(),
+                  labelText: "Password", // نص يدل على الحقل
+                  border: OutlineInputBorder(), // إطار الحقل
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 20), // مساحة فارغة قبل زر تسجيل الدخول
               ElevatedButton(
                 onPressed: () async {
-                  user.email = user.emailController.text;
-                  user.password = user.passwordController.text;
+                  user.email = user
+                      .emailController
+                      .text; // حفظ البريد من الحقل في الكائن
+                  user.password =
+                      user.passwordController.text; // حفظ كلمة المرور من الحقل
+
                   try {
                     UserCredential userCredential = await FirebaseAuth.instance
                         .signInWithEmailAndPassword(
                           email: user.email!,
                           password: user.password!,
                         );
+                    // محاولة تسجيل الدخول باستخدام فايربيز مصادقة
 
-                    // 🔹 جلب بيانات المستخدم من Firestore
                     var doc = await FirebaseFirestore.instance
-                        .collection('users') // أو 'Admin' حسب قاعدة بياناتك
-                        .doc(userCredential.user!.uid)
-                        .get();
+                        .collection(
+                          'users',
+                        ) // الوصول إلى مجموعة المستخدمين في قاعدة البيانات
+                        .doc(
+                          userCredential.user!.uid,
+                        ) // تحديد وثيقة المستخدم بواسطة معرّفه
+                        .get(); // جلب بيانات الوثيقة
 
-                    String role = doc['Role']; // "Patient" أو "Admin"
+                    String role =
+                        doc['Role']; // استخراج دور المستخدم المخزّن في قاعدة البيانات
 
-                    // 🔹 الانتقال حسب الدور
                     if (role == 'Admin') {
+                      // إذا كان المستخدم مديراً يتم نقله إلى صفحة المدير
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(builder: (context) => Admin()),
                       );
                     } else {
+                      // إذا لم يكن مديراً يتم نقله إلى صفحة قائمة المواعيد
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
@@ -77,12 +90,16 @@ class _SigninState extends State<Signin> {
                       );
                     }
 
-                    print("✅ Login successful! Role: $role");
+                    print(
+                      "✅ Login successful! Role: $role",
+                    ); // طباعة تأكيد نجاح تسجيل الدخول
                   } catch (e) {
-                    print("❌ Error: $e");
+                    print(
+                      "❌ Error: $e",
+                    ); // طباعة الخطأ إن وُجدت مشكلة أثناء تسجيل الدخول
                   }
                 },
-                child: Text("login"),
+                child: Text("login"), // نص زر تسجيل الدخول
               ),
             ],
           ),

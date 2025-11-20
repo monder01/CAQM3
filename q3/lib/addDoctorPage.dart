@@ -14,32 +14,38 @@ class Adddoctorpage extends StatefulWidget {
 }
 
 class _AdddoctorpageState extends State<Adddoctorpage> {
-  Users users = Users();
-  Doctors doctor = Doctors();
-  final TextEditingController fullNamecon = TextEditingController();
-  final TextEditingController emailcon = TextEditingController();
-  final TextEditingController passwordcon = TextEditingController();
-  final TextEditingController phoneNumcon = TextEditingController();
-  final TextEditingController specialtyCon = TextEditingController();
+  Users users = Users(); // كائن لتخزين بيانات المستخدم الجديد
+  Doctors doctor = Doctors(); // كائن لتخزين بيانات الطبيب الإضافي
+  final TextEditingController fullNamecon =
+      TextEditingController(); // متحكم لحقل الاسم الكامل
+  final TextEditingController emailcon =
+      TextEditingController(); // متحكم لحقل البريد الإلكتروني
+  final TextEditingController passwordcon =
+      TextEditingController(); // متحكم لحقل كلمة المرور
+  final TextEditingController phoneNumcon =
+      TextEditingController(); // متحكم لحقل رقم الهاتف
+  final TextEditingController specialtyCon =
+      TextEditingController(); // متحكم لحقل التخصص
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add A Doctor"),
+        title: Text("Add A Doctor"), // عنوان صفحة إضافة طبيب
         backgroundColor: Colors.amberAccent[200],
       ),
       body: Column(
         children: [
           TextField(
-            controller: fullNamecon,
+            controller: fullNamecon, // ربط حقل الاسم الكامل بالمتحكم
             decoration: InputDecoration(
-              labelText: "Full name",
-              border: OutlineInputBorder(),
+              labelText: "Full name", // تسمية الحقل
+              border: OutlineInputBorder(), // إطار الحقل
             ),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 10), // مسافة فاصلة بين الحقول
           TextField(
-            controller: emailcon,
+            controller: emailcon, // ربط حقل البريد الإلكتروني بالمتحكم
             decoration: InputDecoration(
               labelText: "Email",
               border: OutlineInputBorder(),
@@ -47,8 +53,8 @@ class _AdddoctorpageState extends State<Adddoctorpage> {
           ),
           SizedBox(height: 10),
           TextField(
-            controller: passwordcon,
-            obscureText: true,
+            controller: passwordcon, // ربط حقل كلمة المرور بالمتحكم
+            obscureText: true, // إخفاء النص للحفاظ على الخصوصية
             decoration: InputDecoration(
               labelText: "Password",
               border: OutlineInputBorder(),
@@ -56,7 +62,7 @@ class _AdddoctorpageState extends State<Adddoctorpage> {
           ),
           SizedBox(height: 10),
           TextField(
-            controller: phoneNumcon,
+            controller: phoneNumcon, // ربط حقل رقم الهاتف بالمتحكم
             decoration: InputDecoration(
               labelText: "Phone Number",
               border: OutlineInputBorder(),
@@ -64,7 +70,7 @@ class _AdddoctorpageState extends State<Adddoctorpage> {
           ),
           SizedBox(height: 10),
           TextField(
-            controller: specialtyCon,
+            controller: specialtyCon, // ربط حقل التخصص بالمتحكم
             decoration: InputDecoration(
               labelText: "Specialty",
               border: OutlineInputBorder(),
@@ -73,18 +79,23 @@ class _AdddoctorpageState extends State<Adddoctorpage> {
           SizedBox(height: 10),
           ElevatedButton(
             onPressed: () async {
+              // تخزين البيانات المدخلة في كائنات المستخدم والطبيب
               users.fullname = fullNamecon.text;
               users.email = emailcon.text;
               users.password = passwordcon.text;
               users.phoneNumber = phoneNumcon.text;
               users.role = "Doctor";
               doctor.specialization = specialtyCon.text;
+
               try {
+                // إنشاء حساب جديد للطبيب باستخدام Firebase Auth
                 UserCredential userinfo = await FirebaseAuth.instance
                     .createUserWithEmailAndPassword(
                       email: users.email!,
                       password: users.password!,
                     );
+
+                // تخزين بيانات الطبيب في مجموعة "Doctors" في Firestore
                 await FirebaseFirestore.instance
                     .collection('Doctors')
                     .doc(userinfo.user!.uid)
@@ -95,7 +106,9 @@ class _AdddoctorpageState extends State<Adddoctorpage> {
                       'Role': users.role,
                       'specialty': doctor.specialization,
                     });
+
                 print("✅ Account created successfully for ${users.fullname}");
+                // الانتقال إلى صفحة إضافة مواعيد للطبيب بعد إنشاء الحساب
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -105,9 +118,10 @@ class _AdddoctorpageState extends State<Adddoctorpage> {
                 );
               } catch (e) {
                 print("❌ Error: $e");
+                // طباعة رسالة خطأ في حال فشل العملية
               }
             },
-            child: Text("Add Doctor"),
+            child: Text("Add Doctor"), // نص الزر لإضافة الطبيب
           ),
         ],
       ),
