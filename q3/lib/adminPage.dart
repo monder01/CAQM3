@@ -1,6 +1,7 @@
 //adminPage.dart
 import 'package:flutter/material.dart';
 import 'package:q3/AdminFindPatientPage.dart';
+import 'package:q3/adminQueuePage.dart';
 //import 'package:q3/adminPatientAppointmentsPage.dart';
 //import 'package:q3/adminQueuePage.dart';
 //import 'package:q3/appointmentManage.dart';
@@ -54,6 +55,17 @@ class _AdminState extends State<Admin> {
             backgroundColor: Colors.amberAccent,
           ),
           SizedBox(height: 20),
+          FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => QueuePage()),
+              );
+            },
+            label: Text("Manage queue"),
+            icon: Icon(Icons.manage_history),
+            backgroundColor: Colors.redAccent,
+          ),
         ],
       ),
     );

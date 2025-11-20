@@ -11,20 +11,32 @@ class QueuePage extends StatefulWidget {
 class _QueuePageState extends State<QueuePage> {
   final db = FirebaseFirestore.instance;
 
-  // ⏭ وظيفة زيادة الدور
+  // ⏭ وظيفة زيادة الدور وتحديث حالة الموعد
   Future<void> nextToken() async {
     final queueRef = db.collection('Queue').doc('main');
 
     await db.runTransaction((tx) async {
       final snap = await tx.get(queueRef);
-
       if (!snap.exists) return;
 
-      int tokenDone = snap['tokenDone'];
-      int tokenCounter = snap['tokenCounter'];
+      int tokenDone = snap['tokenDone'] ?? 0;
+      int tokenCounter = snap['tokenCounter'] ?? 0;
 
       if (tokenDone < tokenCounter) {
-        tx.update(queueRef, {'tokenDone': tokenDone + 1});
+        int nextToken = tokenDone + 1;
+
+        // تحديث الطابور
+        tx.update(queueRef, {'tokenDone': nextToken});
+
+        // تحديث حالة الموعد المقابل للتوكن إلى "done"
+        final query = await db
+            .collection('Appointments')
+            .where('token', isEqualTo: nextToken)
+            .get();
+
+        for (var doc in query.docs) {
+          tx.update(doc.reference, {'status': 'done'});
+        }
       }
     });
   }
@@ -54,8 +66,8 @@ class _QueuePageState extends State<QueuePage> {
           }
 
           var data = snapshot.data!;
-          int tokenCounter = data['tokenCounter'];
-          int tokenDone = data['tokenDone'];
+          int tokenCounter = data['tokenCounter'] ?? 0;
+          int tokenDone = data['tokenDone'] ?? 0;
 
           int upcomingToken = tokenDone + 1;
           int remaining = tokenCounter - tokenDone;
@@ -73,7 +85,7 @@ class _QueuePageState extends State<QueuePage> {
                 // 🔵 Current Token
                 Text("Now Serving", style: TextStyle(fontSize: 24)),
                 Text(
-                  "$tokenDone",
+                  tokenDone > 0 ? "$tokenDone" : "-",
                   style: TextStyle(fontSize: 60, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 40),
@@ -102,7 +114,6 @@ class _QueuePageState extends State<QueuePage> {
                     style: TextStyle(fontSize: 25, color: Colors.white),
                   ),
                 ),
-
                 SizedBox(height: 20),
 
                 // 🔁 Reset Button
