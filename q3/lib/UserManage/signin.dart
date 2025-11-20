@@ -94,6 +94,9 @@ class _SigninState extends State<Signin> {
                       "✅ Login successful! Role: $role",
                     ); // طباعة تأكيد نجاح تسجيل الدخول
                   } catch (e) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text("❌ Error: $e")));
                     print(
                       "❌ Error: $e",
                     ); // طباعة الخطأ إن وُجدت مشكلة أثناء تسجيل الدخول

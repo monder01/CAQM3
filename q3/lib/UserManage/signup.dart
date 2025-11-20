@@ -111,6 +111,9 @@ class _SignupState extends State<Signup> {
                       "✅ Account created successfully for ${users.fullname}", // طباعة رسالة نجاح
                     );
                   } catch (e) {
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text("❌ Error: $e")));
                     print(
                       "❌ Error: $e",
                     ); // طباعة الخطأ إن حدثت مشكلة أثناء إنشاء الحساب
