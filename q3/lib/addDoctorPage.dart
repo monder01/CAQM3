@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'addAvailabilityPage.dart';
-import 'oobclass/doctors.dart';
-import 'oobclass/users.dart';
+import 'UserManage/doctors.dart';
+import 'UserManage/users.dart';
 
 class Adddoctorpage extends StatefulWidget {
   const Adddoctorpage({super.key});
