@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'homePage.dart';
-import 'firebase_options.dart';
+import 'Authenticatable/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // التأكد من تهيئة ربط فلاتر قبل تنفيذ أي عمليات غير متزامنة

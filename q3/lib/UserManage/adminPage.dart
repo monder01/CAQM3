@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:q3/AdminFindPatientPage.dart';
+import 'package:q3/AppointmentManage/AdminFindPatientPage.dart';
 import 'package:q3/adminQueuePage.dart';
 import 'addDoctorPage.dart';
-import 'UserManage/doctors.dart';
-import 'UserManage/users.dart';
+import 'doctors.dart';
+import 'users.dart';
 
 class Admin extends StatefulWidget {
   const Admin({super.key});
