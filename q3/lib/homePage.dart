@@ -1,4 +1,4 @@
-//homePage.dart
+// homePage.dart
 import 'package:flutter/material.dart';
 import 'UserManage/signin.dart';
 import 'UserManage/signup.dart';
@@ -9,15 +9,20 @@ class Homepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // شريط التطبيق العلوي
       appBar: AppBar(
         title: Text("My Clinic"),
         backgroundColor: Colors.amberAccent[200],
       ),
+
+      // يضمن عدم تداخل المحتوى مع حواف الجهاز
       body: SafeArea(
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment:
+                MainAxisAlignment.center, // توسيط العناصر عمودياً
             children: [
+              // نص الترحيب الرئيسي
               Text(
                 "Welcome to My Clinic",
                 style: TextStyle(
@@ -26,7 +31,9 @@ class Homepage extends StatelessWidget {
                   color: Colors.amberAccent[200],
                 ),
               ),
-              SizedBox(height: 20),
+
+              SizedBox(height: 20), // مسافة بين العناصر
+              // زر تسجيل الدخول
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
@@ -36,7 +43,10 @@ class Homepage extends StatelessWidget {
                 },
                 child: Text("Already Have An Account"),
               ),
+
               SizedBox(height: 20),
+
+              // زر إنشاء حساب جديد
               ElevatedButton(
                 onPressed: () {
                   Navigator.push(
