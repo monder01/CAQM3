@@ -10,14 +10,13 @@ class Medicalhistorypage extends StatefulWidget {
 }
 
 class _MedicalhistorypageState extends State<Medicalhistorypage> {
-  TextEditingController companyNameController = TextEditingController();
-  TextEditingController policyNumberController = TextEditingController();
-  TextEditingController insuredTypeController = TextEditingController();
-  TextEditingController insuredStartDateController = TextEditingController();
-  TextEditingController insuredEndDateController = TextEditingController();
-  TextEditingController insuredPersonNameController = TextEditingController();
-  TextEditingController insuredPersonIDController = TextEditingController();
-  TextEditingController insuredNotesController = TextEditingController();
+  final TextEditingController chronicDiseasesController =
+      TextEditingController();
+  final TextEditingController surgeriesController = TextEditingController();
+  final TextEditingController allergiesController = TextEditingController();
+  final TextEditingController medicationsController = TextEditingController();
+  final TextEditingController familyHistoryController = TextEditingController();
+  final TextEditingController vaccinationController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,65 +30,49 @@ class _MedicalhistorypageState extends State<Medicalhistorypage> {
           children: [
             SizedBox(height: 20),
             TextField(
-              controller: companyNameController,
+              controller: chronicDiseasesController,
               decoration: InputDecoration(
-                labelText: "اسم شركة التأمين",
+                labelText: "الأمراض المزمنة",
                 border: OutlineInputBorder(),
               ),
             ),
             SizedBox(height: 12),
             TextField(
-              controller: policyNumberController,
+              controller: surgeriesController,
               decoration: InputDecoration(
-                labelText: "رقم الوثيقة",
+                labelText: "العمليات الجراحية السابقة",
                 border: OutlineInputBorder(),
               ),
             ),
             SizedBox(height: 12),
             TextField(
-              controller: insuredTypeController,
+              controller: allergiesController,
               decoration: InputDecoration(
-                labelText: "نوع المؤمن عليه",
+                labelText: "الحساسية",
                 border: OutlineInputBorder(),
               ),
             ),
             SizedBox(height: 12),
             TextField(
-              controller: insuredStartDateController,
+              controller: medicationsController,
               decoration: InputDecoration(
-                labelText: "تاريخ بدء التأمين",
+                labelText: "الأدوية الحالية",
                 border: OutlineInputBorder(),
               ),
             ),
             SizedBox(height: 12),
             TextField(
-              controller: insuredEndDateController,
+              controller: familyHistoryController,
               decoration: InputDecoration(
-                labelText: "تاريخ انتهاء التأمين",
+                labelText: "التاريخ العائلي للأمراض",
                 border: OutlineInputBorder(),
               ),
             ),
             SizedBox(height: 12),
             TextField(
-              controller: insuredPersonNameController,
+              controller: vaccinationController,
               decoration: InputDecoration(
-                labelText: "اسم الشخص المؤمن عليه",
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 12),
-            TextField(
-              controller: insuredPersonIDController,
-              decoration: InputDecoration(
-                labelText: "رقم هوية الشخص المؤمن عليه",
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 12),
-            TextField(
-              controller: insuredNotesController,
-              decoration: InputDecoration(
-                labelText: "ملاحظات إضافية",
+                labelText: "التطعيمات",
                 border: OutlineInputBorder(),
               ),
             ),
@@ -97,17 +80,12 @@ class _MedicalhistorypageState extends State<Medicalhistorypage> {
             ElevatedButton(
               onPressed: () async {
                 // حفظ بيانات التأمين أو تنفيذ أي عملية أخرى
-                String companyName = companyNameController.text.trim();
-                String policyNumber = policyNumberController.text.trim();
-                String insuredType = insuredTypeController.text.trim();
-                String insuredStartDate = insuredStartDateController.text
-                    .trim();
-                String insuredEndDate = insuredEndDateController.text.trim();
-                String insuredPersonName = insuredPersonNameController.text
-                    .trim();
-                String insuredPersonID = insuredPersonIDController.text.trim();
-                String insuredNotes = insuredNotesController.text.trim();
-                // الحصول على معرف المستخدم الحالي
+                String chronicDiseases = chronicDiseasesController.text;
+                String surgeries = surgeriesController.text;
+                String allergies = allergiesController.text;
+                String medications = medicationsController.text;
+                String familyHistory = familyHistoryController.text;
+                String vaccination = vaccinationController.text;
                 String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
                 if (currentUserId == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -117,17 +95,17 @@ class _MedicalhistorypageState extends State<Medicalhistorypage> {
                 }
                 try {
                   // حفظ البيانات في Firestore
-                  await FirebaseFirestore.instance.collection('Insurance').add({
-                    'CompanyName': companyName,
-                    'PolicyNumber': policyNumber,
-                    'InsuredType': insuredType,
-                    'InsuredStartDate': insuredStartDate,
-                    'InsuredEndDate': insuredEndDate,
-                    'InsuredPersonName': insuredPersonName,
-                    'InsuredPersonID': insuredPersonID,
-                    'InsuredNotes': insuredNotes,
-                    'PatientId': currentUserId,
-                  });
+                  await FirebaseFirestore.instance
+                      .collection('MedicalHistory')
+                      .add({
+                        'ChronicDiseases': chronicDiseases,
+                        'Surgeries': surgeries,
+                        'Allergies': allergies,
+                        'Medications': medications,
+                        'FamilyHistory': familyHistory,
+                        'Vaccination': vaccination,
+                        'PatientId': currentUserId,
+                      });
                 } catch (e) {
                   print("خطأ في حفظ بيانات التأمين: $e");
                 }
