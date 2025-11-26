@@ -1,2 +1,6 @@
 //patient.dart
-class Patients {}
+import 'package:q3/UserManage/users.dart';
+
+class Patients extends Users {
+  String? patientid;
+}

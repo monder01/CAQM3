@@ -4,6 +4,6 @@ import 'dart:io';
 class Forms {
   File? file;
   var name;
-  int? formId;
+  String? formId;
   List<String> formType = ['Insurance', 'Medical History', 'Consent'];
 }
