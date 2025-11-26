@@ -1,90 +1,147 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class MedicalHistoryFormPage extends StatefulWidget {
-  const MedicalHistoryFormPage({super.key});
+class Medicalhistorypage extends StatefulWidget {
+  const Medicalhistorypage({super.key});
 
   @override
-  State<MedicalHistoryFormPage> createState() => _MedicalHistoryFormPageState();
+  State<Medicalhistorypage> createState() => _MedicalhistorypageState();
 }
 
-class _MedicalHistoryFormPageState extends State<MedicalHistoryFormPage> {
-  // مفتاح النموذج للتحقق من صحة المدخلات
-  final _formKey = GlobalKey<FormState>();
-
-  // متحكمات الحقول لجمع البيانات من المستخدم
-  final conditions = TextEditingController();
-  final medications = TextEditingController();
-  final allergies = TextEditingController();
-  final surgeries = TextEditingController();
-
+class _MedicalhistorypageState extends State<Medicalhistorypage> {
+  TextEditingController companyNameController = TextEditingController();
+  TextEditingController policyNumberController = TextEditingController();
+  TextEditingController insuredTypeController = TextEditingController();
+  TextEditingController insuredStartDateController = TextEditingController();
+  TextEditingController insuredEndDateController = TextEditingController();
+  TextEditingController insuredPersonNameController = TextEditingController();
+  TextEditingController insuredPersonIDController = TextEditingController();
+  TextEditingController insuredNotesController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // شريط التطبيق العلوي
       appBar: AppBar(
-        title: Text("Medical History"),
-        backgroundColor: Colors.amberAccent,
+        title: Text("نموذج السجل المرضي"),
+        backgroundColor: Colors.amberAccent[200],
       ),
-
-      // السماح بالتمرير في حالة امتلاء الشاشة
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
-        child: Form(
-          key: _formKey, // ربط النموذج بمفتاح التحقق
-          child: Column(
-            children: [
-              // حقول الإدخال الخاصة بالتاريخ الطبي
-              buildInput("Chronic Conditions", conditions),
-              buildInput("Medications", medications),
-              buildInput("Allergies", allergies),
-              buildInput("Surgeries", surgeries),
-
-              SizedBox(height: 20),
-
-              // زر لحفظ البيانات
-              ElevatedButton(
-                onPressed: saveMedicalHistory,
-                child: Text("Submit"),
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          children: [
+            SizedBox(height: 20),
+            TextField(
+              controller: companyNameController,
+              decoration: InputDecoration(
+                labelText: "اسم شركة التأمين",
+                border: OutlineInputBorder(),
               ),
-            ],
-          ),
+            ),
+            SizedBox(height: 12),
+            TextField(
+              controller: policyNumberController,
+              decoration: InputDecoration(
+                labelText: "رقم الوثيقة",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 12),
+            TextField(
+              controller: insuredTypeController,
+              decoration: InputDecoration(
+                labelText: "نوع المؤمن عليه",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 12),
+            TextField(
+              controller: insuredStartDateController,
+              decoration: InputDecoration(
+                labelText: "تاريخ بدء التأمين",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 12),
+            TextField(
+              controller: insuredEndDateController,
+              decoration: InputDecoration(
+                labelText: "تاريخ انتهاء التأمين",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 12),
+            TextField(
+              controller: insuredPersonNameController,
+              decoration: InputDecoration(
+                labelText: "اسم الشخص المؤمن عليه",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 12),
+            TextField(
+              controller: insuredPersonIDController,
+              decoration: InputDecoration(
+                labelText: "رقم هوية الشخص المؤمن عليه",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 12),
+            TextField(
+              controller: insuredNotesController,
+              decoration: InputDecoration(
+                labelText: "ملاحظات إضافية",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: () async {
+                // حفظ بيانات التأمين أو تنفيذ أي عملية أخرى
+                String companyName = companyNameController.text.trim();
+                String policyNumber = policyNumberController.text.trim();
+                String insuredType = insuredTypeController.text.trim();
+                String insuredStartDate = insuredStartDateController.text
+                    .trim();
+                String insuredEndDate = insuredEndDateController.text.trim();
+                String insuredPersonName = insuredPersonNameController.text
+                    .trim();
+                String insuredPersonID = insuredPersonIDController.text.trim();
+                String insuredNotes = insuredNotesController.text.trim();
+                // الحصول على معرف المستخدم الحالي
+                String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
+                if (currentUserId == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("يجب تسجيل الدخول أولًا")),
+                  );
+                  return;
+                }
+                try {
+                  // حفظ البيانات في Firestore
+                  await FirebaseFirestore.instance.collection('Insurance').add({
+                    'CompanyName': companyName,
+                    'PolicyNumber': policyNumber,
+                    'InsuredType': insuredType,
+                    'InsuredStartDate': insuredStartDate,
+                    'InsuredEndDate': insuredEndDate,
+                    'InsuredPersonName': insuredPersonName,
+                    'InsuredPersonID': insuredPersonID,
+                    'InsuredNotes': insuredNotes,
+                    'PatientId': currentUserId,
+                  });
+                } catch (e) {
+                  print("خطأ في حفظ بيانات التأمين: $e");
+                }
+                // يمكنك إضافة الكود لحفظ هذه البيانات في قاعدة البيانات هنا
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("تم حفظ بيانات التأمين بنجاح ✅")),
+                );
+              },
+              child: Text("حفظ بيانات التأمين"),
+            ),
+          ],
         ),
       ),
     );
-  }
-
-  // دالة تبني حقل إدخال متعدد الأسطر
-  Widget buildInput(String label, TextEditingController controller) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 12), // مسافة بين الحقول
-      child: TextFormField(
-        controller: controller, // ربط المتحكم بالحقل
-        maxLines: 3, // جعل الحقل متعدد الأسطر
-        decoration: InputDecoration(
-          labelText: label, // عنوان الحقل
-          border: OutlineInputBorder(), // إطار الحقل
-        ),
-      ),
-    );
-  }
-
-  // دالة لحفظ البيانات داخل Firestore
-  Future<void> saveMedicalHistory() async {
-    await FirebaseFirestore.instance.collection("MedicalHistoryForms").add({
-      "conditions": conditions.text,
-      "medications": medications.text,
-      "allergies": allergies.text,
-      "surgeries": surgeries.text,
-      "createdAt": Timestamp.now(), // وقت الحفظ
-    });
-
-    // إظهار رسالة نجاح بعد الحفظ
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text("Medical history submitted")));
-
-    // العودة للصفحة السابقة
-    Navigator.pop(context);
   }
 }

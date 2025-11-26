@@ -1,92 +1,149 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:q3/forms/forms.dart';
 
-class InsuranceFormPage extends StatefulWidget {
-  const InsuranceFormPage({super.key});
+class Insurancepage extends StatefulWidget {
+  const Insurancepage({super.key});
 
   @override
-  State<InsuranceFormPage> createState() => _InsuranceFormPageState();
+  State<Insurancepage> createState() => _InsurancepageState();
 }
 
-class _InsuranceFormPageState extends State<InsuranceFormPage> {
-  // مفتاح النموذج للتحقق من صحة المدخلات
-  final _formKey = GlobalKey<FormState>();
-
-  // متحكمات الحقول للحصول على النص المكتوب في كل خانة
-  final insuranceCompany = TextEditingController();
-  final policyNumber = TextEditingController();
-  final cardNumber = TextEditingController();
-  final expiryDate = TextEditingController();
-  final insuranceType = TextEditingController();
-
+class _InsurancepageState extends State<Insurancepage> {
+  Forms insuranceForm = Forms();
+  TextEditingController companyNameController = TextEditingController();
+  TextEditingController policyNumberController = TextEditingController();
+  TextEditingController insuredTypeController = TextEditingController();
+  TextEditingController insuredStartDateController = TextEditingController();
+  TextEditingController insuredEndDateController = TextEditingController();
+  TextEditingController insuredPersonNameController = TextEditingController();
+  TextEditingController insuredPersonIDController = TextEditingController();
+  TextEditingController insuredNotesController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // شريط العنوان في أعلى الصفحة
       appBar: AppBar(
-        title: Text("Insurance Details"),
-        backgroundColor: Colors.amberAccent,
+        title: Text("نموذج التأمين"),
+        backgroundColor: Colors.amberAccent[200],
       ),
-
-      // يسمح بالتمرير عند امتلاء الشاشة
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
-        child: Form(
-          key: _formKey, // ربط النموذج بمفتاح التحقق
-          child: Column(
-            children: [
-              // حقول الإدخال الخاصة بنموذج التأمين
-              buildInput("Insurance Company", insuranceCompany),
-              buildInput("Policy Number", policyNumber),
-              buildInput("Card Number", cardNumber),
-              buildInput("Expiry Date", expiryDate),
-              buildInput("Insurance Type", insuranceType),
-
-              SizedBox(height: 20),
-
-              // زر حفظ البيانات
-              ElevatedButton(
-                onPressed: saveInsuranceForm,
-                child: Text("Submit"),
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          children: [
+            SizedBox(height: 20),
+            TextField(
+              controller: companyNameController,
+              decoration: InputDecoration(
+                labelText: "اسم شركة التأمين",
+                border: OutlineInputBorder(),
               ),
-            ],
-          ),
+            ),
+            SizedBox(height: 12),
+            TextField(
+              controller: policyNumberController,
+              decoration: InputDecoration(
+                labelText: "رقم الوثيقة",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 12),
+            TextField(
+              controller: insuredTypeController,
+              decoration: InputDecoration(
+                labelText: "نوع المؤمن عليه",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 12),
+            TextField(
+              controller: insuredStartDateController,
+              decoration: InputDecoration(
+                labelText: "تاريخ بدء التأمين",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 12),
+            TextField(
+              controller: insuredEndDateController,
+              decoration: InputDecoration(
+                labelText: "تاريخ انتهاء التأمين",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 12),
+            TextField(
+              controller: insuredPersonNameController,
+              decoration: InputDecoration(
+                labelText: "اسم الشخص المؤمن عليه",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 12),
+            TextField(
+              controller: insuredPersonIDController,
+              decoration: InputDecoration(
+                labelText: "رقم هوية الشخص المؤمن عليه",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 12),
+            TextField(
+              controller: insuredNotesController,
+              decoration: InputDecoration(
+                labelText: "ملاحظات إضافية",
+                border: OutlineInputBorder(),
+              ),
+            ),
+            SizedBox(height: 12),
+            ElevatedButton(
+              onPressed: () async {
+                // حفظ بيانات التأمين أو تنفيذ أي عملية أخرى
+                String companyName = companyNameController.text.trim();
+                String policyNumber = policyNumberController.text.trim();
+                String insuredType = insuredTypeController.text.trim();
+                String insuredStartDate = insuredStartDateController.text
+                    .trim();
+                String insuredEndDate = insuredEndDateController.text.trim();
+                String insuredPersonName = insuredPersonNameController.text
+                    .trim();
+                String insuredPersonID = insuredPersonIDController.text.trim();
+                String insuredNotes = insuredNotesController.text.trim();
+                // الحصول على معرف المستخدم الحالي
+                String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
+                if (currentUserId == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("يجب تسجيل الدخول أولًا")),
+                  );
+                  return;
+                }
+                try {
+                  // حفظ البيانات في Firestore
+                  await FirebaseFirestore.instance.collection('Insurance').add({
+                    'CompanyName': companyName,
+                    'PolicyNumber': policyNumber,
+                    'InsuredType': insuredType,
+                    'InsuredStartDate': insuredStartDate,
+                    'InsuredEndDate': insuredEndDate,
+                    'InsuredPersonName': insuredPersonName,
+                    'InsuredPersonID': insuredPersonID,
+                    'InsuredNotes': insuredNotes,
+                    'PatientId': currentUserId,
+                  });
+                } catch (e) {
+                  print("خطأ في حفظ بيانات التأمين: $e");
+                }
+                // يمكنك إضافة الكود لحفظ هذه البيانات في قاعدة البيانات هنا
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("تم حفظ بيانات التأمين بنجاح ✅")),
+                );
+              },
+              child: Text("حفظ بيانات التأمين"),
+            ),
+          ],
         ),
       ),
     );
-  }
-
-  // دالة إنشاء حقل إدخال نصي واحد
-  Widget buildInput(String label, TextEditingController controller) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 12), // مسافة بين الحقول
-      child: TextFormField(
-        controller: controller, // ربط المتحكم بالحقل
-        decoration: InputDecoration(
-          labelText: label, // عنوان الحقل
-          border: OutlineInputBorder(), // إطار الحقل
-        ),
-      ),
-    );
-  }
-
-  // دالة حفظ بيانات نموذج التأمين في Firestore
-  Future<void> saveInsuranceForm() async {
-    await FirebaseFirestore.instance.collection("InsuranceForms").add({
-      "insuranceCompany": insuranceCompany.text,
-      "policyNumber": policyNumber.text,
-      "cardNumber": cardNumber.text,
-      "expiryDate": expiryDate.text,
-      "insuranceType": insuranceType.text,
-      "createdAt": Timestamp.now(), // وقت إدخال البيانات
-    });
-
-    // إظهار رسالة نجاح بعد الحفظ
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text("Insurance form submitted")));
-
-    // العودة إلى الصفحة السابقة بعد الإرسال
-    Navigator.pop(context);
   }
 }
