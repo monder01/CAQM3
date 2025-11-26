@@ -13,6 +13,10 @@ class _FormpageState extends State<Formpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("نماذج المعلومات الصحية"),
+        backgroundColor: Colors.amberAccent[200],
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
