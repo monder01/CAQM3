@@ -12,7 +12,7 @@ class _QueuePageState extends State<QueuePage> {
   final db = FirebaseFirestore
       .instance; // مرجع إلى قاعدة بيانات فايرستور لإجراء العمليات عليها
 
-  // ⏭ وظيفة زيادة الدور وتحديث حالة الموعد
+  //  وظيفة  الدور وتحديث حالة الموعد
   Future<void> nextToken() async {
     final queueRef = db
         .collection('Queue')
