@@ -73,20 +73,12 @@ class _ShowappointmentState extends State<Showappointment> {
                       ),
                       IconButton(
                         onPressed: () async {
-                          int? num = 1;
                           await FirebaseFirestore.instance
                               .collection('Appointments')
                               .doc(doc.id)
-                              .update({
-                                'status': 'WaitingToCheckIn',
-                                'lineNumber': num,
-                              });
+                              .update({'status': 'WaitingToCheckIn'});
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                "Check in done your Line number is $num",
-                              ),
-                            ),
+                            SnackBar(content: Text("في تأكيد الوصول. ")),
                           );
                         },
                         icon: Icon(Icons.check, color: Colors.purpleAccent),
