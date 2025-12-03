@@ -29,12 +29,10 @@ class _CheckinadminState extends State<Checkinadmin> {
             IconButton(onPressed: () {}, icon: Icon(Icons.arrow_upward)),
             IconButton(
               onPressed: () async {
-                final serverTime = Timestamp.now();
-                final date = serverTime.toDate();
-                final finalDate = "${date.year}-${date.month}-${date.day}";
-
+                final date = DateTime.now().toIso8601String().substring(0, 10);
+                print(date);
                 final queueDoc = queueData.collection("Queue").doc();
-                await queueDoc.set({'createdAt': finalDate});
+                await queueDoc.set({'QueueID': 'QueueID', 'createdAt': date});
 
                 await queueDoc.collection("QueueLine").add({
                   'patientId': currentUser,

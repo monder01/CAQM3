@@ -54,6 +54,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
               },
               child: Text('اختر طبيب ووقت'),
             ),
+
             SizedBox(height: 20),
             Text('الطبيب المختار: ${selectedDoctorName ?? "لم يتم الاختيار"}'),
             SizedBox(height: 10),
