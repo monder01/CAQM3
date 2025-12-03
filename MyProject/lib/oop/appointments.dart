@@ -173,6 +173,7 @@ class Appointment {
       'appointmentType': appointmentType,
       'cost': cost,
       'LineNumber': lineNumber,
+      'statue': 'Booked',
     });
   }
 }

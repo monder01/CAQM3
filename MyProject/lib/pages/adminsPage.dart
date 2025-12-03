@@ -3,6 +3,7 @@ import 'package:prototype1/pages/addDoctor.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:prototype1/pages/findPatient.dart';
 import 'package:prototype1/pages/homePage.dart';
+import 'package:prototype1/pages/queuePage.dart';
 
 class Adminspage extends StatefulWidget {
   const Adminspage({super.key});
@@ -15,11 +16,7 @@ class _AdminspageState extends State<Adminspage> {
   int i = 0;
 
   // الصفحات البسيطة
-  final List<Widget> _pages = [
-    FindPatient(),
-    Adddoctor(),
-    Center(child: Text('الملف الشخصي')),
-  ];
+  final List<Widget> _pages = [FindPatient(), Adddoctor(), Queuepage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,14 +50,17 @@ class _AdminspageState extends State<Adminspage> {
           });
         },
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'الرئيسية'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
+            icon: Icon(Icons.person_search),
+            label: 'إدارة مواعيد المرضى',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_add),
             label: 'إضافة طبيب',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'الملف الشخصي',
+            icon: Icon(Icons.cloud_queue),
+            label: 'إدارة الطابور',
           ),
         ],
       ),
