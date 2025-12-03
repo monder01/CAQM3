@@ -8,7 +8,7 @@ class Appointment {
   String? time;
   String? reason;
   String? status; // booked, completed, canceled
-  String? lineNumber;
+  int? lineNumber = 0;
   String? appointmentType;
   double? cost;
 
@@ -172,6 +172,7 @@ class Appointment {
       'date': date,
       'appointmentType': appointmentType,
       'cost': cost,
+      'LineNumber': lineNumber,
     });
   }
 }

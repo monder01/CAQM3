@@ -71,6 +71,19 @@ class _ShowappointmentState extends State<Showappointment> {
                               .delete();
                         },
                       ),
+                      IconButton(
+                        onPressed: () async {
+                          int? num = 1;
+                          await FirebaseFirestore.instance
+                              .collection('Appointments')
+                              .doc(doc.id)
+                              .update({'LineNumber': num});
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text("Done")));
+                        },
+                        icon: Icon(Icons.check, color: Colors.purpleAccent),
+                      ),
                     ],
                   ),
                 ),
