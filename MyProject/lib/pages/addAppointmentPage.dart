@@ -112,21 +112,21 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
               value: selectedAppointmentType,
               items: const [
                 DropdownMenuItem(
-                  child: Text('إستشارة (السعر 30د.ل)'),
                   value: 'إستشارة',
+                  child: Text('إستشارة (السعر 30د.ل)'),
                 ),
                 DropdownMenuItem(
-                  child: Text('متابعة (السعر 70د.ل)'),
                   value: 'متابعة',
+                  child: Text('متابعة (السعر 70د.ل)'),
                 ),
                 DropdownMenuItem(
-                  child: Text('فحص دوري (السعر 50د.ل)'),
                   value: 'فحص دوري',
+                  child: Text('فحص دوري (السعر 50د.ل)'),
                 ),
               ],
               onChanged: (value) {
                 setState(() {
-                  selectedAppointmentType = value as String?;
+                  selectedAppointmentType = value;
                   print('Selected appointment type: $selectedAppointmentType');
                   if (selectedAppointmentType == "إستشارة") {
                     appointmentCost = 30.0;
