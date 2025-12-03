@@ -15,7 +15,7 @@ class _CheckinpatientState extends State<Checkinpatient> {
         title: Text('تسجيل وصول المريض'),
         backgroundColor: Colors.amberAccent[200],
       ),
-      body: Center(child: Text('صفحة تسجيل وصول المريض قيد التطوير')),
+      body: Center(child: Text('صفحة تسجيل وصول المريض')),
     );
   }
 }

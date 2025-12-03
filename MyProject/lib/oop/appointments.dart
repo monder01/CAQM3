@@ -1,10 +1,11 @@
+/// appointments.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:prototype1/oop/patients.dart';
 
 class Appointment {
   String? appointmentId;
   DateTime? appointmentDate;
-  String? date;
   String? time;
   String? reason;
   String? status; // booked, completed, canceled
@@ -21,8 +22,8 @@ class Appointment {
     final snapshot = await FirebaseFirestore.instance
         .collection('Appointments')
         .where('doctorId', isEqualTo: doctorId)
-        .where('time', isEqualTo: time)
         .where('date', isEqualTo: date)
+        .where('time', isEqualTo: time)
         .get();
 
     return snapshot.docs.isEmpty;
@@ -77,10 +78,12 @@ class Appointment {
                             doctorId,
                           );
                           if (selectedTime != null) {
+                            // ✅ التعديل: تمرير التاريخ مع الوقت عند العودة
                             Navigator.of(context).pop({
                               'doctorId': doctorId,
                               'doctorName': doctorName,
-                              'time': selectedTime,
+                              'time': selectedTime['time'],
+                              'date': selectedTime['date'],
                             });
                           }
                         },
@@ -97,13 +100,13 @@ class Appointment {
   }
 
   /// عرض Dialog لاختيار الوقت
-  Future<String?> showTimesDialog(
+  Future<Map<String, String>?> showTimesDialog(
     BuildContext context,
     String doctorName,
     List<String> times,
     String doctorId,
   ) async {
-    return await showDialog<String>(
+    return await showDialog<Map<String, String>>(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -124,14 +127,23 @@ class Appointment {
                   child: ListTile(
                     title: Text(times[index]),
                     onTap: () async {
-                      final date = DateTime.now().toIso8601String().substring(
-                        0,
-                        10,
+                      final selectedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime(2030),
                       );
+
+                      if (selectedDate == null) return;
+
+                      String formattedDate = selectedDate
+                          .toIso8601String()
+                          .substring(0, 10);
+
                       bool available = await isTimeAvailable(
                         doctorId,
                         times[index],
-                        date,
+                        formattedDate,
                       );
 
                       if (!available) {
@@ -140,7 +152,11 @@ class Appointment {
                         );
                         return;
                       }
-                      Navigator.of(context).pop(times[index]);
+
+                      // ✅ التعديل: إرجاع الوقت + التاريخ
+                      Navigator.of(
+                        context,
+                      ).pop({'time': times[index], 'date': formattedDate});
                     },
                   ),
                 );
@@ -160,20 +176,22 @@ class Appointment {
     String? appointmentType,
     double? cost,
     String? patientId,
+    String? date,
+    String? patientName,
   }) async {
     if (patientId == null) return;
 
-    final date = DateTime.now().toIso8601String().substring(0, 10);
     await FirebaseFirestore.instance.collection('Appointments').add({
       'doctorId': doctorId,
       'doctorName': doctorName,
       'patientId': patientId,
+      'patientName': patientName,
       'time': time,
       'date': date,
       'appointmentType': appointmentType,
       'cost': cost,
       'LineNumber': lineNumber,
-      'statue': 'Booked',
+      'status': 'Booked',
     });
   }
 }

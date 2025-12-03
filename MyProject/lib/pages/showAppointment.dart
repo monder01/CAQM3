@@ -77,7 +77,10 @@ class _ShowappointmentState extends State<Showappointment> {
                           await FirebaseFirestore.instance
                               .collection('Appointments')
                               .doc(doc.id)
-                              .update({'LineNumber': num});
+                              .update({
+                                'status': 'WaitingToCheckIn',
+                                'lineNumber': num,
+                              });
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(

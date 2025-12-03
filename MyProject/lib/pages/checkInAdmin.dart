@@ -22,32 +22,47 @@ class _CheckinadminState extends State<Checkinadmin> {
         title: Text('تسجيل وصول المريض'),
         backgroundColor: Colors.amberAccent[200],
       ),
-      body: Center(
-        child: Column(
-          children: [
-            SizedBox(height: 20),
-            IconButton(onPressed: () {}, icon: Icon(Icons.arrow_upward)),
-            IconButton(
-              onPressed: () async {
-                final date = DateTime.now().toIso8601String().substring(0, 10);
-                print(date);
-                final queueDoc = queueData.collection("Queue").doc();
-                await queueDoc.set({'QueueID': 'QueueID', 'createdAt': date});
+      body: StreamBuilder<QuerySnapshot>(
+        stream: queueData
+            .collection('Appointments')
+            .where('status', isEqualTo: 'WaitingToCheckIn')
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          }
 
-                await queueDoc.collection("QueueLine").add({
-                  'patientId': currentUser,
-                  'status': 'CheckedIn',
-                  'time': FieldValue.serverTimestamp(),
-                });
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text("succesfull try")));
-              },
-              icon: Icon(Icons.restore),
-            ),
-            IconButton(onPressed: () {}, icon: Icon(Icons.arrow_downward)),
-          ],
-        ),
+          final docs = snapshot.data!.docs;
+
+          if (docs.isEmpty) {
+            return Center(child: Text("لا توجد حالات انتظار"));
+          }
+
+          return ListView.builder(
+            itemCount: docs.length,
+            itemBuilder: (context, index) {
+              final doc = docs[index];
+
+              return Card(
+                child: ListTile(
+                  leading: Icon(Icons.person, color: Colors.amber),
+                  title: Text("المريض: ${doc['PatientName']}"),
+                  subtitle: Text("رقم الدور: ${doc['lineNumber']}"),
+                  trailing: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                    ),
+                    child: Text('تسجيل الوصول'),
+                    onPressed: () async {
+                      //await queueLine.checkInPatient(doc.id);
+                      setState(() {});
+                    },
+                  ),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }

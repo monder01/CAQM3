@@ -1,6 +1,8 @@
+// addAppointmentPage.dart
 import 'package:flutter/material.dart';
 import 'package:prototype1/oop/appointments.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddAppointmentPage extends StatefulWidget {
   const AddAppointmentPage({super.key, this.patientIdd});
@@ -18,7 +20,9 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   String? selectedTime;
   String? selectedAppointmentType;
   double? appointmentCost;
+  TextEditingController dateController = TextEditingController();
   final thisUser = FirebaseAuth.instance.currentUser;
+
   bool whosTheUser() {
     return widget.patientIdd != null;
   }
@@ -49,12 +53,23 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                     selectedDoctorId = result['doctorId'];
                     selectedDoctorName = result['doctorName'];
                     selectedTime = result['time'];
+                    dateController.text =
+                        result['date']; // ✅ الآن التاريخ يصل بشكل صحيح
                   });
                 }
               },
               child: Text('اختر طبيب ووقت'),
             ),
-
+            SizedBox(height: 20),
+            TextField(
+              controller: dateController,
+              decoration: InputDecoration(
+                labelText: 'تاريخ الموعد',
+                border: OutlineInputBorder(),
+              ),
+              readOnly: true, // لمنع الكتابة أو الضغط
+              enabled: false, // حقل للعرض فقط
+            ),
             SizedBox(height: 20),
             Text('الطبيب المختار: ${selectedDoctorName ?? "لم يتم الاختيار"}'),
             SizedBox(height: 10),
@@ -68,9 +83,14 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                 } else {
                   currentUser = thisUser?.uid;
                 }
+                DocumentSnapshot userInfo = await FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(currentUser)
+                    .get();
                 if (selectedDoctorId != null &&
                     selectedDoctorName != null &&
-                    selectedTime != null) {
+                    selectedTime != null &&
+                    dateController.text.isNotEmpty) {
                   await appointment.saveAppointment(
                     doctorId: selectedDoctorId!,
                     doctorName: selectedDoctorName!,
@@ -78,6 +98,8 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                     appointmentType: selectedAppointmentType,
                     cost: appointmentCost,
                     patientId: currentUser,
+                    date: dateController.text,
+                    patientName: userInfo['FullName'],
                   );
                   Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -105,8 +127,6 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
               },
               child: Text('حجز'),
             ),
-
-            // chooese appointment type
             SizedBox(height: 20),
             DropdownButton(
               hint: Text('اختر نوع الموعد'),
@@ -128,7 +148,6 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
               onChanged: (value) {
                 setState(() {
                   selectedAppointmentType = value;
-                  print('Selected appointment type: $selectedAppointmentType');
                   if (selectedAppointmentType == "إستشارة") {
                     appointmentCost = 30.0;
                   } else if (selectedAppointmentType == "متابعة") {
@@ -138,7 +157,6 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                   } else {
                     appointmentCost = null;
                   }
-                  print('Appointment cost: $appointmentCost');
                 });
               },
             ),
