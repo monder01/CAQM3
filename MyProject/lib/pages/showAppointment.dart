@@ -78,9 +78,13 @@ class _ShowappointmentState extends State<Showappointment> {
                               .collection('Appointments')
                               .doc(doc.id)
                               .update({'LineNumber': num});
-                          ScaffoldMessenger.of(
-                            context,
-                          ).showSnackBar(SnackBar(content: Text("Done")));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "Check in done your Line number is $num",
+                              ),
+                            ),
+                          );
                         },
                         icon: Icon(Icons.check, color: Colors.purpleAccent),
                       ),
