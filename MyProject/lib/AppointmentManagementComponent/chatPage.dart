@@ -1,52 +1,42 @@
-import 'dart:developer';
-
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
-class Chatpage extends StatefulWidget {
-  const Chatpage({super.key});
+class ChatPage extends StatefulWidget {
+  final String otherUserEmail; // البريد الإلكتروني للطرف الاخر
+  final String otherUserName;
+  const ChatPage({
+    super.key,
+    required this.otherUserEmail,
+    required this.otherUserName,
+  });
 
   @override
-  State<Chatpage> createState() => _ChatpageState();
+  State<ChatPage> createState() => _ChatPageState();
 }
 
-class _ChatpageState extends State<Chatpage> {
+class _ChatPageState extends State<ChatPage> {
   final _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
-  late User signedInUser;
-  String? messageText;
+  final TextEditingController messageController = TextEditingController();
+  late String currentUserEmail;
+
   @override
   void initState() {
     super.initState();
-    getCurrentUser();
+    currentUserEmail = _auth.currentUser!.email!;
   }
 
-  void getCurrentUser() {
-    try {
-      final user = _auth.currentUser;
-      if (user != null) {
-        signedInUser = user;
-        print(signedInUser.email);
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  void getMessages() async {
-    final messages = await _firestore.collection('massages').get();
-    for (var message in messages.docs) {
-      print(message.data());
-    }
-    messages.docs;
-  }
-
-  void messageStreams() async {
-    await for (var snapshot in _firestore.collection('massages').snapshots()) {
-      for (var message in snapshot.docs) {
-        print(message.data());
-      }
+  void sendMessage() {
+    final text = messageController.text.trim();
+    if (text.isNotEmpty) {
+      _firestore.collection('messages').add({
+        'text': text,
+        'senderEmail': currentUserEmail,
+        'receiverEmail': widget.otherUserEmail,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+      messageController.clear();
     }
   }
 
@@ -54,86 +44,93 @@ class _ChatpageState extends State<Chatpage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("إستشارة طبيب"),
+        title: Text("إستشارة طبية من د. ${widget.otherUserName}"),
         backgroundColor: Colors.amberAccent[200],
-        actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 70),
-            child: IconButton(
-              onPressed: () {
-                messageStreams();
-              },
-              icon: Icon(Icons.download),
-            ),
-          ),
-        ],
       ),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-
-          children: [
-            StreamBuilder<QuerySnapshot>(
-              stream: _firestore.collection('massages').snapshots(),
-              //initialData: initialData,
+      body: Column(
+        children: [
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: _firestore
+                  .collection('messages')
+                  .orderBy('timestamp')
+                  .snapshots(),
               builder: (context, snapshot) {
-                List<Text> messageWidget = [];
                 if (!snapshot.hasData) {
-                  //dddd
+                  return Center(child: CircularProgressIndicator());
                 }
-                return Column(children: [
-                    
-                  ],
+                final messages = snapshot.data!.docs;
+                List<Widget> messageWidgets = [];
 
+                for (var msg in messages) {
+                  final sender = msg.get('senderEmail');
+                  final receiver = msg.get('receiverEmail');
+
+                  // عرض فقط الرسائل بين المستخدم الحالي والطرف الآخر
+                  if ((sender == currentUserEmail &&
+                          receiver == widget.otherUserEmail) ||
+                      (sender == widget.otherUserEmail &&
+                          receiver == currentUserEmail)) {
+                    final text = msg.get('text');
+                    final isMe = sender == currentUserEmail;
+                    messageWidgets.add(
+                      Align(
+                        alignment: isMe
+                            ? Alignment.centerRight
+                            : Alignment.centerLeft,
+                        child: Container(
+                          margin: EdgeInsets.symmetric(
+                            vertical: 4,
+                            horizontal: 8,
+                          ),
+                          padding: EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: isMe
+                                ? Colors.lightBlueAccent
+                                : Colors.grey[300],
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            text,
+                            style: TextStyle(
+                              color: isMe ? Colors.white : Colors.black87,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                }
+
+                return ListView(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  children: messageWidgets,
                 );
               },
             ),
-            Container(
-              decoration: BoxDecoration(
-                border: Border(
-                  top: BorderSide(color: Colors.amberAccent, width: 2),
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            color: Colors.grey[200],
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: messageController,
+                    decoration: InputDecoration(
+                      hintText: "اكتب رسالتك...",
+                      border: InputBorder.none,
+                    ),
+                  ),
                 ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: TextField(
-                      onChanged: (value) {
-                        messageText = value;
-                      },
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 20,
-                        ),
-                        hintText: 'أكتب رسالتك',
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      _firestore.collection('massages').add({
-                        'text': messageText,
-                        'sender': signedInUser.email,
-                      });
-                    },
-                    child: Text(
-                      "إرسال",
-                      style: TextStyle(
-                        color: Colors.blueAccent,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                IconButton(
+                  icon: Icon(Icons.send, color: Colors.blueAccent),
+                  onPressed: sendMessage,
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

@@ -62,6 +62,7 @@ class Appointment {
                     final data = docs[index].data() as Map<String, dynamic>;
                     final doctorId = data['DoctorID'] ?? docs[index].id;
                     final doctorName = data['FullName'] ?? 'No Name';
+                    final doctorEmail = data['Email'];
                     final workingHours = List<String>.from(
                       data['WorkingHours'] ?? [],
                     );
@@ -78,6 +79,7 @@ class Appointment {
                             doctorName,
                             workingHours,
                             doctorId,
+                            doctorEmail,
                           );
                           if (selectedTime != null) {
                             // ✅ التعديل: تمرير التاريخ مع الوقت عند العودة
@@ -86,6 +88,7 @@ class Appointment {
                               'doctorName': doctorName,
                               'time': selectedTime['time'],
                               'date': selectedTime['date'],
+                              'doctorEmail': doctorEmail,
                             });
                           }
                         },
@@ -107,6 +110,7 @@ class Appointment {
     String doctorName,
     List<String> times,
     String doctorId,
+    String doctorEmail,
   ) async {
     return await showDialog<Map<String, String>>(
       context: context,
@@ -180,6 +184,8 @@ class Appointment {
     String? patientId,
     String? date,
     String? patientName,
+    String? patientEmail,
+    String? doctorEmail,
   }) async {
     if (patientId == null) return;
 
@@ -194,6 +200,8 @@ class Appointment {
       'cost': cost,
       'LineNumber': lineNumber,
       'status': 'Booked',
+      'email': patientEmail,
+      'doctorEmail': doctorEmail,
     });
   }
 }

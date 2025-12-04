@@ -17,6 +17,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
   Appointment appointment = Appointment();
   String? selectedDoctorId;
   String? selectedDoctorName;
+  String? selectedDoctorEmail;
   String? selectedTime;
   String? selectedAppointmentType;
   double? appointmentCost;
@@ -52,6 +53,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                   setState(() {
                     selectedDoctorId = result['doctorId'];
                     selectedDoctorName = result['doctorName'];
+                    selectedDoctorEmail = result['doctorEmail'];
                     selectedTime = result['time'];
                     dateController.text =
                         result['date']; // ✅ الآن التاريخ يصل بشكل صحيح
@@ -100,6 +102,8 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                     patientId: currentUser,
                     date: dateController.text,
                     patientName: userInfo['FullName'],
+                    patientEmail: userInfo['Email'],
+                    doctorEmail: selectedDoctorEmail,
                   );
                   Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(

@@ -13,7 +13,10 @@ class Showappointment extends StatefulWidget {
 
 class _ShowappointmentState extends State<Showappointment> {
   final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+  final currentUserEmail = FirebaseAuth.instance.currentUser!.email;
   String? currentUser;
+
+  String? currentEmail;
 
   @override
   void initState() {
@@ -159,7 +162,10 @@ class _ShowappointmentState extends State<Showappointment> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => Chatpage(),
+                                      builder: (context) => ChatPage(
+                                        otherUserEmail: doc['doctorEmail'],
+                                        otherUserName: doc['doctorName'],
+                                      ),
                                     ),
                                   );
                                 },

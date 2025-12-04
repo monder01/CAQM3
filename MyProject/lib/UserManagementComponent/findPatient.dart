@@ -85,6 +85,7 @@ class _FindPatientState extends State<FindPatient> {
                               icon: Icon(Icons.add, color: Colors.blue),
                               onPressed: () {
                                 String? patientId = doc.id;
+                                String patientEmail = doc['email'];
                                 print('patientId : $patientId');
                                 Navigator.push(
                                   context,
