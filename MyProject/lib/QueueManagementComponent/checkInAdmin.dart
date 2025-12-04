@@ -104,6 +104,7 @@ class _CheckinadminState extends State<Checkinadmin> {
 
                         // Reset the Today's Line Number in the Queue collection
                         queueData.collection('Queue').doc(queueDoc.id).update({
+                          'MovingLineNumber': 0,
                           'TodayLineNumber': 0,
                           'date': formattedDate,
                         });
@@ -111,6 +112,7 @@ class _CheckinadminState extends State<Checkinadmin> {
                         // If no queue document exists, create one
                         queueData.collection('Queue').add({
                           'TodayLineNumber': 0,
+                          'MovingLineNumber': 0,
                           'date': formattedDate,
                         });
                       }

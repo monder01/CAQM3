@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:prototype1/AppointmentManagementComponent/checkInAdmin.dart';
+import 'package:prototype1/QueueManagementComponent/checkInAdmin.dart';
+import 'package:prototype1/QueueManagementComponent/manageQueuePage.dart';
 
 class Queuepage extends StatefulWidget {
   const Queuepage({super.key});
@@ -71,6 +72,34 @@ class _QueuepageState extends State<Queuepage> {
                     SizedBox(height: 20),
                     Text(
                       "سجل الطوابير",
+                      style: TextStyle(fontSize: 20, color: Colors.black),
+                    ),
+                  ],
+                ),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Managequeuepage()),
+                  );
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.confirmation_num,
+                      size: 100,
+                      color: Colors.amberAccent[200],
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      "إدارة الطابور للواصلين",
                       style: TextStyle(fontSize: 20, color: Colors.black),
                     ),
                   ],

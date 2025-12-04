@@ -31,6 +31,7 @@ class QueueL {
         lineNumber = 1;
         firestore.collection('Queue').add({
           'TodayLineNumber': lineNumber,
+          'MovingLineNumber': 0,
           'date': formattedDate,
         });
       }
