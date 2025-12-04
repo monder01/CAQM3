@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:prototype1/AppointmentManagementComponent/chatPage.dart';
 
 class Showappointment extends StatefulWidget {
   const Showappointment({super.key, this.patientIdd});
@@ -154,7 +155,14 @@ class _ShowappointmentState extends State<Showappointment> {
                             ),
                             if (doc['appointmentType'] == 'إستشارة')
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Chatpage(),
+                                    ),
+                                  );
+                                },
                                 icon: Text("Start Session"),
                               ),
                           ],
