@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:prototype1/AppointmentManagementComponent/chatPage.dart';
+import 'teleconsultationPage.dart';
 
 class Showappointment extends StatefulWidget {
   const Showappointment({super.key, this.patientIdd});
@@ -162,10 +162,11 @@ class _ShowappointmentState extends State<Showappointment> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => ChatPage(
-                                        otherUserEmail: doc['doctorEmail'],
-                                        otherUserName: doc['doctorName'],
-                                      ),
+                                      builder: (context) =>
+                                          Teleconsultationpage(
+                                            otherUserEmail: doc['doctorEmail'],
+                                            otherUserName: doc['doctorName'],
+                                          ),
                                     ),
                                   );
                                 },
