@@ -1,6 +1,6 @@
 // addAppointmentPage.dart
 import 'package:flutter/material.dart';
-import 'package:prototype1/oop/appointments.dart';
+import 'package:prototype1/AppointmentManagementComponent/appointments.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 

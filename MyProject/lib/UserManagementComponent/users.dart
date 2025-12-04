@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:prototype1/pages/adminsPage.dart';
-import 'package:prototype1/pages/patientPage.dart';
+import 'package:prototype1/UserManagementComponent/adminsPage.dart';
+import 'package:prototype1/UserManagementComponent/patientPage.dart';
 
 class UserC {
   String? fullname;

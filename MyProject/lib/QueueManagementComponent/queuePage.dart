@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:prototype1/pages/checkInAdmin.dart';
+import 'package:prototype1/AppointmentManagementComponent/checkInAdmin.dart';
 
 class Queuepage extends StatefulWidget {
   const Queuepage({super.key});

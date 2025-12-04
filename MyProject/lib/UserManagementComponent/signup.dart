@@ -1,7 +1,7 @@
 // lib/pages/signup.dart
 import 'package:flutter/material.dart';
-import 'package:prototype1/oop/patients.dart';
-import 'package:prototype1/oop/users.dart';
+import 'package:prototype1/UserManagementComponent/patients.dart';
+import 'package:prototype1/UserManagementComponent/users.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});

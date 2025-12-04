@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:prototype1/pages/addAppointmentPage.dart';
-import 'package:prototype1/pages/showAppointment.dart';
+import 'package:prototype1/FormManagementComponent/insurancePage.dart';
+import 'package:prototype1/FormManagementComponent/medicalHistoryPage.dart';
 
-class Appointmentpage extends StatefulWidget {
-  const Appointmentpage({super.key});
+class Formpage extends StatefulWidget {
+  const Formpage({super.key});
 
   @override
-  State<Appointmentpage> createState() => _AppointmentpageState();
+  State<Formpage> createState() => _FormpageState();
 }
 
-class _AppointmentpageState extends State<Appointmentpage> {
+class _FormpageState extends State<Formpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,22 +30,20 @@ class _AppointmentpageState extends State<Appointmentpage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => AddAppointmentPage(),
-                    ),
+                    MaterialPageRoute(builder: (context) => Insurancepage()),
                   );
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.add_circle,
+                      Icons.credit_card,
                       size: 100,
                       color: Colors.amberAccent[200],
                     ),
                     SizedBox(height: 20),
                     Text(
-                      "إضافة موعد جديد",
+                      "تعبئة بيانات التأمين",
                       style: TextStyle(fontSize: 20, color: Colors.black),
                     ),
                   ],
@@ -60,20 +58,22 @@ class _AppointmentpageState extends State<Appointmentpage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => Showappointment()),
+                    MaterialPageRoute(
+                      builder: (context) => Medicalhistorypage(),
+                    ),
                   );
                 },
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      Icons.history,
+                      Icons.history_edu,
                       size: 100,
                       color: Colors.amberAccent[200],
                     ),
                     SizedBox(height: 20),
                     Text(
-                      "عرض المواعيد السابقة",
+                      "تعبئة بيانات التاريخ الطبي",
                       style: TextStyle(fontSize: 20, color: Colors.black),
                     ),
                   ],

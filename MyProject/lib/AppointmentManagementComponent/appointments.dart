@@ -1,8 +1,9 @@
 /// appointments.dart
 library;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:prototype1/oop/patients.dart';
+import 'package:prototype1/UserManagementComponent/patients.dart';
 
 class Appointment {
   String? appointmentId;

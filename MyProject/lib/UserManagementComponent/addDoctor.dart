@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:prototype1/oop/doctors.dart';
-import 'package:prototype1/oop/users.dart';
+import 'package:prototype1/UserManagementComponent/doctors.dart';
+import 'package:prototype1/UserManagementComponent/users.dart';
 
 class Adddoctor extends StatefulWidget {
   const Adddoctor({super.key});

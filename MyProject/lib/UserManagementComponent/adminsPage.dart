@@ -1,30 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:prototype1/pages/appointmentPage.dart';
-import 'package:prototype1/pages/formPage.dart';
-import 'package:prototype1/pages/homePage.dart';
+import 'package:prototype1/UserManagementComponent/addDoctor.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:prototype1/UserManagementComponent/findPatient.dart';
+import 'package:prototype1/homePage.dart';
+import 'package:prototype1/QueueManagementComponent/queuePage.dart';
 
-class Patientpage extends StatefulWidget {
-  const Patientpage({super.key});
+class Adminspage extends StatefulWidget {
+  const Adminspage({super.key});
 
   @override
-  State<Patientpage> createState() => _PatientpageState();
+  State<Adminspage> createState() => _AdminspageState();
 }
 
-class _PatientpageState extends State<Patientpage> {
+class _AdminspageState extends State<Adminspage> {
   int i = 0;
 
   // الصفحات البسيطة
-  final List<Widget> _pages = [
-    Appointmentpage(),
-    Formpage(),
-    Center(child: Text('الملف الشخصي')),
-  ];
+  final List<Widget> _pages = [FindPatient(), Adddoctor(), Queuepage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("إدارة المواعيد"),
+        title: Text("Admins Page"),
         backgroundColor: Colors.amberAccent[200],
         automaticallyImplyLeading: false,
         actions: [
@@ -43,7 +40,7 @@ class _PatientpageState extends State<Patientpage> {
             ),
           ),
         ],
-      ),
+      ), // عنوان شريط التطبيق
       body: _pages[i],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: i,
@@ -54,16 +51,16 @@ class _PatientpageState extends State<Patientpage> {
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'مواعيدي',
+            icon: Icon(Icons.person_search),
+            label: 'إدارة مواعيد المرضى',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.assignment),
-            label: 'نماذجي',
+            icon: Icon(Icons.person_add),
+            label: 'إضافة طبيب',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'الملف الشخصي',
+            icon: Icon(Icons.cloud_queue),
+            label: 'إدارة الطابور',
           ),
         ],
       ),

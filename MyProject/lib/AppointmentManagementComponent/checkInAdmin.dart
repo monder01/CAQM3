@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:prototype1/notifications.dart';
-import 'package:prototype1/oop/queues.dart';
+import 'package:prototype1/NotificationSystemComponent/notifications.dart';
+import 'package:prototype1/QueueManagementComponent/queues.dart';
 
 class Checkinadmin extends StatefulWidget {
   const Checkinadmin({super.key});
