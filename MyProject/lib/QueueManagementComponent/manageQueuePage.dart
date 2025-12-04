@@ -149,6 +149,11 @@ class _ManagequeuepageState extends State<Managequeuepage> {
                     ),
                   ),
                   onPressed: () async {
+                    final confirmed = await notify.showConfirmationDialog(
+                      context,
+                      'سيتم تقدم أرقام الدور لليوم الحالي.',
+                    );
+                    if (!confirmed) return;
                     try {
                       final snap = await queuedata
                           .collection('Queue')

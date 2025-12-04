@@ -19,7 +19,11 @@ class Notifications {
             textAlign: TextAlign.right,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
-          content: Text(message, textAlign: TextAlign.right),
+          content: Text(
+            message,
+            textAlign: TextAlign.right,
+            style: TextStyle(color: Colors.redAccent),
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),

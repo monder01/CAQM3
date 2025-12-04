@@ -85,12 +85,13 @@ class _FindPatientState extends State<FindPatient> {
                               icon: Icon(Icons.add, color: Colors.blue),
                               onPressed: () {
                                 String? patientId = doc.id;
-                                String patientEmail = doc['email'];
+                                String patientEmail = doc['Email'];
                                 print('patientId : $patientId');
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => AddAppointmentPage(
+                                      //
                                       patientIdd: patientId,
                                     ),
                                   ),
