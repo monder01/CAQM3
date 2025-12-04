@@ -88,6 +88,8 @@ class _CheckinadminState extends State<Checkinadmin> {
                   onPressed: () async {
                     bool confirmed = await notify.showConfirmationDialog(
                       context,
+                      notify.message =
+                          'سيتم إعادة تعيين أرقام الدور لليوم الحالي.',
                     );
                     if (!confirmed) return;
                     DateTime? dateNow = DateTime.now();

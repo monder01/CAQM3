@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prototype1/NotificationSystemComponent/notifications.dart';
 import 'package:prototype1/QueueManagementComponent/checkInAdmin.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -11,6 +12,7 @@ class Managequeuepage extends StatefulWidget {
 }
 
 class _ManagequeuepageState extends State<Managequeuepage> {
+  Notifications notify = Notifications();
   FirebaseFirestore queuedata = FirebaseFirestore.instance;
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,12 @@ class _ManagequeuepageState extends State<Managequeuepage> {
                     ),
                   ),
                   onPressed: () async {
+                    final confirmed = await notify.showConfirmationDialog(
+                      context,
+                      'سيتم تقليل أرقام الدور لليوم الحالي.',
+                    );
+                    if (!confirmed) return;
+
                     try {
                       final snap = await queuedata
                           .collection('Queue')
