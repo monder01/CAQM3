@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:prototype1/notifications.dart';
 import 'package:prototype1/oop/queues.dart';
@@ -59,14 +58,12 @@ class _CheckinadminState extends State<Checkinadmin> {
                           ),
                           child: Text('تسجيل الوصول'),
                           onPressed: () async {
-                            await queueLine.checkInPatient(doc.id);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  "تم تسجيل وصول المريض ${doc['patientName']} بنجاح.",
-                                ),
-                              ),
+                            await queueLine.checkInPatient(
+                              doc.id,
+                              context,
+                              doc['patientName'],
                             );
+                            //if (!mounted) return;
                           },
                         ),
                       ),

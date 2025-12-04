@@ -54,7 +54,12 @@ class _ShowappointmentState extends State<Showappointment> {
 
               return Card(
                 child: ListTile(
-                  leading: Icon(Icons.schedule, color: Colors.amber),
+                  minLeadingWidth: 50,
+                  leading: Icon(
+                    Icons.schedule_sharp,
+                    color: Colors.amber,
+                    size: 40,
+                  ),
                   title: Text("الطبيب: ${doc['doctorName']}"),
                   subtitle: Text(
                     "التاريخ: ${doc['date']} - الوقت: ${doc['time']} \nالنوع: ${doc['appointmentType']} - التكلفة: \$${doc['cost']}",
@@ -62,6 +67,17 @@ class _ShowappointmentState extends State<Showappointment> {
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.confirmation_num, color: Colors.blue),
+                          Text(
+                            "الدور : ${doc['LineNumber']}",
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                      SizedBox(width: 8),
                       IconButton(
                         icon: Icon(Icons.delete, color: Colors.red),
                         onPressed: () async {
@@ -71,6 +87,7 @@ class _ShowappointmentState extends State<Showappointment> {
                               .delete();
                         },
                       ),
+
                       IconButton(
                         onPressed: () async {
                           await FirebaseFirestore.instance

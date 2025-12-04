@@ -1,7 +1,6 @@
 //queues.dart
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class QueueL {
   DateTime? checkInTime;
@@ -10,7 +9,11 @@ class QueueL {
   String? token;
   int? lineNumber = 0;
 
-  Future<void> checkInPatient(String appointmentId) async {
+  Future<void> checkInPatient(
+    String appointmentId,
+    BuildContext context,
+    String patientname,
+  ) async {
     DateTime? dateNow = DateTime.now();
     String formattedDate = dateNow.toIso8601String().substring(0, 10);
     FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -33,6 +36,7 @@ class QueueL {
       }
     });
     // Update the appointment status and line number
+
     await firestore.collection('Appointments').doc(appointmentId).update({
       'status': 'CheckedIn',
       'LineNumber': lineNumber,
