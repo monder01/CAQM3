@@ -1,5 +1,5 @@
 import 'package:prototype1/NotificationSystemComponent/notifications.dart';
-import 'package:prototype1/UserManagementComponent/doctorAppointment.dart';
+import 'package:prototype1/AppointmentManagementComponent/doctorAppointment.dart';
 import 'package:prototype1/homePage.dart';
 
 import 'package:flutter/material.dart';
