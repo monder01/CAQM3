@@ -3,6 +3,7 @@ import 'package:flutter/material.dart'; // استيراد مكتبة فلاتر 
 import 'package:firebase_auth/firebase_auth.dart'; // استيراد مكتبة المصادقة من Firebase
 import 'package:cloud_firestore/cloud_firestore.dart'; // استيراد مكتبة التعامل مع Cloud Firestore
 import 'package:prototype1/UserManagementComponent/adminsPage.dart'; // استيراد صفحة الأدمن
+import 'package:prototype1/UserManagementComponent/doctorPage.dart';
 import 'package:prototype1/UserManagementComponent/patientPage.dart'; // استيراد صفحة المريض
 
 class UserC {
@@ -30,13 +31,20 @@ class UserC {
   ) async {
     email = emailcontroller; // تخزين البريد المرسل في خاصية الكلاس
     password = passwordcontroller; // تخزين كلمة المرور المرسلة في خاصية الكلاس
+    if (email == null || password == null) {
+      // التحقق من أن البريد وكلمة المرور غير فارغين
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("يرجى إدخال البريد الإلكتروني وكلمة المرور")),
+      );
+      return; // إنهاء الدالة إذا كانت القيم غير صالحة
+    }
     try {
       // محاولة تسجيل الدخول عبر FirebaseAuth باستخدام البريد وكلمة المرور
       UserCredential userAuth = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email!, password: password!);
 
       print(
-        "verified : ${userAuth.user!.emailVerified}",
+        "verified : ${userAuth.user!.email} ",
       ); // طباعة حالة التحقق من البريد (للاختبار/التتبع)
 
       // جلب بيانات المستخدم من مجموعة 'users' في Firestore باستخدام الـ UID
@@ -44,7 +52,26 @@ class UserC {
           .collection('users')
           .doc(userAuth.user!.uid)
           .get();
+      if (!userInfo.exists) {
+        DocumentSnapshot doctorInfo = await FirebaseFirestore.instance
+            .collection('Doctors')
+            .doc(userAuth.user!.uid)
+            .get();
 
+        if (!doctorInfo.exists) {
+          throw Exception("Doctor record not found in Firestore");
+        }
+
+        role = doctorInfo['Role'];
+        fullname = doctorInfo['FullName'];
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Doctorpage()),
+        );
+
+        return;
+      }
       fullname = userInfo['FullName']; // قراءة الاسم الكامل من المستند
       role = userInfo['Role']; // قراءة الدور (Role) من المستند
 
@@ -61,8 +88,13 @@ class UserC {
           context,
           MaterialPageRoute(builder: (context) => Patientpage()),
         );
+      } else if (role == "Doctor") {
+        // في حالة كان المستخدم طبيب، الانتقال لصفحة الطبيب
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Doctorpage()),
+        );
       }
-
       // إظهار رسالة ترحيبية بعد تسجيل الدخول بنجاح
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

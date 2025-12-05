@@ -18,7 +18,7 @@ class _SigninState extends State<Signin> {
       TextEditingController(); // متحكم لحقل إدخال البريد الإلكتروني
   TextEditingController passwordController =
       TextEditingController(); // متحكم لحقل إدخال كلمة المرور
-
+  String? selectedValue; // القيمة المختارة من القائمة المنسدلة
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,6 +68,7 @@ class _SigninState extends State<Signin> {
 
               SizedBox(height: 20),
 
+              SizedBox(height: 20),
               // زر تسجيل الدخول
               ElevatedButton(
                 onPressed: () async {
