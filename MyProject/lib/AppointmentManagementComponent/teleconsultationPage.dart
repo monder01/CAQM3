@@ -106,14 +106,23 @@ class _TeleconsultationpageState extends State<Teleconsultationpage> {
                           padding: EdgeInsets.all(
                             12,
                           ), // حشوة داخل فقاعة الرسالة
+
                           decoration: BoxDecoration(
                             color: isMe
                                 ? Colors
                                       .lightBlueAccent // لون مختلف لرسائل المرسل
                                 : Colors.grey[300], // لون لرسائل الطرف الآخر
-                            borderRadius: BorderRadius.circular(
-                              20,
-                            ), // زوايا دائرية للفقاعة
+                            borderRadius: isMe
+                                ? BorderRadius.only(
+                                    topLeft: Radius.circular(30),
+                                    bottomLeft: Radius.circular(30),
+                                    bottomRight: Radius.circular(30),
+                                  )
+                                : BorderRadius.only(
+                                    topRight: Radius.circular(30),
+                                    bottomLeft: Radius.circular(30),
+                                    bottomRight: Radius.circular(30),
+                                  ), // زوايا دائرية للفقاعة
                           ),
                           child: Text(
                             text, // نص الرسالة داخل الفقاعة
