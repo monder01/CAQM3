@@ -56,7 +56,7 @@ class _TeleconsultationpageState extends State<Teleconsultationpage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "إستشارة طبية من د. ${widget.otherUserName}",
+          "إستشارة طبية مع  ${widget.otherUserName}",
         ), // عنوان أعلى الصفحة مع اسم الطبيب
         backgroundColor: Colors.amberAccent[200], // لون خلفية شريط التطبيق
       ),
