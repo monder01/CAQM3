@@ -127,6 +127,7 @@ class _TeleconsultationpageState extends State<Teleconsultationpage> {
                           child: Text(
                             text, // نص الرسالة داخل الفقاعة
                             style: TextStyle(
+                              fontSize: 24,
                               color: isMe
                                   ? Colors
                                         .white // لون خط للمرسل
