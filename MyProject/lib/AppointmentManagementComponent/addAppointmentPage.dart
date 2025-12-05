@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:prototype1/AppointmentManagementComponent/appointments.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:prototype1/NotificationSystemComponent/notifications.dart';
 
 class AddAppointmentPage extends StatefulWidget {
   const AddAppointmentPage({super.key, this.patientIdd});
@@ -14,6 +15,7 @@ class AddAppointmentPage extends StatefulWidget {
 }
 
 class _AddAppointmentPageState extends State<AddAppointmentPage> {
+  Notifications notify = Notifications();
   Appointment appointment = Appointment();
   String? selectedDoctorId;
   String? selectedDoctorName;
@@ -79,6 +81,11 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
             Divider(),
             ElevatedButton(
               onPressed: () async {
+                final confirmed = await notify.showConfirmationDialog(
+                  context,
+                  'هل أنت متأكد من حجز هذا الموعد؟',
+                );
+                if (!confirmed) return;
                 String? currentUser;
                 if (whosTheUser()) {
                   currentUser = widget.patientIdd;

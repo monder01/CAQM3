@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:prototype1/NotificationSystemComponent/notifications.dart';
 import 'teleconsultationPage.dart';
 
 class Showappointment extends StatefulWidget {
@@ -12,6 +13,7 @@ class Showappointment extends StatefulWidget {
 }
 
 class _ShowappointmentState extends State<Showappointment> {
+  Notifications notify = Notifications();
   final currentUserId = FirebaseAuth.instance.currentUser!.uid;
   final currentUserEmail = FirebaseAuth.instance.currentUser!.email;
   String? currentUser;
@@ -134,6 +136,12 @@ class _ShowappointmentState extends State<Showappointment> {
                             IconButton(
                               icon: Icon(Icons.delete, color: Colors.red),
                               onPressed: () async {
+                                final confirmed = await notify
+                                    .showConfirmationDialog(
+                                      context,
+                                      'هل أنت متأكد من إلغاء هذا الموعد؟',
+                                    );
+                                if (!confirmed) return;
                                 await FirebaseFirestore.instance
                                     .collection('Appointments')
                                     .doc(doc.id)
@@ -142,6 +150,12 @@ class _ShowappointmentState extends State<Showappointment> {
                             ),
                             IconButton(
                               onPressed: () async {
+                                final confirmed = await notify
+                                    .showConfirmationDialog(
+                                      context,
+                                      'هل أنت متأكد من تأكيد وصولك؟',
+                                    );
+                                if (!confirmed) return;
                                 await FirebaseFirestore.instance
                                     .collection('Appointments')
                                     .doc(doc.id)

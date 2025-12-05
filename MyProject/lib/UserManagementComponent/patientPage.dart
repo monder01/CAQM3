@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:prototype1/AppointmentManagementComponent/appointmentPage.dart';
 import 'package:prototype1/FormManagementComponent/formPage.dart';
+import 'package:prototype1/NotificationSystemComponent/notifications.dart';
 import 'package:prototype1/homePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -12,6 +13,7 @@ class Patientpage extends StatefulWidget {
 }
 
 class _PatientpageState extends State<Patientpage> {
+  Notifications notify = Notifications();
   int i = 0;
 
   // الصفحات البسيطة
@@ -32,6 +34,11 @@ class _PatientpageState extends State<Patientpage> {
             padding: const EdgeInsets.symmetric(horizontal: 35),
             child: IconButton(
               onPressed: () async {
+                final confirmed = await notify.showConfirmationDialog(
+                  context,
+                  'سيتم تسجيل الخروج من حسابك الحالي.',
+                );
+                if (!confirmed) return;
                 await FirebaseAuth.instance.signOut();
                 Navigator.pushAndRemoveUntil(
                   context,

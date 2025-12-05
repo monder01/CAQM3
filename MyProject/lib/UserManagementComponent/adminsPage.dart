@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:prototype1/NotificationSystemComponent/notifications.dart';
 import 'package:prototype1/UserManagementComponent/addDoctor.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:prototype1/UserManagementComponent/findPatient.dart';
@@ -14,7 +15,7 @@ class Adminspage extends StatefulWidget {
 
 class _AdminspageState extends State<Adminspage> {
   int i = 0;
-
+  Notifications notify = Notifications();
   // الصفحات البسيطة
   final List<Widget> _pages = [FindPatient(), Adddoctor(), Queuepage()];
   @override
@@ -29,6 +30,11 @@ class _AdminspageState extends State<Adminspage> {
             padding: const EdgeInsets.symmetric(horizontal: 35),
             child: IconButton(
               onPressed: () async {
+                final confirmed = await notify.showConfirmationDialog(
+                  context,
+                  'سيتم تسجيل الخروج من حسابك الحالي.',
+                );
+                if (!confirmed) return;
                 await FirebaseAuth.instance.signOut();
                 Navigator.pushAndRemoveUntil(
                   context,

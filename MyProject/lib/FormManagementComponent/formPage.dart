@@ -59,7 +59,7 @@ class _FormpageState extends State<Formpage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => Medicalhistorypage(),
+                      builder: (context) => MedicalHistoryPage(),
                     ),
                   );
                 },

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:prototype1/FormManagementComponent/forms.dart';
+import 'package:prototype1/NotificationSystemComponent/notifications.dart';
 
 class Insurancepage extends StatefulWidget {
   const Insurancepage({super.key});
@@ -11,6 +12,7 @@ class Insurancepage extends StatefulWidget {
 }
 
 class _InsurancepageState extends State<Insurancepage> {
+  Notifications notify = Notifications();
   Forms insuranceForm = Forms();
   TextEditingController companyNameController = TextEditingController();
   TextEditingController policyNumberController = TextEditingController();
@@ -111,6 +113,11 @@ class _InsurancepageState extends State<Insurancepage> {
                 String insuredNotes = insuredNotesController.text.trim();
                 // الحصول على معرف المستخدم الحالي
                 String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
+                final confirmed = await notify.showConfirmationDialog(
+                  context,
+                  'هل أنت متأكد من حفظ بيانات التأمين؟',
+                );
+                if (!confirmed) return; //اذا لم يؤكد المستخدم، لا تفعل شيئًا
                 try {
                   // حفظ البيانات في Firestore
                   await FirebaseFirestore.instance.collection('Insurance').add({

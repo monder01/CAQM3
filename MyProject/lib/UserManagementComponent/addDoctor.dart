@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:prototype1/NotificationSystemComponent/notifications.dart';
 import 'package:prototype1/UserManagementComponent/doctors.dart';
 import 'package:prototype1/UserManagementComponent/users.dart';
 
@@ -12,6 +13,7 @@ class Adddoctor extends StatefulWidget {
 }
 
 class _AdddoctorState extends State<Adddoctor> {
+  Notifications notify = Notifications();
   UserC user = UserC();
   Doctors doctor = Doctors();
   TextEditingController nameController = TextEditingController();
@@ -199,6 +201,11 @@ class _AdddoctorState extends State<Adddoctor> {
             SizedBox(height: 12),
             ElevatedButton(
               onPressed: () async {
+                final confirmed = await notify.showConfirmationDialog(
+                  context,
+                  'سيتم تقدم أرقام الدور لليوم الحالي.',
+                );
+                if (!confirmed) return;
                 doctor.email = emailController.text.trim();
                 doctor.password = passwordController.text.trim();
                 doctor.fullname = nameController.text.trim();

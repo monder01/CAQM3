@@ -153,7 +153,8 @@ class _ManagequeuepageState extends State<Managequeuepage> {
                       context,
                       'سيتم تقدم أرقام الدور لليوم الحالي.',
                     );
-                    if (!confirmed) return;
+                    if (!confirmed)
+                      return; //اذا لم يؤكد المستخدم، لا تفعل شيئًا
                     try {
                       final snap = await queuedata
                           .collection('Queue')

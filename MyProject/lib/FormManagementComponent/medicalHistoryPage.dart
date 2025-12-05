@@ -1,137 +1,167 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:prototype1/FormManagementComponent/forms.dart';
+import 'package:prototype1/NotificationSystemComponent/notifications.dart';
 
-class Medicalhistorypage extends StatefulWidget {
-  const Medicalhistorypage({super.key});
+class MedicalHistoryPage extends StatefulWidget {
+  const MedicalHistoryPage({super.key});
 
   @override
-  State<Medicalhistorypage> createState() => _MedicalhistorypageState();
+  State<MedicalHistoryPage> createState() => _MedicalHistoryPageState();
 }
 
-class _MedicalhistorypageState extends State<Medicalhistorypage> {
-  TextEditingController companyNameController = TextEditingController();
-  TextEditingController policyNumberController = TextEditingController();
-  TextEditingController insuredTypeController = TextEditingController();
-  TextEditingController insuredStartDateController = TextEditingController();
-  TextEditingController insuredEndDateController = TextEditingController();
-  TextEditingController insuredPersonNameController = TextEditingController();
-  TextEditingController insuredPersonIDController = TextEditingController();
-  TextEditingController insuredNotesController = TextEditingController();
+class _MedicalHistoryPageState extends State<MedicalHistoryPage> {
+  Forms medicalHistoryForm = Forms();
+  Notifications notify = Notifications();
+  // الكنترولرز لحقول التاريخ المرضي
+  TextEditingController chronicDiseasesController =
+      TextEditingController(); // الأمراض المزمنة
+  TextEditingController previousSurgeriesController =
+      TextEditingController(); // العمليات السابقة
+  TextEditingController allergiesController =
+      TextEditingController(); // الحساسية من الأدوية/الأطعمة
+  TextEditingController currentMedicationsController =
+      TextEditingController(); // الأدوية الحالية
+  TextEditingController familyHistoryController =
+      TextEditingController(); // التاريخ العائلي
+  TextEditingController socialHabitsController =
+      TextEditingController(); // العادات (تدخين، كحول ..)
+  TextEditingController otherNotesController =
+      TextEditingController(); // ملاحظات أخرى
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("نموذج السجل المرضي"),
+        title: const Text("النموذج الطبي / التاريخ المرضي"),
         backgroundColor: Colors.amberAccent[200],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(12),
         child: Column(
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
+
             TextField(
-              controller: companyNameController,
-              decoration: InputDecoration(
-                labelText: "اسم شركة التأمين",
+              controller: chronicDiseasesController,
+              maxLines: 2,
+              decoration: const InputDecoration(
+                labelText: "الأمراض المزمنة (إن وجدت)",
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
+
             TextField(
-              controller: policyNumberController,
-              decoration: InputDecoration(
-                labelText: "رقم الوثيقة",
+              controller: previousSurgeriesController,
+              maxLines: 2,
+              decoration: const InputDecoration(
+                labelText: "العمليات الجراحية السابقة",
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
+
             TextField(
-              controller: insuredTypeController,
-              decoration: InputDecoration(
-                labelText: "نوع المؤمن عليه",
+              controller: allergiesController,
+              maxLines: 2,
+              decoration: const InputDecoration(
+                labelText: "الحساسية من الأدوية أو الأطعمة",
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
+
             TextField(
-              controller: insuredStartDateController,
-              decoration: InputDecoration(
-                labelText: "تاريخ بدء التأمين",
+              controller: currentMedicationsController,
+              maxLines: 2,
+              decoration: const InputDecoration(
+                labelText: "الأدوية الحالية التي يتناولها المريض",
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
+
             TextField(
-              controller: insuredEndDateController,
-              decoration: InputDecoration(
-                labelText: "تاريخ انتهاء التأمين",
+              controller: familyHistoryController,
+              maxLines: 2,
+              decoration: const InputDecoration(
+                labelText: "التاريخ المرضي في العائلة",
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
+
             TextField(
-              controller: insuredPersonNameController,
-              decoration: InputDecoration(
-                labelText: "اسم الشخص المؤمن عليه",
+              controller: socialHabitsController,
+              maxLines: 2,
+              decoration: const InputDecoration(
+                labelText: "العادات (تدخين، كحول، نمط حياة...)",
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
+
             TextField(
-              controller: insuredPersonIDController,
-              decoration: InputDecoration(
-                labelText: "رقم هوية الشخص المؤمن عليه",
+              controller: otherNotesController,
+              maxLines: 3,
+              decoration: const InputDecoration(
+                labelText: "ملاحظات أخرى",
                 border: OutlineInputBorder(),
               ),
             ),
-            SizedBox(height: 12),
-            TextField(
-              controller: insuredNotesController,
-              decoration: InputDecoration(
-                labelText: "ملاحظات إضافية",
-                border: OutlineInputBorder(),
-              ),
-            ),
-            SizedBox(height: 12),
+            const SizedBox(height: 20),
+
             ElevatedButton(
               onPressed: () async {
-                // حفظ بيانات التأمين أو تنفيذ أي عملية أخرى
-                String companyName = companyNameController.text.trim();
-                String policyNumber = policyNumberController.text.trim();
-                String insuredType = insuredTypeController.text.trim();
-                String insuredStartDate = insuredStartDateController.text
-                    .trim();
-                String insuredEndDate = insuredEndDateController.text.trim();
-                String insuredPersonName = insuredPersonNameController.text
-                    .trim();
-                String insuredPersonID = insuredPersonIDController.text.trim();
-                String insuredNotes = insuredNotesController.text.trim();
-                // الحصول على معرف المستخدم الحالي
-                String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
-                try {
-                  // حفظ البيانات في Firestore
-                  await FirebaseFirestore.instance.collection('Insurance').add({
-                    'CompanyName': companyName,
-                    'PolicyNumber': policyNumber,
-                    'InsuredType': insuredType,
-                    'InsuredStartDate': insuredStartDate,
-                    'InsuredEndDate': insuredEndDate,
-                    'InsuredPersonName': insuredPersonName,
-                    'InsuredPersonID': insuredPersonID,
-                    'InsuredNotes': insuredNotes,
-                    'PatientId': currentUserId,
-                  });
-                } catch (e) {
-                  print("خطأ في حفظ بيانات التأمين: $e");
-                }
-                // يمكنك إضافة الكود لحفظ هذه البيانات في قاعدة البيانات هنا
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("تم حفظ بيانات التأمين بنجاح ✅")),
+                final confirmed = await notify.showConfirmationDialog(
+                  context,
+                  'هل أنت متأكد من حفظ هذا التاريخ المرضي؟',
                 );
+                if (!confirmed) return;
+                // قراءة القيم
+                String chronicDiseases = chronicDiseasesController.text.trim();
+                String previousSurgeries = previousSurgeriesController.text
+                    .trim();
+                String allergies = allergiesController.text.trim();
+                String currentMedications = currentMedicationsController.text
+                    .trim();
+                String familyHistory = familyHistoryController.text.trim();
+                String socialHabits = socialHabitsController.text.trim();
+                String otherNotes = otherNotesController.text.trim();
+
+                // معرف المستخدم الحالي
+                String? currentUserId = FirebaseAuth.instance.currentUser?.uid;
+
+                try {
+                  await FirebaseFirestore.instance
+                      .collection('MedicalHistory')
+                      .add({
+                        'ChronicDiseases': chronicDiseases,
+                        'PreviousSurgeries': previousSurgeries,
+                        'Allergies': allergies,
+                        'CurrentMedications': currentMedications,
+                        'FamilyHistory': familyHistory,
+                        'SocialHabits': socialHabits,
+                        'OtherNotes': otherNotes,
+                        'PatientId': currentUserId,
+                        'CreatedAt': FieldValue.serverTimestamp(),
+                      });
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("تم حفظ التاريخ المرضي بنجاح ✅"),
+                    ),
+                  );
+                } catch (e) {
+                  print("خطأ في حفظ بيانات التاريخ المرضي: $e");
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("حدث خطأ أثناء الحفظ: $e")),
+                  );
+                }
               },
-              child: Text("حفظ بيانات التأمين"),
+              child: const Text("حفظ التاريخ المرضي"),
             ),
           ],
         ),

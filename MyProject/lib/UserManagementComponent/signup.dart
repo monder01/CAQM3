@@ -1,5 +1,6 @@
 // lib/pages/signup.dart
 import 'package:flutter/material.dart';
+import 'package:prototype1/NotificationSystemComponent/notifications.dart';
 import 'package:prototype1/UserManagementComponent/patients.dart';
 import 'package:prototype1/UserManagementComponent/users.dart';
 
@@ -11,6 +12,7 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
+  Notifications notify = Notifications();
   UserC user = UserC();
   Patient patient = Patient();
   TextEditingController emailController = TextEditingController();
@@ -76,6 +78,11 @@ class _SignupState extends State<Signup> {
                 SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () async {
+                    final confirmed = await notify.showConfirmationDialog(
+                      context,
+                      'سيتم تقدم أرقام الدور لليوم الحالي.',
+                    );
+                    if (!confirmed) return;
                     patient.email = emailController.text.trim();
                     patient.password = passwordController.text.trim();
                     patient.fullname = nameController.text.trim();
