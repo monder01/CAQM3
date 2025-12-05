@@ -3,7 +3,6 @@ library; // تعريف مكتبة Dart بدون اسم (استخدام بسيط 
 
 import 'package:cloud_firestore/cloud_firestore.dart'; // استيراد مكتبة Cloud Firestore للتعامل مع قاعدة البيانات
 import 'package:flutter/material.dart'; // استيراد أدوات الواجهة الرسومية من فلاتر
-import 'package:prototype1/UserManagementComponent/patients.dart'; // استيراد كلاس المرضى (غير مستخدم مباشرة هنا لكن يمكن استخدامه لاحقًا)
 
 class Appointment {
   String? appointmentId; // معرّف الموعد في قاعدة البيانات
