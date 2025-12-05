@@ -1,17 +1,17 @@
 // lib/oop/users.dart
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:prototype1/UserManagementComponent/adminsPage.dart';
-import 'package:prototype1/UserManagementComponent/patientPage.dart';
+import 'package:flutter/material.dart'; // استيراد مكتبة فلاتر لبناء الواجهات
+import 'package:firebase_auth/firebase_auth.dart'; // استيراد مكتبة المصادقة من Firebase
+import 'package:cloud_firestore/cloud_firestore.dart'; // استيراد مكتبة التعامل مع Cloud Firestore
+import 'package:prototype1/UserManagementComponent/adminsPage.dart'; // استيراد صفحة الأدمن
+import 'package:prototype1/UserManagementComponent/patientPage.dart'; // استيراد صفحة المريض
 
 class UserC {
-  String? fullname;
-  String? email;
-  String? phoneNumber;
-  String? role;
-  String? userId;
-  String? password;
+  String? fullname; // اسم المستخدم الكامل
+  String? email; // البريد الإلكتروني للمستخدم
+  String? phoneNumber; // رقم هاتف المستخدم
+  String? role; // دور المستخدم في النظام (Admin / Patient / Doctor ...)
+  String? userId; // معرف المستخدم (عادة يكون UID من FirebaseAuth)
+  String? password; // كلمة مرور المستخدم
 
   UserC({
     this.fullname,
@@ -20,57 +20,74 @@ class UserC {
     this.role,
     this.userId,
     this.password,
-  });
+  }); // باني الكلاس يسمح بإنشاء كائن مستخدم مع إعطاء قيم مبدئية اختيارية
+
   // تسجيل الدخول للمستخدم باستخدام البريد الإلكتروني وكلمة المرور
   Future<void> signin(
     String emailcontroller,
     String passwordcontroller,
     BuildContext context,
   ) async {
-    email = emailcontroller;
-    password = passwordcontroller;
+    email = emailcontroller; // تخزين البريد المرسل في خاصية الكلاس
+    password = passwordcontroller; // تخزين كلمة المرور المرسلة في خاصية الكلاس
     try {
+      // محاولة تسجيل الدخول عبر FirebaseAuth باستخدام البريد وكلمة المرور
       UserCredential userAuth = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email!, password: password!);
-      print("verified : ${userAuth.user!.emailVerified}");
+
+      print(
+        "verified : ${userAuth.user!.emailVerified}",
+      ); // طباعة حالة التحقق من البريد (للاختبار/التتبع)
+
+      // جلب بيانات المستخدم من مجموعة 'users' في Firestore باستخدام الـ UID
       DocumentSnapshot userInfo = await FirebaseFirestore.instance
           .collection('users')
           .doc(userAuth.user!.uid)
           .get();
-      fullname = userInfo['FullName'];
-      role = userInfo['Role'];
+
+      fullname = userInfo['FullName']; // قراءة الاسم الكامل من المستند
+      role = userInfo['Role']; // قراءة الدور (Role) من المستند
+
+      // التوجيه حسب الدور:
       if (role == "Admin") {
+        // في حالة كان المستخدم أدمن، الانتقال لصفحة الأدمن
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Adminspage()),
         );
       } else if (role == "Patient") {
+        // في حالة كان المستخدم مريض، الانتقال لصفحة المريض
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Patientpage()),
         );
       }
+
+      // إظهار رسالة ترحيبية بعد تسجيل الدخول بنجاح
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("مرحبا بك في عيادتنا 😝 $fullname"),
-          showCloseIcon: true,
+          showCloseIcon: true, // إظهار أيقونة إغلاق في الـ SnackBar
         ),
       );
     } on FirebaseAuthException catch (e) {
+      // معالجة الأخطاء الخاصة بـ FirebaseAuth أثناء تسجيل الدخول
       String message = "";
       if (e.code == "user-not-found") {
-        message = "المستخدم غير موجود";
+        message =
+            "المستخدم غير موجود"; // في حالة عدم العثور على مستخدم بهذا البريد
       } else if (e.code == "wrong-password") {
-        message = "كلمة المرور غير صحيحة";
+        message = "كلمة المرور غير صحيحة"; // في حالة كلمة المرور خطأ
       } else if (e.code == "invalid-email") {
-        message = "البريد الإلكتروني غير صالح";
+        message = "البريد الإلكتروني غير صالح"; // في حالة البريد غير صالح
       } else {
-        message = e.message ?? "حدث خطأ أثناء تسجيل الدخول";
+        message = e.message ?? "حدث خطأ أثناء تسجيل الدخول"; // أي خطأ آخر
       }
+      // إظهار رسالة الخطأ للمستخدم في واجهة التطبيق
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("❌ $message")));
-      print("Error: $e");
+      print("Error: $e"); // طباعة الخطأ في الـ console للتتبع
     }
   }
 
@@ -84,60 +101,68 @@ class UserC {
     String roleController,
     BuildContext context,
   ) async {
+    // تخزين القيم القادمة من الحقول في خصائص الكائن
     email = emailController;
     password = passwordController;
     fullname = fullnameController;
     phoneNumber = phoneNumberController;
     role = roleController;
     try {
-      // إنشاء مستخدم await
+      // إنشاء مستخدم جديد في FirebaseAuth باستخدام البريد وكلمة المرور
       UserCredential userinfo = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email!, password: password!);
+
+      // حفظ بيانات المستخدم في مجموعة 'users' في Cloud Firestore، والوثيقة باسم UID
       await FirebaseFirestore.instance
           .collection('users')
           .doc(userinfo.user!.uid)
           .set({
-            'FullName': fullname,
-            'Email': email,
-            'PhoneNumber': phoneNumber,
-            'Role': role,
-            'UserID': userinfo.user!.uid,
+            'FullName': fullname, // الاسم الكامل
+            'Email': email, // البريد الإلكتروني
+            'PhoneNumber': phoneNumber, // رقم الهاتف
+            'Role': role, // الدور في النظام
+            'UserID': userinfo.user!.uid, // معرف المستخدم (UID)
           });
 
-      // الانتقال لصفحة Homepage
+      // الانتقال لصفحة المريض بعد إنشاء الحساب بنجاح
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => Patientpage()),
       );
 
-      // رسالة ترحيب
+      // إظهار رسالة نجاح عند إنشاء الحساب
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("تم إنشاء الحساب بنجاح ✅ $email")));
 
-      print("✅ patient created successfully: $email");
+      print(
+        "✅ patient created successfully: $email",
+      ); // طباعة رسالة نجاح في الـ console
     } on FirebaseAuthException catch (e) {
+      // معالجة أخطاء إنشاء الحساب في FirebaseAuth
       String message = "";
       if (e.code == "email-already-in-use") {
-        message = "هذا البريد مسجل بالفعل";
+        message = "هذا البريد مسجل بالفعل"; // البريد مستخدم مسبقًا
       } else if (e.code == "weak-password") {
-        message = "كلمة المرور ضعيفة جدًا";
+        message = "كلمة المرور ضعيفة جدًا"; // كلمة المرور ضعيفة
       } else if (e.code == "invalid-email") {
-        message = "البريد الإلكتروني غير صالح";
+        message = "البريد الإلكتروني غير صالح"; // البريد غير صحيح الصيغة
       } else {
-        message = e.message ?? "حدث خطأ أثناء إنشاء الحساب";
+        message = e.message ?? "حدث خطأ أثناء إنشاء الحساب"; // أي خطأ آخر
       }
 
+      // إظهار رسالة الخطأ في واجهة التطبيق
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("❌ $message")));
 
-      print("❌ Error: $message");
+      print("❌ Error: $message"); // طباعة نص الخطأ في الـ console
     } catch (e) {
+      // معالجة أي أخطاء أخرى غير متعلقة بـ FirebaseAuth
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("حدث خطأ غير متوقع")));
-      print("❌ Error: $e");
+      print("❌ Error: $e"); // طباعة الخطأ العام في الـ console
     }
   }
 }

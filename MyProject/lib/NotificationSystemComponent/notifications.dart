@@ -1,37 +1,44 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; // استيراد مكتبة الواجهة الرسومية في فلاتر
 
 class Notifications {
-  String message = '';
+  String message = ''; // متغير لتخزين الرسالة التي سيتم عرضها داخل مربع الحوار
 
   Future<bool> showConfirmationDialog(
-    BuildContext context,
-    String message,
+    BuildContext context, // السياق المطلوب لعرض مربع الحوار
+    String message, // الرسالة التي ستظهر داخل مربع التأكيد
   ) async {
-    this.message = message;
+    this.message =
+        message; // تخزين الرسالة داخل الكائن لاستخدامها مستقبلاً إن لزم ذلك
 
+    // فتح مربع حوار من نوع AlertDialog وإرجاع قيمة منطقية حسب اختيار المستخدم
     final result = await showDialog<bool>(
       context: context,
-      barrierDismissible: true, // يقدر يقفله من برا أو بالـ back
+      barrierDismissible:
+          true, // السماح بإغلاق مربع الحوار عند الضغط خارجَه أو بالرجوع
       builder: (context) {
         return AlertDialog(
           title: const Text(
-            'هل أنت متأكد؟',
-            textAlign: TextAlign.right,
-            style: TextStyle(fontWeight: FontWeight.bold),
+            'هل أنت متأكد؟', // عنوان مربع الحوار
+            textAlign: TextAlign.right, // جعل النص بمحاذاة اليمين (العربية)
+            style: TextStyle(fontWeight: FontWeight.bold), // جعل الخط عريضًا
           ),
           content: Text(
-            message,
-            textAlign: TextAlign.right,
-            style: TextStyle(color: Colors.redAccent),
+            message, // عرض الرسالة المرسلة للتابع
+            textAlign: TextAlign.right, // محاذاة النص لليمين
+            style: TextStyle(color: Colors.redAccent), // لون مميز للرسالة
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
+              // زر الإلغاء
+              onPressed: () =>
+                  Navigator.of(context).pop(false), // إرجاع false عند الإلغاء
               child: const Text('إلغاء'),
             ),
-            SizedBox(width: 100),
+            SizedBox(width: 100), // مسافة بين زري الإلغاء والتأكيد
             TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
+              // زر التأكيد
+              onPressed: () =>
+                  Navigator.of(context).pop(true), // إرجاع true عند التأكيد
               child: const Text('تأكيد'),
             ),
           ],
@@ -39,7 +46,7 @@ class Notifications {
       },
     );
 
-    // لو تسكر الديالوج بدون اختيار، اعتبره false
+    // إذا أغلق المستخدم مربع الحوار بدون اختيار، اعتبر القيمة false
     return result ?? false;
   }
 }

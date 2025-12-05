@@ -1,70 +1,93 @@
 // lib/pages/signin.dart
-import 'package:flutter/material.dart';
-import 'package:prototype1/UserManagementComponent/users.dart';
+import 'package:flutter/material.dart'; // استيراد مكتبة الواجهات الرسومية الخاصة بفلاتر
+import 'package:prototype1/UserManagementComponent/users.dart'; // استيراد كلاس المستخدم الأساسي UserC
 
 class Signin extends StatefulWidget {
-  const Signin({super.key});
+  const Signin({
+    super.key,
+  }); // ويدجت تسجيل الدخول، من نوع Stateful لأنها تعتمد على مدخلات المستخدم
 
   @override
-  State<Signin> createState() => _SigninState();
+  State<Signin> createState() => _SigninState(); // ربط الصفحة بحالة State خاصة بها
 }
 
 class _SigninState extends State<Signin> {
-  UserC user = UserC();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  UserC user =
+      UserC(); // إنشاء كائن من UserC لتخزين بيانات تسجيل الدخول وتنفيذ وظيفة signin
+  TextEditingController emailController =
+      TextEditingController(); // متحكم لحقل إدخال البريد الإلكتروني
+  TextEditingController passwordController =
+      TextEditingController(); // متحكم لحقل إدخال كلمة المرور
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Sign In"),
-        backgroundColor: Colors.amberAccent[200], // عنوان شريط التطبيق
+        title: Text("Sign In"), // عنوان الصفحة في شريط التطبيق
+        backgroundColor: Colors.amberAccent[200], // لون خلفية الـ AppBar
       ),
       body: SingleChildScrollView(
+        // يسمح بالتمرير في حال كانت العناصر كثيرة
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start, // محاذاة المحتوى للأعلى
 
             children: [
-              SizedBox(height: 50),
+              SizedBox(height: 50), // مسافة علوية كبيرة
               Text(
-                "تسجيل الدخول",
+                "تسجيل الدخول", // عنوان رئيسي كبير
                 style: TextStyle(
                   fontSize: 54,
                   fontWeight: FontWeight.bold,
-                  color: Colors.amberAccent[200],
+                  color: Colors.amberAccent[200], // اللون الذهبي المميز للتطبيق
                 ),
               ),
               SizedBox(height: 50),
+
+              // حقل إدخال البريد الإلكتروني
               TextField(
-                controller: emailController,
+                controller: emailController, // ربط الحقل بالمتحكم
                 decoration: InputDecoration(
-                  labelText: "أدخل بريدك الإلكتروني الشخصي",
-                  border: OutlineInputBorder(),
+                  labelText:
+                      "أدخل بريدك الإلكتروني الشخصي", // النص الإرشادي داخل الحقل
+                  border: OutlineInputBorder(), // إطار حول الحقل
                 ),
               ),
+
               SizedBox(height: 20),
+
+              // حقل إدخال كلمة المرور
               TextField(
-                obscureText: true,
+                obscureText: true, // إخفاء النص عند كتابة كلمة المرور
                 controller: passwordController,
                 decoration: InputDecoration(
-                  labelText: "أدخل الرقم السري الشخصي",
+                  labelText: "أدخل الرقم السري الشخصي", // النص الإرشادي
                   border: OutlineInputBorder(),
                 ),
               ),
+
               SizedBox(height: 20),
+
+              // زر تسجيل الدخول
               ElevatedButton(
                 onPressed: () async {
-                  print("Login button clicked!");
+                  print(
+                    "Login button clicked!",
+                  ); // طباعة نص للتأكد من ضغط الزر أثناء التنفيذ
+
+                  // تخزين الإدخالات في كائن user
                   user.email = emailController.text.trim();
                   user.password = passwordController.text.trim();
+
+                  // استدعاء دالة تسجيل الدخول الموجودة داخل كلاس UserC
                   user.signin(
-                    emailController.text.trim(),
-                    passwordController.text.trim(),
-                    context,
+                    emailController.text
+                        .trim(), // البريد المدخل بعد إزالة الفراغات
+                    passwordController.text.trim(), // كلمة المرور
+                    context, // تمرير السياق لإنشاء التنقل أو رسائل الخطأ
                   );
                 },
-                child: Text("تسجيل الدخول"),
+                child: Text("تسجيل الدخول"), // نص الزر
               ),
             ],
           ), // محتوى الصفحة
