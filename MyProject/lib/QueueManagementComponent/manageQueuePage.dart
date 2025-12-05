@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart'; // استيراد مكتبة واجهة المستخدم من فلاتر
 import 'package:prototype1/NotificationSystemComponent/notifications.dart'; // استيراد كلاس الإشعارات/رسائل التأكيد
-import 'package:prototype1/QueueManagementComponent/checkInAdmin.dart'; // استيراد صفحة/كلاس تسجيل وصول المريض (قد لا تُستخدم هنا مباشرة)
+// استيراد صفحة/كلاس تسجيل وصول المريض (قد لا تُستخدم هنا مباشرة)
 import 'package:cloud_firestore/cloud_firestore.dart'; // استيراد مكتبة Cloud Firestore للتعامل مع قاعدة البيانات
-import 'package:firebase_auth/firebase_auth.dart'; // استيراد مكتبة Firebase Auth (غير مستخدمة حاليًا في هذه الصفحة)
+// استيراد مكتبة Firebase Auth (غير مستخدمة حاليًا في هذه الصفحة)
 
 class Managequeuepage extends StatefulWidget {
   const Managequeuepage({
