@@ -130,8 +130,9 @@ class _MedicalHistoryPageState extends State<MedicalHistoryPage> {
                   context,
                   'هل أنت متأكد من حفظ هذا التاريخ المرضي؟', // رسالة التأكيد قبل الحفظ
                 );
-                if (!confirmed)
+                if (!confirmed) {
                   return; // إذا لم يؤكد المستخدم، يتم إلغاء العملية
+                }
 
                 // قراءة القيم من الحقول المختلفة بعد إزالة الفراغات الزائدة
                 String chronicDiseases = chronicDiseasesController.text.trim();

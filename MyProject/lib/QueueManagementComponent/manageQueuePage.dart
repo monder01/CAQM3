@@ -53,8 +53,9 @@ class _ManagequeuepageState extends State<Managequeuepage> {
                       context,
                       'سيتم تقليل أرقام الدور لليوم الحالي.', // رسالة تأكيد قبل تنفيذ العملية
                     );
-                    if (!confirmed)
+                    if (!confirmed) {
                       return; // إذا لم يؤكد المستخدم، لا يتم تنفيذ أي شيء
+                    }
 
                     try {
                       // الحصول على أول مستند من مجموعة Queue
@@ -192,8 +193,9 @@ class _ManagequeuepageState extends State<Managequeuepage> {
                       context,
                       'سيتم تقدم أرقام الدور لليوم الحالي.', // رسالة تأكيد قبل تنفيذ العملية
                     );
-                    if (!confirmed)
+                    if (!confirmed) {
                       return; //اذا لم يؤكد المستخدم، لا تفعل شيئًا
+                    }
                     try {
                       // جلب أول مستند من مجموعة Queue
                       final snap = await queuedata

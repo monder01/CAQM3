@@ -122,8 +122,9 @@ class _CheckinadminState extends State<Checkinadmin> {
                       notify.message =
                           'سيتم إعادة تعيين أرقام الدور لليوم الحالي.', // رسالة التنبيه للمستخدم
                     );
-                    if (!confirmed)
+                    if (!confirmed) {
                       return; // إذا لم يؤكد المستخدم، يتم إلغاء العملية
+                    }
 
                     DateTime? dateNow =
                         DateTime.now(); // الحصول على التاريخ والوقت الحالي

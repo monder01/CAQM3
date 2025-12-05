@@ -47,8 +47,9 @@ class _PatientpageState extends State<Patientpage> {
                   context,
                   'سيتم تسجيل الخروج من حسابك الحالي.', // رسالة تأكيد قبل تسجيل الخروج
                 );
-                if (!confirmed)
+                if (!confirmed) {
                   return; // إذا لم يؤكد المستخدم، يتم إلغاء العملية
+                }
 
                 await FirebaseAuth.instance
                     .signOut(); // تسجيل خروج المستخدم من حساب FirebaseAuth

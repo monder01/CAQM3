@@ -106,8 +106,9 @@ class _SignupState extends State<Signup> {
                       context,
                       'سيتم تقدم أرقام الدور لليوم الحالي.', // رسالة التأكيد المعروضة للمستخدم
                     );
-                    if (!confirmed)
+                    if (!confirmed) {
                       return; // في حال لم يؤكد المستخدم، يتم إلغاء العملية
+                    }
 
                     // تعبئة بيانات المريض من الحقول النصية
                     patient.email = emailController.text

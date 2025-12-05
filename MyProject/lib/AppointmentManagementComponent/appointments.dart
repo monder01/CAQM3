@@ -157,8 +157,9 @@ class Appointment {
                         lastDate: DateTime(2030), // أقصى تاريخ للاختيار
                       );
 
-                      if (selectedDate == null)
+                      if (selectedDate == null) {
                         return; // لو لم يتم اختيار تاريخ، خروج بدون فعل شيء
+                      }
 
                       String formattedDate = selectedDate
                           .toIso8601String()

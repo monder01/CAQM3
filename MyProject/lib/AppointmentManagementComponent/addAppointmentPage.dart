@@ -107,8 +107,9 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                   context,
                   'هل أنت متأكد من حجز هذا الموعد؟', // رسالة التأكيد قبل الحجز
                 );
-                if (!confirmed)
+                if (!confirmed) {
                   return; // إذا لم يؤكد المستخدم، لا يتم تنفيذ شيء
+                }
 
                 String?
                 currentUser; // متغير لتحديد المريض الذي سيُسجَّل له الموعد
@@ -199,8 +200,7 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
               onChanged: (value) {
                 // عند تغيير نوع الموعد من القائمة المنسدلة
                 setState(() {
-                  selectedAppointmentType =
-                      value as String?; // تخزين النوع المختار
+                  selectedAppointmentType = value; // تخزين النوع المختار
                   // تحديد تكلفة الموعد حسب النوع
                   if (selectedAppointmentType == "إستشارة") {
                     appointmentCost = 30.0;

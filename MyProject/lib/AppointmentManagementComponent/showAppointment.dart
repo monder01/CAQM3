@@ -173,8 +173,9 @@ class _ShowappointmentState extends State<Showappointment> {
                                       context,
                                       'هل أنت متأكد من إلغاء هذا الموعد؟',
                                     );
-                                if (!confirmed)
+                                if (!confirmed) {
                                   return; // في حال عدم التأكيد لا يتم تنفيذ شيء
+                                }
                                 await FirebaseFirestore.instance
                                     .collection('Appointments')
                                     .doc(doc.id)

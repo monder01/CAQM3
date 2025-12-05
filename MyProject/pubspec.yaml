@@ -19,14 +19,17 @@ dependencies:
   flutter_speed_dial: ^7.0.0
   lottie: ^3.1.2
   intl: ^0.20.2
-
+  coverage: ^1.0.0
+  dio: ^5.2.1
+  mockito: ^5.5.0
 
 dev_dependencies:
-  coverage: ^1.0.0
   flutter_test:
     sdk: flutter
+  test: any
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.14.4
+  mocktail: ^0.3.0
 
 flutter_icons:
   android: true

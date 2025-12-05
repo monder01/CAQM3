@@ -2,9 +2,7 @@ import 'package:prototype1/NotificationSystemComponent/notifications.dart';
 import 'package:prototype1/UserManagementComponent/doctorAppointment.dart';
 import 'package:prototype1/homePage.dart';
 
-import 'users.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Doctorpage extends StatefulWidget {
