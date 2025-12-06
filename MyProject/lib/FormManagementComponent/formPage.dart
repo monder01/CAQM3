@@ -111,7 +111,7 @@ class _FormpageState extends State<Formpage> {
                     Icon(
                       Icons.history_edu, // أيقونة كتاب للمعلومات الطبية
                       size: 100,
-                      color: Colors.amberAccent[200],
+                      color: Colors.blueGrey[200],
                     ),
                     SizedBox(height: 20),
                     Text(
