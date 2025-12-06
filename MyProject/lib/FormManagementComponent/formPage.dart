@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart'; // استيراد مكتبة بناء واجهات فلاتر
-import 'package:prototype1/FormManagementComponent/insurancePage.dart'; // استيراد صفحة نموذج التأمين
-import 'package:prototype1/FormManagementComponent/medicalHistoryPage.dart'; // استيراد صفحة التاريخ الطبي
+import '/FormManagementComponent/insurancePage.dart'; // استيراد صفحة نموذج التأمين
+import '/FormManagementComponent/medicalHistoryPage.dart'; // استيراد صفحة التاريخ الطبي
 
 class Formpage extends StatefulWidget {
   const Formpage({super.key}); // الصفحة الرئيسية للنماذج، من نوع StatefulWidget

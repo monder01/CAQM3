@@ -1,6 +1,6 @@
-import 'package:prototype1/NotificationSystemComponent/notifications.dart';
-import 'package:prototype1/AppointmentManagementComponent/doctorAppointment.dart';
-import 'package:prototype1/homePage.dart';
+import '/NotificationSystemComponent/notifications.dart';
+import '/AppointmentManagementComponent/doctorAppointment.dart';
+import '/homePage.dart';
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';

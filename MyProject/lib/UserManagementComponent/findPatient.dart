@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:prototype1/AppointmentManagementComponent/addAppointmentPage.dart';
-import 'package:prototype1/AppointmentManagementComponent/showAppointment.dart';
+import '/AppointmentManagementComponent/addAppointmentPage.dart';
+import '/AppointmentManagementComponent/showAppointment.dart';
 
 class FindPatient extends StatefulWidget {
   const FindPatient({

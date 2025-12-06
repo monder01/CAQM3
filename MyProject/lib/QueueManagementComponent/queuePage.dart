@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart'; // استيراد مكتبة واجهة المستخدم من فلاتر
-import 'package:prototype1/QueueManagementComponent/checkInAdmin.dart'; // استيراد صفحة/ويدجت تسجيل وصول المرضى
-import 'package:prototype1/QueueManagementComponent/manageQueuePage.dart'; // استيراد صفحة إدارة الطابور للواصلين
+import '/QueueManagementComponent/checkInAdmin.dart'; // استيراد صفحة/ويدجت تسجيل وصول المرضى
+import '/QueueManagementComponent/manageQueuePage.dart'; // استيراد صفحة إدارة الطابور للواصلين
 
 class Queuepage extends StatefulWidget {
   const Queuepage({

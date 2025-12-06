@@ -1,4 +1,4 @@
-import 'package:prototype1/UserManagementComponent/users.dart';
+import '/UserManagementComponent/users.dart';
 
 class Patient extends UserC {
   String? patientId; // معرف المريض (يمكن ربطه بمعرف المستخدم في FirebaseAuth)

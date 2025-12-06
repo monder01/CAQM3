@@ -1,6 +1,6 @@
 // lib/pages/signin.dart
 import 'package:flutter/material.dart'; // استيراد مكتبة الواجهات الرسومية الخاصة بفلاتر
-import 'package:prototype1/UserManagementComponent/users.dart'; // استيراد كلاس المستخدم الأساسي UserC
+import '/UserManagementComponent/users.dart'; // استيراد كلاس المستخدم الأساسي UserC
 
 class Signin extends StatefulWidget {
   const Signin({

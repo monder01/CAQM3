@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:prototype1/UserManagementComponent/signin.dart';
-import 'package:prototype1/UserManagementComponent/signup.dart';
-import 'package:prototype1/homePage.dart';
+import 'package:MyCAQM/UserManagementComponent/signin.dart';
+import 'package:MyCAQM/UserManagementComponent/signup.dart';
+import 'package:MyCAQM/homePage.dart';
 
 void main() {
   testWidgets('Homepage shows welcome text and buttons', (

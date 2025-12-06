@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:prototype1/AppointmentManagementComponent/appointmentPage.dart';
-import 'package:prototype1/FormManagementComponent/formPage.dart';
-import 'package:prototype1/NotificationSystemComponent/notifications.dart';
-import 'package:prototype1/homePage.dart';
+import '/AppointmentManagementComponent/appointmentPage.dart';
+import '/FormManagementComponent/formPage.dart';
+import '/NotificationSystemComponent/notifications.dart';
+import '/homePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Patientpage extends StatefulWidget {

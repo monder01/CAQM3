@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:prototype1/NotificationSystemComponent/notifications.dart';
-import 'package:prototype1/UserManagementComponent/addDoctor.dart';
+import '/NotificationSystemComponent/notifications.dart';
+import '/UserManagementComponent/addDoctor.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:prototype1/UserManagementComponent/findPatient.dart';
-import 'package:prototype1/homePage.dart';
-import 'package:prototype1/QueueManagementComponent/queuePage.dart';
+import '/UserManagementComponent/findPatient.dart';
+import '/homePage.dart';
+import '/QueueManagementComponent/queuePage.dart';
 
 class Adminspage extends StatefulWidget {
   const Adminspage({

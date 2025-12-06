@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart'; // استيراد مكتبة الواجهات في فلاتر
 import 'package:firebase_auth/firebase_auth.dart'; // استيراد مكتبة إدارة المستخدمين من Firebase
 import 'package:cloud_firestore/cloud_firestore.dart'; // استيراد مكتبة Firestore للتعامل مع قاعدة البيانات السحابية
-import 'package:prototype1/FormManagementComponent/forms.dart'; // استيراد الكلاس Forms (نموذج عام لإدارة النماذج)
-import 'package:prototype1/NotificationSystemComponent/notifications.dart'; // استيراد كلاس Notifications لعرض رسائل التأكيد
+import '/FormManagementComponent/forms.dart'; // استيراد الكلاس Forms (نموذج عام لإدارة النماذج)
+import '/NotificationSystemComponent/notifications.dart'; // استيراد كلاس Notifications لعرض رسائل التأكيد
 
 class Insurancepage extends StatefulWidget {
-  const Insurancepage({super.key}); // ويدجت صفحة نموذج التأمين، من نوع Stateful لأنها تحتوي على حقول إدخال تتغير
+  const Insurancepage({
+    super.key,
+  }); // ويدجت صفحة نموذج التأمين، من نوع Stateful لأنها تحتوي على حقول إدخال تتغير
 
   @override
   State<Insurancepage> createState() => _InsurancepageState(); // ربط الويدجت بالحالة الخاصة بها
@@ -13,15 +15,24 @@ class Insurancepage extends StatefulWidget {
 
 class _InsurancepageState extends State<Insurancepage> {
   Notifications notify = Notifications(); // كائن للتعامل مع رسائل التأكيد
-  Forms insuranceForm = Forms(); // كائن من Forms يمكن استخدامه كواجهة عامة للنماذج (غير مستخدم مباشرة هنا)
-  TextEditingController companyNameController = TextEditingController(); // متحكم لحقل اسم شركة التأمين
-  TextEditingController policyNumberController = TextEditingController(); // متحكم لحقل رقم الوثيقة
-  TextEditingController insuredTypeController = TextEditingController(); // متحكم لحقل نوع المؤمن عليه
-  TextEditingController insuredStartDateController = TextEditingController(); // متحكم لحقل تاريخ بدء التأمين
-  TextEditingController insuredEndDateController = TextEditingController(); // متحكم لحقل تاريخ انتهاء التأمين
-  TextEditingController insuredPersonNameController = TextEditingController(); // متحكم لحقل اسم الشخص المؤمن عليه
-  TextEditingController insuredPersonIDController = TextEditingController(); // متحكم لحقل رقم هوية الشخص المؤمن عليه
-  TextEditingController insuredNotesController = TextEditingController(); // متحكم لحقل الملاحظات الإضافية
+  Forms insuranceForm =
+      Forms(); // كائن من Forms يمكن استخدامه كواجهة عامة للنماذج (غير مستخدم مباشرة هنا)
+  TextEditingController companyNameController =
+      TextEditingController(); // متحكم لحقل اسم شركة التأمين
+  TextEditingController policyNumberController =
+      TextEditingController(); // متحكم لحقل رقم الوثيقة
+  TextEditingController insuredTypeController =
+      TextEditingController(); // متحكم لحقل نوع المؤمن عليه
+  TextEditingController insuredStartDateController =
+      TextEditingController(); // متحكم لحقل تاريخ بدء التأمين
+  TextEditingController insuredEndDateController =
+      TextEditingController(); // متحكم لحقل تاريخ انتهاء التأمين
+  TextEditingController insuredPersonNameController =
+      TextEditingController(); // متحكم لحقل اسم الشخص المؤمن عليه
+  TextEditingController insuredPersonIDController =
+      TextEditingController(); // متحكم لحقل رقم هوية الشخص المؤمن عليه
+  TextEditingController insuredNotesController =
+      TextEditingController(); // متحكم لحقل الملاحظات الإضافية
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +48,8 @@ class _InsurancepageState extends State<Insurancepage> {
           children: [
             SizedBox(height: 20), // مسافة علوية بسيطة
             TextField(
-              controller: companyNameController, // ربط حقل الإدخال بمتحكم اسم الشركة
+              controller:
+                  companyNameController, // ربط حقل الإدخال بمتحكم اسم الشركة
               decoration: InputDecoration(
                 labelText: "اسم شركة التأمين", // نص إرشادي داخل الحقل
                 border: OutlineInputBorder(), // إطار حول الحقل
@@ -61,7 +73,8 @@ class _InsurancepageState extends State<Insurancepage> {
             ),
             SizedBox(height: 12),
             TextField(
-              controller: insuredStartDateController, // متحكم تاريخ بداية التأمين
+              controller:
+                  insuredStartDateController, // متحكم تاريخ بداية التأمين
               decoration: InputDecoration(
                 labelText: "تاريخ بدء التأمين",
                 border: OutlineInputBorder(),
@@ -69,7 +82,8 @@ class _InsurancepageState extends State<Insurancepage> {
             ),
             SizedBox(height: 12),
             TextField(
-              controller: insuredEndDateController, // متحكم تاريخ انتهاء التأمين
+              controller:
+                  insuredEndDateController, // متحكم تاريخ انتهاء التأمين
               decoration: InputDecoration(
                 labelText: "تاريخ انتهاء التأمين",
                 border: OutlineInputBorder(),
@@ -77,7 +91,8 @@ class _InsurancepageState extends State<Insurancepage> {
             ),
             SizedBox(height: 12),
             TextField(
-              controller: insuredPersonNameController, // متحكم اسم الشخص المؤمن عليه
+              controller:
+                  insuredPersonNameController, // متحكم اسم الشخص المؤمن عليه
               decoration: InputDecoration(
                 labelText: "اسم الشخص المؤمن عليه",
                 border: OutlineInputBorder(),
@@ -85,7 +100,8 @@ class _InsurancepageState extends State<Insurancepage> {
             ),
             SizedBox(height: 12),
             TextField(
-              controller: insuredPersonIDController, // متحكم رقم هوية الشخص المؤمن عليه
+              controller:
+                  insuredPersonIDController, // متحكم رقم هوية الشخص المؤمن عليه
               decoration: InputDecoration(
                 labelText: "رقم هوية الشخص المؤمن عليه",
                 border: OutlineInputBorder(),
@@ -133,10 +149,13 @@ class _InsurancepageState extends State<Insurancepage> {
                     'InsuredType': insuredType, // نوع المؤمن عليه
                     'InsuredStartDate': insuredStartDate, // تاريخ بدء التأمين
                     'InsuredEndDate': insuredEndDate, // تاريخ انتهاء التأمين
-                    'InsuredPersonName': insuredPersonName, // اسم الشخص المؤمن عليه
-                    'InsuredPersonID': insuredPersonID, // رقم هوية الشخص المؤمن عليه
+                    'InsuredPersonName':
+                        insuredPersonName, // اسم الشخص المؤمن عليه
+                    'InsuredPersonID':
+                        insuredPersonID, // رقم هوية الشخص المؤمن عليه
                     'InsuredNotes': insuredNotes, // ملاحظات إضافية حول التأمين
-                    'PatientId': currentUserId, // ربط بيانات التأمين بالمريض (معرف المستخدم في النظام)
+                    'PatientId':
+                        currentUserId, // ربط بيانات التأمين بالمريض (معرف المستخدم في النظام)
                   });
                 } catch (e) {
                   // في حال حدوث خطأ أثناء عملية الحفظ في Firestore

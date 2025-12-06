@@ -1,9 +1,9 @@
 // addAppointmentPage.dart
 import 'package:flutter/material.dart'; // استيراد أدوات الواجهة الرسومية من فلاتر
-import 'package:prototype1/AppointmentManagementComponent/appointments.dart'; // استيراد كلاس إدارة المواعيد
+import '/AppointmentManagementComponent/appointments.dart'; // استيراد كلاس إدارة المواعيد
 import 'package:firebase_auth/firebase_auth.dart'; // استيراد مكتبة المصادقة من Firebase
 import 'package:cloud_firestore/cloud_firestore.dart'; // استيراد مكتبة Cloud Firestore للتعامل مع قاعدة البيانات
-import 'package:prototype1/NotificationSystemComponent/notifications.dart'; // استيراد كلاس الإشعارات/رسائل التأكيد
+import '/NotificationSystemComponent/notifications.dart'; // استيراد كلاس الإشعارات/رسائل التأكيد
 
 class AddAppointmentPage extends StatefulWidget {
   const AddAppointmentPage({super.key, this.patientIdd});

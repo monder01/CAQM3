@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart'; // استيراد مكتبة فلاتر لبناء الواجهات
 import 'package:firebase_auth/firebase_auth.dart'; // استيراد مكتبة المصادقة من Firebase
 import 'package:cloud_firestore/cloud_firestore.dart'; // استيراد مكتبة التعامل مع Cloud Firestore
-import 'package:prototype1/UserManagementComponent/adminsPage.dart'; // استيراد صفحة الأدمن
-import 'package:prototype1/UserManagementComponent/doctorPage.dart';
-import 'package:prototype1/UserManagementComponent/patientPage.dart'; // استيراد صفحة المريض
+import '/UserManagementComponent/adminsPage.dart'; // استيراد صفحة الأدمن
+import '/UserManagementComponent/doctorPage.dart';
+import '/UserManagementComponent/patientPage.dart'; // استيراد صفحة المريض
 
 class UserC {
   String? fullname; // اسم المستخدم الكامل

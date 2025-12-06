@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart'; // استيراد مكتبة الواجهات في فلاتر
-import 'package:prototype1/AppointmentManagementComponent/addAppointmentPage.dart'; // استيراد صفحة إضافة موعد جديد
-import 'package:prototype1/AppointmentManagementComponent/showAppointment.dart'; // استيراد صفحة عرض المواعيد
+import '/AppointmentManagementComponent/addAppointmentPage.dart'; // استيراد صفحة إضافة موعد جديد
+import '/AppointmentManagementComponent/showAppointment.dart'; // استيراد صفحة عرض المواعيد
 
 class Appointmentpage extends StatefulWidget {
   const Appointmentpage({

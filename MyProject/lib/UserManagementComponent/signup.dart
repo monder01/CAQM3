@@ -1,8 +1,8 @@
 // lib/pages/signup.dart
 import 'package:flutter/material.dart'; // استيراد مكتبة واجهة المستخدم في فلاتر
-import 'package:prototype1/NotificationSystemComponent/notifications.dart'; // استيراد نظام الإشعارات/الحوارات المخصصة
-import 'package:prototype1/UserManagementComponent/patients.dart'; // استيراد كلاس Patient الذي يمثل المريض
-import 'package:prototype1/UserManagementComponent/users.dart'; // استيراد الكلاس الأساسي UserC المستخدم كأساس لأنواع المستخدمين
+import '/NotificationSystemComponent/notifications.dart'; // استيراد نظام الإشعارات/الحوارات المخصصة
+import '/UserManagementComponent/patients.dart'; // استيراد كلاس Patient الذي يمثل المريض
+import '/UserManagementComponent/users.dart'; // استيراد الكلاس الأساسي UserC المستخدم كأساس لأنواع المستخدمين
 
 class Signup extends StatefulWidget {
   const Signup({

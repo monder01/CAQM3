@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart'; // استيراد مكتبة واجهة المستخدم من فلاتر
-import 'package:prototype1/NotificationSystemComponent/notifications.dart'; // استيراد كلاس الإشعارات/رسائل التأكيد
+import '/NotificationSystemComponent/notifications.dart'; // استيراد كلاس الإشعارات/رسائل التأكيد
 import 'package:cloud_firestore/cloud_firestore.dart'; // استيراد مكتبة Cloud Firestore للتعامل مع قاعدة البيانات
 
 class Managequeuepage extends StatefulWidget {

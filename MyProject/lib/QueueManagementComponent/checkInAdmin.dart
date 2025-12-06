@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart'; // استيراد مكتبة Cloud Firestore للتعامل مع قاعدة البيانات السحابية
 import 'package:firebase_auth/firebase_auth.dart'; // استيراد مكتبة Firebase Auth للحصول على المستخدم الحالي
 import 'package:flutter/material.dart'; // استيراد مكتبة الواجهات في فلاتر
-import 'package:prototype1/NotificationSystemComponent/notifications.dart'; // استيراد كلاس الإشعارات/رسائل التأكيد
-import 'package:prototype1/QueueManagementComponent/queues.dart'; // استيراد كلاس إدارة الطوابير QueueL
+import '/NotificationSystemComponent/notifications.dart'; // استيراد كلاس الإشعارات/رسائل التأكيد
+import '/QueueManagementComponent/queues.dart'; // استيراد كلاس إدارة الطوابير QueueL
 
 class Checkinadmin extends StatefulWidget {
   const Checkinadmin({super.key});
