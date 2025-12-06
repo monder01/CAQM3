@@ -1,171 +1,228 @@
-# 🏥 CAQM - Clinic Appointment & Queue Management System
+# CAQM – نظام إدارة العيادات والمواعيد والطوابير
 
-## 📘 Overview
-**CAQM (Clinic Appointment & Queue Management)** is a smart system designed to manage **appointments and patient queues** for clinics and medical centers. It helps reduce waiting times, improve patient experience, and organize doctor schedules through a modern Flutter + Firebase architecture.
+## 1. نظرة عامة
+يهدف مشروع CAQM (Clinic Appointment & Queue Management System) إلى توفير منصة رقمية متكاملة لإدارة العيادات الطبية.
+يعالج النظام مشكلات الازدحام، وسوء تنظيم المواعيد، وبطء الإجراءات الورقية عبر تقديم حلول ذكية تشمل:
 
-## 🚀 Features
+- إدارة المواعيد الإلكترونية
+- نظام طوابير لحظي
+- نماذج طبية رقمية
+- استشارات عن بعد
+- إدارة أدوار وصلاحيات المستخدمين
 
-### 👤 User Management
-- Register & Login (Email / Google)
-- Role-based access: Patient, Doctor, Admin
-- Secure authentication via Firebase Auth
+تم تطوير النظام باستخدام Flutter لتطبيقات الهاتف، و Firebase كخلفية (Backend-as-a-Service)، مما يوفر سرعة في التطوير وتحديثًا لحظيًا للبيانات.
 
-### 📅 Appointment Management
-- Book, update, or cancel appointments
-- View past and upcoming appointments
-- Teleconsultation (virtual video appointments)
-- Appointment statistics and analytics for admins
+## 2. أهداف المشروع
+1. أتمتة إجراءات إدارة العيادات.
+2. تنظيم المواعيد وتقليل وقت الانتظار.
+3. تحسين تجربة المرضى من خلال التواصل الرقمي.
+4. تمكين الطاقم الطبي من الوصول إلى بيانات المرضى بسهولة.
+5. تزويد المشرفين بأدوات فعّالة للتحكم في النظام.
 
-### ⏳ Queue Management
-- Real-time queue tracking inside clinics
-- Dynamic updates for arrivals and absences
-- Automatic notification when the patient’s turn approaches
+## 3. المزايا الأساسية للنظام
 
-### 🔔 Notification System
-- Push notifications for reminders and changes (via Firebase Cloud Messaging)
-- Optional Email or SMS alerts
-- Supports message status (Read / Unread)
+### 3.1 إدارة المستخدمين
+- تسجيل الدخول وإنشاء الحساب باستخدام البريد الإلكتروني.
+- تخصيص صلاحيات مختلفة حسب الدور:
+  - مريض
+  - طبيب
+  - مشرف (Admin)
+- تخزين بيانات المستخدمين داخل Firestore.
 
-### 📄 Form Management
-- Digital medical forms (Insurance, Medical History, Consent)
-- Pre-fill and submit before appointment
-- Validation and storage in Firestore
+### 3.2 إدارة المواعيد
+- حجز موعد جديد عبر اختيار:
+  - الطبيب
+  - تاريخ الموعد
+  - الوقت
+  - نوع الموعد (استشارة – متابعة – فحص دوري)
+- منع ازدواجية الحجز عبر التحقق من قاعدة البيانات في Firestore.
+- إرسال بيانات المواعيد للطبيب والمريض.
+- عرض المواعيد الحالية والسابقة للمريض.
+- إمكانية إلغاء الموعد.
+- تمكين الطبيب من عرض جميع المواعيد الخاصة به.
 
-## 🧰 Tech Stack
-| Layer | Technology |
-|-------|-------------|
-| **Frontend** | Flutter (Android / iOS) |
-| **Backend / DB** | Firebase Firestore |
-| **Authentication** | Firebase Auth (Email / Google Login) |
-| **Notifications** | Firebase Cloud Messaging (FCM) |
-| **Hosting** | Firebase Hosting |
-| **Team Collaboration** | Microsoft Teams, Telegram |
+### 3.3 إدارة الطوابير
+- تخصيص رقم طابور لكل مريض عند تسجيل الوصول.
+- عرض رقم الدور الحالي مباشرة عبر Stream من Firestore.
+- تحكم كامل للمشرف في الطابور:
+  - التقدم في الطابور.
+  - الرجوع في الطابور.
+  - إعادة تهيئة الطابور لليوم الجديد.
+- ربط الطابور بالمواعيد والمرضى.
 
-## 🧠 System Architecture
-- **Modular OOP design** following SOLID principles.  
-- **Low coupling / High cohesion** for scalability and maintainability.  
-- **Real-time updates** via Firestore Streams and FCM.  
-- **Role-based access control (RBAC)** for secure user management.
+### 3.4 الاستشارات الطبية عن بُعد (Teleconsultation)
+- نظام محادثة نصيّة بين الطبيب والمريض.
+- يعتمد على Firestore في إرسال الرسائل اللحظية.
+- كل جلسة استشارة مرتبطة بمواعيد من نوع "استشارة".
+- تخزين الرسائل مع معلومات المرسل والمستقبل والتوقيت.
 
-## 🗄️ Firestore Database Structure
+### 3.5 إدارة النماذج الطبية
 
-### 🔹 Collections Overview
+يوفر النظام نماذج رقمية جاهزة للتعبئة من قبل المريض:
 
-### 🔸 1. `users`
-Contains all user types (Patient, Doctor, Admin) with shared attributes.  
-Fields:  
-- `name` (String) – Full name  
-- `email` (String) – User email  
-- `password` (String) – Encrypted password  
-- `role` (String) – `Patient`, `Doctor`, or `Admin`  
-- `phoneNumber` (String) – Contact number  
-- `createdAt` (Timestamp) – Account creation date  
+#### أ. نموذج بيانات التأمين (Insurance Form)
+- اسم شركة التأمين.
+- رقم الوثيقة.
+- نوع التأمين.
+- فترة بداية ونهاية التأمين.
+- بيانات الشخص المؤمن عليه.
+- ملاحظات إضافية.
 
-### 🔸 2. `patients`
-Stores patient-specific information and related sub-collections.  
-Fields:  
-- `medicalHistory` (String) – Patient medical history  
-- `insuranceNumber` (String) – Insurance ID  
-- `userRef` (Reference → /users/{userId}) – Linked user account  
-Sub-Collections: `/appointments`, `/forms`, `/tokens`
+#### ب. نموذج التاريخ الطبي (Medical History Form)
+- الأمراض المزمنة.
+- العمليات الجراحية السابقة.
+- الحساسية من الأدوية أو الأطعمة.
+- الأدوية الحالية.
+- التاريخ المرضي في العائلة.
+- العادات الصحية.
+- ملاحظات أخرى.
 
-### 🔸 3. `doctors`
-Stores doctor information and schedules.  
-Fields:  
-- `specialization` (String) – Doctor specialization  
-- `availabilitySchedule` (Map) – Working schedule  
-- `userRef` (Reference → /users/{userId}) – Linked user account  
-Sub-Collections: `/appointments`, `/teleconsultations`
+### 3.6 لوحة المشرف (Admin Panel)
+- البحث عن المرضى باستخدام بيانات مثل رقم الهاتف.
+- إضافة طبيب جديد مع بياناته وجدول عمله.
+- إدارة الطوابير (تهيئة، تقديم، إرجاع).
+- إدارة المواعيد وربطها بالمرضى والأطباء.
 
-### 🔸 4. `admins`
-Contains admin user data for system and queue management.  
-Fields:  
-- `department` (String) – Admin department  
-- `userRef` (Reference → /users/{userId}) – Linked user account  
-Sub-Collections: `/queueManagers`, `/reports`
+### 3.7 لوحة الطبيب (Doctor Dashboard)
+- عرض جميع المواعيد الخاصة بالطبيب.
+- عرض تفاصيل كل موعد (مريض، تاريخ، وقت، نوع، تكلفة، رقم دور).
+- بدء جلسة استشارة عن بُعد مع المريض في المواعيد من نوع "استشارة".
 
-### 🔸 5. `appointments`
-Represents appointments between patients and doctors.  
-Fields:  
-- `patientRef` (Reference → /patients/{patientId}) – Patient reference  
-- `doctorRef` (Reference → /doctors/{doctorId}) – Doctor reference  
-- `queueRef` (Reference → /queues/{queueId}) – Related queue  
-- `date` (DateTime) – Appointment date  
-- `time` (String) – Appointment time  
-- `status` (String) – `Scheduled`, `Completed`, or `Canceled`
+## 4. حزمة التقنيات (Tech Stack)
 
-### 🔸 6. `queues`
-Manages waiting queues for each clinic or department.  
-Fields:  
-- `name` (String) – Queue name  
-- `location` (String) – Clinic location  
-- `currentPosition` (Number) – Current token being served  
-- `managerRef` (Reference → /admins/{adminId}) – Queue manager  
-Sub-Collections: `/tokens`
+| الطبقة             | التقنية                |
+                                  |--------------------|------------------------|
+| الواجهة الأمامية   | Flutter                |
+| قاعدة البيانات     | Firebase Firestore     |
+| المصادقة           | Firebase Authentication|
+| الإشعارات          | Firebase Cloud Messaging |
+| الاستضافة          | Firebase Hosting       |
+| تعاون الفريق       | Microsoft Teams، Telegram |
 
-### 🔸 7. `tokens`
-Represents a patient’s position in the queue.  
-Fields:  
-- `tokenNumber` (Number) – Queue number  
-- `patientRef` (Reference → /patients/{patientId}) – Linked patient  
-- `queueRef` (Reference → /queues/{queueId}) – Queue reference  
-- `status` (String) – `Waiting`, `Called`, or `Completed`
+## 5. البنية المعمارية للنظام (Architecture)
+- تصميم كائني (Object-Oriented Programming) مع الالتزام بمبادئ SOLID.
+- بنية وحدات مستقلة (Modular Design) لسهولة التطوير والصيانة.
+- تحديث لحظي للبيانات باستخدام Firestore Streams.
+- إدارة صلاحيات دقيقة عبر Role-Based Access Control (RBAC).
 
-### 🔸 8. `forms`
-Stores electronic medical or insurance forms.  
-Fields:  
-- `type` (String) – Form type (`Insurance`, `MedicalHistory`, `Consent`)  
-- `content` (Map / JSON) – Form data  
-- `patientRef` (Reference → /patients/{patientId}) – Linked patient  
-- `isValidated` (Boolean) – Validation status  
+## 6. نموذج قاعدة البيانات (Firestore Structure)
 
-### 🔸 9. `notifications`
-Handles notifications sent to users.  
-Fields:  
-- `recipientRef` (Reference → /users/{userId}) – Recipient reference  
-- `message` (String) – Notification text  
-- `timestamp` (Timestamp) – Sent time  
-- `status` (String) – `Read` or `Unread`
+### 6.1 مجموعة users
+تحتوي على بيانات المستخدمين من جميع الأدوار:
 
-### 🔸 10. `teleconsultations`
-Stores details of virtual consultation sessions.  
-Fields:  
-- `patientRef` (Reference → /patients/{patientId}) – Patient reference  
-- `doctorRef` (Reference → /doctors/{doctorId}) – Doctor reference  
-- `startTime` (Timestamp) – Session start time  
-- `endTime` (Timestamp) – Session end time  
-- `messages` (Array) – Chat or message logs  
-- `status` (String) – `Active`, `Completed`, or `Canceled`
 
-### 🔗 Relationships Diagram (Text)
-User (1) → Patient / Doctor / Admin  
-Patient (1) → Appointments / Forms / Tokens  
-Doctor (1) → Appointments / Teleconsultations  
-Admin (1) → Queues / Reports  
-Appointment (1) → Queue  
-Queue (1) → Tokens  
-Form (M) → Patient  
-Notification (M) → User
+FullName (String)
+Email (String)
+PhoneNumber (String)
+Role (String)
+UserID (String)
 
-## 🧩 Future Enhancements
+### 6.2 مجموعة appointments
+تخزن بيانات المواعيد بين المرضى والأطباء:
+doctorId
+doctorName
+patientId
+patientName
+appointmentType
+date
+time
+cost
+LineNumber
+status
+email
+doctorEmail
 
-- Multi-clinic and multi-branch support
-- Integration with health insurance APIs
-- AI-based appointment suggestions
-- Offline mode and caching
-- Admin analytics dashboard
+### 6.3 مجموعة Queue
+تخزن بيانات الطابور اليومي:
+TodayLineNumber (Number)
+MovingLineNumber (Number)
+date (String)
+
 
 ---
 
-## 👨‍💻 Authors
-- Milad Al-Azhar Zgheirah
-- Monder Massoud Araboub
+### 6.4 مجموعة Insurance
+تخزن بيانات نموذج التأمين الطبي:
+CompanyName
+PolicyNumber
+InsuredType
+InsuredStartDate
+InsuredEndDate
+InsuredPersonName
+InsuredPersonID
+InsuredNotes
+PatientId
 
-## ⚙️ Installation & Run
-```bash
-git clone https://github.com/<your-username>/CAQM.git
+### 6.5 مجموعة MedicalHistory
+تخزن بيانات التاريخ الطبي لكل مريض:
+ChronicDiseases
+PreviousSurgeries
+Allergies
+CurrentMedications
+FamilyHistory
+SocialHabits
+OtherNotes
+PatientId
+CreatedAt
+
+### 6.6 مجموعة messages
+تخزن رسائل الاستشارات عن بُعد:
+senderEmail
+receiverEmail
+text
+timestamp
+
+
+---
+
+## 7. العلاقات بين البيانات (Relationships)
+
+- المستخدم يمكن أن يكون مريضًا أو طبيبًا أو مشرفًا حسب الحقل Role.
+- المريض يمكن أن يمتلك مواعيد متعددة ونماذج متعددة وسجلات طابور.
+- الطبيب يمتلك مواعيد متعددة، ويمكنه إجراء استشارات عن بُعد مع عدة مرضى.
+- كل موعد يمكن ربطه بطابور من خلال LineNumber.
+- كل نموذج (تأمين أو تاريخ طبي) مرتبط بمريض واحد.
+- كل رسالة في الاستشارات عن بُعد مرتبطة بطبيب ومريض عبر البريد الإلكتروني.
+
+## 8. تشغيل المشروع (Installation & Run)
+
+### المتطلبات:
+- تثبيت Flutter SDK.
+- تثبيت محرر مثل VS Code أو Android Studio.
+- إعداد مشروع Firebase وربطه بتطبيق Flutter.
+
+### خطوات التشغيل:
+1. استنساخ المستودع:
+git clone https://github.com/
+<your-username>/CAQM.git
+
+2. الدخول إلى مجلد المشروع:
 cd CAQM
+3. تثبيت الحزم:
 flutter pub get
+
+5. إعداد ملفات Firebase (مثل google-services.json و GoogleService-Info.plist).
+
+6. تشغيل التطبيق:
 flutter run
 
+
 ---
+
+## 9. التحسينات المستقبلية
+
+- دعم تعدد الفروع والعيادات داخل نفس النظام.
+- إضافة بوابة دفع إلكتروني لرسوم المواعيد.
+- دمج خوارزميات ذكية لاقتراح مواعيد مناسبة حسب توافر الأطباء.
+- إنشاء لوحة تحكم إحصائية للمشرفين تتضمن تقارير وأرقام.
+- دعم الاستشارات الصوتية والمرئية بالإضافة للمحادثة النصية.
+
+## 10. المؤلفون
+
+- Milad Al-Azhar Zgheirah  
+- Monder Massoud Araboub  
+
+## 11. الترخيص
+
+هذا المشروع موجّه للأغراض التعليمية والبحثية والتطويرية.  
+يمكن إعادة استخدامه أو التعديل عليه بما يتناسب مع احتياجاتك، ما لم توجد قيود إضافية من جهة أكاديمية أو جهة العمل.
