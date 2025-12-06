@@ -52,6 +52,7 @@ class _ShowappointmentState extends State<Showappointment> {
           Row(
             mainAxisAlignment:
                 MainAxisAlignment.center, // محاذاة العناصر في منتصف الصف
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
                 Icons.move_down,
@@ -129,102 +130,134 @@ class _ShowappointmentState extends State<Showappointment> {
                     final doc = docs[index]; // الموعد الحالي
 
                     return Card(
-                      // كرت لكل موعد
-                      child: ListTile(
-                        minLeadingWidth: 50, // أقل عرض للمساحة أمام الـ leading
-                        leading: Icon(
-                          Icons.schedule_sharp, // أيقونة تمثل موعد/جدول
-                          color: Colors.amber,
-                          size: 40,
-                        ),
-                        title: Text(
-                          "الطبيب: ${doc['doctorName']}",
-                        ), // عرض اسم الطبيب
-                        subtitle: Text(
-                          // عرض تفاصيل التاريخ، الوقت، نوع الموعد والتكلفة
-                          "التاريخ: ${doc['date']} - الوقت: ${doc['time']} \nالنوع: ${doc['appointmentType']} - التكلفة: \$${doc['cost']}",
-                        ),
-                        trailing: Row(
-                          mainAxisSize:
-                              MainAxisSize.min, // جعل الصف يأخذ أقل مساحة ممكنة
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // عرض رقم الدور الخاص بهذا الموعد
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                            // الصف الأول: الأيقونة + نصوص الموعد
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Icon(
-                                  Icons.confirmation_num,
-                                  color: Colors.blue,
+                                  Icons.schedule_sharp,
+                                  color: Colors.amber,
+                                  size: 40,
                                 ),
-                                Text(
-                                  "الدور : ${doc['LineNumber']}", // رقم دور المريض في الطابور
-                                  style: TextStyle(fontSize: 12),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "الطبيب: ${doc['doctorName']}",
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        "التاريخ: ${doc['date']} - الوقت: ${doc['time']}\n"
+                                        "النوع: ${doc['appointmentType']} - التكلفة: \$${doc['cost']}",
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
-                            SizedBox(width: 8),
-                            // زر لحذف الموعد (إلغاء الحجز)
-                            IconButton(
-                              icon: Icon(Icons.delete, color: Colors.red),
-                              onPressed: () async {
-                                // تأكيد إلغاء الموعد
-                                final confirmed = await notify
-                                    .showConfirmationDialog(
-                                      context,
-                                      'هل أنت متأكد من إلغاء هذا الموعد؟',
-                                    );
-                                if (!confirmed) {
-                                  return; // في حال عدم التأكيد لا يتم تنفيذ شيء
-                                }
-                                await FirebaseFirestore.instance
-                                    .collection('Appointments')
-                                    .doc(doc.id)
-                                    .delete(); // حذف الموعد من قاعدة البيانات
-                              },
-                            ),
-                            // زر لتأكيد الوصول (تغيير حالة الموعد إلى WaitingToCheckIn)
-                            IconButton(
-                              onPressed: () async {
-                                final confirmed = await notify
-                                    .showConfirmationDialog(
-                                      context,
-                                      'هل أنت متأكد من تأكيد وصولك؟',
-                                    );
-                                if (!confirmed) return;
-                                await FirebaseFirestore.instance
-                                    .collection('Appointments')
-                                    .doc(doc.id)
-                                    .update({'status': 'WaitingToCheckIn'});
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("في تأكيد الوصول. ")),
-                                );
-                              },
 
-                              icon: Icon(
-                                Icons.check,
-                                color: Colors.purpleAccent,
-                              ),
-                            ),
-                            // زر بدء جلسة استشارة عن بعد (Teleconsultation) إذا كان نوع الموعد "إستشارة"
-                            if (doc['appointmentType'] == 'إستشارة')
-                              IconButton(
-                                onPressed: () {
-                                  // الانتقال لصفحة الاستشارة عن بعد مع تمرير بريد واسم الطبيب
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          Teleconsultationpage(
-                                            otherUserEmail: doc['doctorEmail'],
-                                            otherUserName: doc['doctorName'],
-                                          ),
+                            const SizedBox(height: 8),
+
+                            // الصف الثاني: الأزرار (الدور + حذف + تأكيد + Start Session)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                // رقم الدور
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.confirmation_num,
+                                      color: Colors.blue,
+                                      size: 20,
                                     ),
-                                  );
-                                },
-                                icon: Text(
-                                  "Start Session",
-                                ), // نص بسيط كزر لبدء الجلسة
-                              ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      "الدور : ${doc['LineNumber']}",
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(width: 12),
+
+                                // زر حذف الموعد
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
+                                  onPressed: () async {
+                                    final confirmed = await notify
+                                        .showConfirmationDialog(
+                                          context,
+                                          'هل أنت متأكد من إلغاء هذا الموعد؟',
+                                        );
+                                    if (!confirmed) return;
+                                    await FirebaseFirestore.instance
+                                        .collection('Appointments')
+                                        .doc(doc.id)
+                                        .delete();
+                                  },
+                                ),
+
+                                // زر تأكيد الوصول
+                                IconButton(
+                                  icon: const Icon(
+                                    Icons.check,
+                                    color: Colors.purpleAccent,
+                                  ),
+                                  onPressed: () async {
+                                    final confirmed = await notify
+                                        .showConfirmationDialog(
+                                          context,
+                                          'هل أنت متأكد من تأكيد وصولك؟',
+                                        );
+                                    if (!confirmed) return;
+                                    await FirebaseFirestore.instance
+                                        .collection('Appointments')
+                                        .doc(doc.id)
+                                        .update({'status': 'WaitingToCheckIn'});
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          "تم إرسال طلب تأكيد الوصول.",
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+
+                                // زر Start Session لو الموعد استشارة
+                                if (doc['appointmentType'] == 'إستشارة')
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              Teleconsultationpage(
+                                                otherUserEmail:
+                                                    doc['doctorEmail'],
+                                                otherUserName:
+                                                    doc['doctorName'],
+                                              ),
+                                        ),
+                                      );
+                                    },
+                                    child: const Text("Start Session"),
+                                  ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
