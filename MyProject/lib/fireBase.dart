@@ -67,4 +67,18 @@ class FirebaseService {
       return [];
     }
   }
+
+  Future<bool> updateCollectionField({
+    required String collection,
+    required String document,
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      await firestore.collection(collection).doc(document).update(data);
+      return true;
+    } catch (e) {
+      print("Update Error: $e");
+      return false;
+    }
+  }
 }
