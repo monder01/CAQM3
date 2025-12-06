@@ -22,13 +22,28 @@ class FirebaseService {
   }
 
   Future<List<QueryDocumentSnapshot>> getSearchWithOne(
-    String searchedWith,
+    String searchedFor,
     String collectionA,
     String collectionB,
   ) async {
     final snapshot = await firestore
         .collection(collectionA)
-        .where(collectionB, isEqualTo: searchedWith)
+        .where(collectionB, isEqualTo: searchedFor)
+        .get();
+    return snapshot.docs;
+  }
+
+  Future<List<QueryDocumentSnapshot>> getSearchWithTwo(
+    String searchedForB,
+    String searchedForBB,
+    String collectionA,
+    String collectionB,
+    String collectiomBB,
+  ) async {
+    final snapshot = await firestore
+        .collection(collectionA)
+        .where(collectionB, isEqualTo: searchedForB)
+        .where(collectiomBB, isEqualTo: searchedForBB)
         .get();
     return snapshot.docs;
   }
