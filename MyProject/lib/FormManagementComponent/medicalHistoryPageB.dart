@@ -14,6 +14,12 @@ class Medicalhistorypageb extends StatefulWidget {
 class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("النموذج الطبي / التاريخ المرضي - النسخة ب"),
+        backgroundColor: Colors.amberAccent[200],
+      ),
+      body: Center(child: Text("هذه صفحة التاريخ المرضي - النسخة ب")),
+    );
   }
 }
