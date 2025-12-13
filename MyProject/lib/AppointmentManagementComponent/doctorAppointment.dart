@@ -117,7 +117,7 @@ class _DoctorappointmentState extends State<Doctorappointment> {
                   ),
 
                   onTap: () {
-                    // يمكن هنا لاحقًا إضافة التنقل لصفحة تفاصيل الموعد إن رغبت
+                    // يمكن هنا لاحقًا إضافة التنقل لصفحة تفاصيل الموعد
                   },
                 ),
               );

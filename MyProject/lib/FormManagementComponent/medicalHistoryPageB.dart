@@ -13,6 +13,9 @@ class Medicalhistorypageb extends StatefulWidget {
 
 class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
   bool isChecked = false;
+  bool option1 = false;
+  bool option2 = false;
+  bool option3 = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -40,10 +43,6 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                     builder: (context) {
                       return StatefulBuilder(
                         builder: (context, setState) {
-                          bool option1 = false;
-                          bool option2 = false;
-                          bool option3 = false;
-
                           return AlertDialog(
                             title: Text("Select Options"),
                             content: Column(
