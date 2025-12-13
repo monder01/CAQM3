@@ -1,3 +1,4 @@
+import 'package:MyCAQM/NotificationSystemComponent/notifications.dart';
 import 'package:flutter/material.dart';
 
 class Medicalhistorypageb extends StatefulWidget {
@@ -8,9 +9,24 @@ class Medicalhistorypageb extends StatefulWidget {
 }
 
 class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
+  Notifications notify = Notifications();
+  //String? illComplain;
+  List<String> illnessList_1 = [
+    'السكري',
+    'ضغط الدم',
+    'القلب',
+    'الربو',
+    'الصرع',
+    'السرطان',
+    'الكلى',
+    'الكبد',
+    'الرئة',
+  ];
+  List<String> selectedIllnesses_1 = []; // لتخزين الأمراض المختارة
   bool option1 = false;
   bool option2 = false;
   bool option3 = false;
+  TextEditingController illComplainController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -27,6 +43,24 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
+                    Row(
+                      children: [
+                        Text(
+                          "الشكوى الرئيسية  :",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(width: 20),
+                        Expanded(
+                          child: TextField(
+                            controller: illComplainController,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -50,33 +84,40 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                 return StatefulBuilder(
                                   builder: (context, setState) {
                                     return AlertDialog(
-                                      title: Text("Select Options"),
-                                      content: Column(
-                                        mainAxisSize:
-                                            MainAxisSize.min, // important!
-                                        children: [
-                                          CheckboxListTile(
-                                            title: Text("Option 1"),
-                                            value: option1,
-                                            onChanged: (value) => setState(
-                                              () => option1 = value!,
-                                            ),
-                                          ),
-                                          CheckboxListTile(
-                                            title: Text("Option 2"),
-                                            value: option2,
-                                            onChanged: (value) => setState(
-                                              () => option2 = value!,
-                                            ),
-                                          ),
-                                          CheckboxListTile(
-                                            title: Text("Option 3"),
-                                            value: option3,
-                                            onChanged: (value) => setState(
-                                              () => option3 = value!,
-                                            ),
-                                          ),
-                                        ],
+                                      title: Text(
+                                        "حدد المرض",
+                                        textAlign: TextAlign.right,
+                                      ),
+                                      content: SizedBox(
+                                        height: 300,
+                                        width: double.maxFinite,
+                                        child: ListView(
+                                          shrinkWrap: true,
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          children: illnessList_1.map((item) {
+                                            return CheckboxListTile(
+                                              title: Text(item), // اسم العنصر
+                                              value: selectedIllnesses_1
+                                                  .contains(
+                                                    item,
+                                                  ), // هل العنصر مختار؟
+                                              onChanged: (checked) {
+                                                setState(() {
+                                                  if (checked!) {
+                                                    selectedIllnesses_1.add(
+                                                      item,
+                                                    );
+                                                  } else {
+                                                    selectedIllnesses_1.remove(
+                                                      item,
+                                                    );
+                                                  }
+                                                });
+                                              },
+                                            );
+                                          }).toList(),
+                                        ),
                                       ),
                                       actions: [
                                         TextButton(
@@ -86,96 +127,7 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                         ),
                                         TextButton(
                                           onPressed: () {
-                                            print(option1);
-                                            print(option2);
-                                            print(option3);
-                                            Navigator.pop(context);
-                                          },
-                                          child: Text("Done"),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                            );
-                          },
-                          child: Row(
-                            children: [
-                              Icon(Icons.add, color: Colors.amberAccent[200]),
-                              SizedBox(width: 5),
-                              Text(
-                                "تحديد",
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          "عمليات جراحية سابقة :",
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        SizedBox(width: 20),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                15,
-                              ), // زوايا ناعمة
-                            ),
-                          ),
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (context) {
-                                return StatefulBuilder(
-                                  builder: (context, setState) {
-                                    return AlertDialog(
-                                      title: Text("Select Options"),
-                                      content: Column(
-                                        mainAxisSize:
-                                            MainAxisSize.min, // important!
-                                        children: [
-                                          CheckboxListTile(
-                                            title: Text("Option 1"),
-                                            value: option1,
-                                            onChanged: (value) => setState(
-                                              () => option1 = value!,
-                                            ),
-                                          ),
-                                          CheckboxListTile(
-                                            title: Text("Option 2"),
-                                            value: option2,
-                                            onChanged: (value) => setState(
-                                              () => option2 = value!,
-                                            ),
-                                          ),
-                                          CheckboxListTile(
-                                            title: Text("Option 3"),
-                                            value: option3,
-                                            onChanged: (value) => setState(
-                                              () => option3 = value!,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: Text("Cancel"),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            print(option1);
-                                            print(option2);
-                                            print(option3);
+                                            print(selectedIllnesses_1);
                                             Navigator.pop(context);
                                           },
                                           child: Text("Done"),
@@ -224,33 +176,40 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                 return StatefulBuilder(
                                   builder: (context, setState) {
                                     return AlertDialog(
-                                      title: Text("Select Options"),
-                                      content: Column(
-                                        mainAxisSize:
-                                            MainAxisSize.min, // important!
-                                        children: [
-                                          CheckboxListTile(
-                                            title: Text("Option 1"),
-                                            value: option1,
-                                            onChanged: (value) => setState(
-                                              () => option1 = value!,
-                                            ),
-                                          ),
-                                          CheckboxListTile(
-                                            title: Text("Option 2"),
-                                            value: option2,
-                                            onChanged: (value) => setState(
-                                              () => option2 = value!,
-                                            ),
-                                          ),
-                                          CheckboxListTile(
-                                            title: Text("Option 3"),
-                                            value: option3,
-                                            onChanged: (value) => setState(
-                                              () => option3 = value!,
-                                            ),
-                                          ),
-                                        ],
+                                      title: Text(
+                                        "حدد المرض",
+                                        textAlign: TextAlign.right,
+                                      ),
+                                      content: SizedBox(
+                                        height: 300,
+                                        width: double.maxFinite,
+                                        child: ListView(
+                                          shrinkWrap: true,
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          children: illnessList_1.map((item) {
+                                            return CheckboxListTile(
+                                              title: Text(item), // اسم العنصر
+                                              value: selectedIllnesses_1
+                                                  .contains(
+                                                    item,
+                                                  ), // هل العنصر مختار؟
+                                              onChanged: (checked) {
+                                                setState(() {
+                                                  if (checked!) {
+                                                    selectedIllnesses_1.add(
+                                                      item,
+                                                    );
+                                                  } else {
+                                                    selectedIllnesses_1.remove(
+                                                      item,
+                                                    );
+                                                  }
+                                                });
+                                              },
+                                            );
+                                          }).toList(),
+                                        ),
                                       ),
                                       actions: [
                                         TextButton(
@@ -260,9 +219,7 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                         ),
                                         TextButton(
                                           onPressed: () {
-                                            print(option1);
-                                            print(option2);
-                                            print(option3);
+                                            print(selectedIllnesses_1);
                                             Navigator.pop(context);
                                           },
                                           child: Text("Done"),
@@ -291,7 +248,10 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text("الحساسيات :", style: TextStyle(fontSize: 16)),
+                        Text(
+                          "الحساسية إتجاه شيء :",
+                          style: TextStyle(fontSize: 16),
+                        ),
                         SizedBox(width: 20),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -308,33 +268,40 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                 return StatefulBuilder(
                                   builder: (context, setState) {
                                     return AlertDialog(
-                                      title: Text("Select Options"),
-                                      content: Column(
-                                        mainAxisSize:
-                                            MainAxisSize.min, // important!
-                                        children: [
-                                          CheckboxListTile(
-                                            title: Text("Option 1"),
-                                            value: option1,
-                                            onChanged: (value) => setState(
-                                              () => option1 = value!,
-                                            ),
-                                          ),
-                                          CheckboxListTile(
-                                            title: Text("Option 2"),
-                                            value: option2,
-                                            onChanged: (value) => setState(
-                                              () => option2 = value!,
-                                            ),
-                                          ),
-                                          CheckboxListTile(
-                                            title: Text("Option 3"),
-                                            value: option3,
-                                            onChanged: (value) => setState(
-                                              () => option3 = value!,
-                                            ),
-                                          ),
-                                        ],
+                                      title: Text(
+                                        "حدد المرض",
+                                        textAlign: TextAlign.right,
+                                      ),
+                                      content: SizedBox(
+                                        height: 300,
+                                        width: double.maxFinite,
+                                        child: ListView(
+                                          shrinkWrap: true,
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          children: illnessList_1.map((item) {
+                                            return CheckboxListTile(
+                                              title: Text(item), // اسم العنصر
+                                              value: selectedIllnesses_1
+                                                  .contains(
+                                                    item,
+                                                  ), // هل العنصر مختار؟
+                                              onChanged: (checked) {
+                                                setState(() {
+                                                  if (checked!) {
+                                                    selectedIllnesses_1.add(
+                                                      item,
+                                                    );
+                                                  } else {
+                                                    selectedIllnesses_1.remove(
+                                                      item,
+                                                    );
+                                                  }
+                                                });
+                                              },
+                                            );
+                                          }).toList(),
+                                        ),
                                       ),
                                       actions: [
                                         TextButton(
@@ -344,9 +311,99 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                         ),
                                         TextButton(
                                           onPressed: () {
-                                            print(option1);
-                                            print(option2);
-                                            print(option3);
+                                            print(selectedIllnesses_1);
+                                            Navigator.pop(context);
+                                          },
+                                          child: Text("Done"),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          },
+                          child: Row(
+                            children: [
+                              Icon(Icons.add, color: Colors.amberAccent[200]),
+                              SizedBox(width: 5),
+                              Text(
+                                "تحديد",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "الادمان إتجاه شيء :",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(width: 20),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                15,
+                              ), // زوايا ناعمة
+                            ),
+                          ),
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return StatefulBuilder(
+                                  builder: (context, setState) {
+                                    return AlertDialog(
+                                      title: Text(
+                                        "حدد المرض",
+                                        textAlign: TextAlign.right,
+                                      ),
+                                      content: SizedBox(
+                                        height: 300,
+                                        width: double.maxFinite,
+                                        child: ListView(
+                                          shrinkWrap: true,
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          children: illnessList_1.map((item) {
+                                            return CheckboxListTile(
+                                              title: Text(item), // اسم العنصر
+                                              value: selectedIllnesses_1
+                                                  .contains(
+                                                    item,
+                                                  ), // هل العنصر مختار؟
+                                              onChanged: (checked) {
+                                                setState(() {
+                                                  if (checked!) {
+                                                    selectedIllnesses_1.add(
+                                                      item,
+                                                    );
+                                                  } else {
+                                                    selectedIllnesses_1.remove(
+                                                      item,
+                                                    );
+                                                  }
+                                                });
+                                              },
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: Text("Cancel"),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            print(selectedIllnesses_1);
                                             Navigator.pop(context);
                                           },
                                           child: Text("Done"),
@@ -392,33 +449,40 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                 return StatefulBuilder(
                                   builder: (context, setState) {
                                     return AlertDialog(
-                                      title: Text("Select Options"),
-                                      content: Column(
-                                        mainAxisSize:
-                                            MainAxisSize.min, // important!
-                                        children: [
-                                          CheckboxListTile(
-                                            title: Text("Option 1"),
-                                            value: option1,
-                                            onChanged: (value) => setState(
-                                              () => option1 = value!,
-                                            ),
-                                          ),
-                                          CheckboxListTile(
-                                            title: Text("Option 2"),
-                                            value: option2,
-                                            onChanged: (value) => setState(
-                                              () => option2 = value!,
-                                            ),
-                                          ),
-                                          CheckboxListTile(
-                                            title: Text("Option 3"),
-                                            value: option3,
-                                            onChanged: (value) => setState(
-                                              () => option3 = value!,
-                                            ),
-                                          ),
-                                        ],
+                                      title: Text(
+                                        "حدد المرض",
+                                        textAlign: TextAlign.right,
+                                      ),
+                                      content: SizedBox(
+                                        height: 300,
+                                        width: double.maxFinite,
+                                        child: ListView(
+                                          shrinkWrap: true,
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          children: illnessList_1.map((item) {
+                                            return CheckboxListTile(
+                                              title: Text(item), // اسم العنصر
+                                              value: selectedIllnesses_1
+                                                  .contains(
+                                                    item,
+                                                  ), // هل العنصر مختار؟
+                                              onChanged: (checked) {
+                                                setState(() {
+                                                  if (checked!) {
+                                                    selectedIllnesses_1.add(
+                                                      item,
+                                                    );
+                                                  } else {
+                                                    selectedIllnesses_1.remove(
+                                                      item,
+                                                    );
+                                                  }
+                                                });
+                                              },
+                                            );
+                                          }).toList(),
+                                        ),
                                       ),
                                       actions: [
                                         TextButton(
@@ -428,9 +492,7 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                         ),
                                         TextButton(
                                           onPressed: () {
-                                            print(option1);
-                                            print(option2);
-                                            print(option3);
+                                            print(selectedIllnesses_1);
                                             Navigator.pop(context);
                                           },
                                           child: Text("Done"),
@@ -459,7 +521,10 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text("إدمانات  :", style: TextStyle(fontSize: 16)),
+                        Text(
+                          "عمليات جراحية سابقة :",
+                          style: TextStyle(fontSize: 16),
+                        ),
                         SizedBox(width: 20),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -476,33 +541,40 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                 return StatefulBuilder(
                                   builder: (context, setState) {
                                     return AlertDialog(
-                                      title: Text("Select Options"),
-                                      content: Column(
-                                        mainAxisSize:
-                                            MainAxisSize.min, // important!
-                                        children: [
-                                          CheckboxListTile(
-                                            title: Text("Option 1"),
-                                            value: option1,
-                                            onChanged: (value) => setState(
-                                              () => option1 = value!,
-                                            ),
-                                          ),
-                                          CheckboxListTile(
-                                            title: Text("Option 2"),
-                                            value: option2,
-                                            onChanged: (value) => setState(
-                                              () => option2 = value!,
-                                            ),
-                                          ),
-                                          CheckboxListTile(
-                                            title: Text("Option 3"),
-                                            value: option3,
-                                            onChanged: (value) => setState(
-                                              () => option3 = value!,
-                                            ),
-                                          ),
-                                        ],
+                                      title: Text(
+                                        "حدد المرض",
+                                        textAlign: TextAlign.right,
+                                      ),
+                                      content: SizedBox(
+                                        height: 300,
+                                        width: double.maxFinite,
+                                        child: ListView(
+                                          shrinkWrap: true,
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          children: illnessList_1.map((item) {
+                                            return CheckboxListTile(
+                                              title: Text(item), // اسم العنصر
+                                              value: selectedIllnesses_1
+                                                  .contains(
+                                                    item,
+                                                  ), // هل العنصر مختار؟
+                                              onChanged: (checked) {
+                                                setState(() {
+                                                  if (checked!) {
+                                                    selectedIllnesses_1.add(
+                                                      item,
+                                                    );
+                                                  } else {
+                                                    selectedIllnesses_1.remove(
+                                                      item,
+                                                    );
+                                                  }
+                                                });
+                                              },
+                                            );
+                                          }).toList(),
+                                        ),
                                       ),
                                       actions: [
                                         TextButton(
@@ -512,9 +584,7 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                         ),
                                         TextButton(
                                           onPressed: () {
-                                            print(option1);
-                                            print(option2);
-                                            print(option3);
+                                            print(selectedIllnesses_1);
                                             Navigator.pop(context);
                                           },
                                           child: Text("Done"),
@@ -538,6 +608,40 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                           ),
                         ),
                       ],
+                    ),
+                    SizedBox(height: 20),
+                    Center(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.amberAccent[100],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                              5,
+                            ), // زوايا ناعمة
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "حفظ و إرسال",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                            SizedBox(width: 10),
+                            Icon(Icons.save, color: Colors.black45),
+                          ],
+                        ),
+                        onPressed: () async {
+                          final confirmed = await notify.showConfirmationDialog(
+                            context,
+                            'هل أنت متأكد من حفظ بيانات السجل الطبي؟ \n سيتم تشخيص حالتك بناءا على البيانات المدخلة', // رسالة التأكيد
+                          );
+                          if (!confirmed) {
+                            return; //اذا لم يؤكد المستخدم، لا تفعل شيئًا
+                          }
+                        },
+                      ),
                     ),
                   ],
                 ),

@@ -1,3 +1,4 @@
+import 'package:MyCAQM/NotificationSystemComponent/notifiables.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'homePage.dart';
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "My Clinc", // تعيين عنوان التطبيق
       home:
-          Homepage(), // تحديد الصفحة الرئيسية التي يتم عرضها عند بدء تشغيل التطبيق
+          Notifiable(), // تحديد الصفحة الرئيسية التي يتم عرضها عند بدء تشغيل التطبيق
     );
   }
 }
