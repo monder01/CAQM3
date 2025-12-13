@@ -11,9 +11,15 @@ class Notifiable extends StatefulWidget {
 }
 
 class _NotifiableState extends State<Notifiable> {
-  final AudioPlayer audioPlay = AudioPlayer(); // مشغل الصوت
   Notifications notify = Notifications();
+  final player = AudioPlayer();
   late Timer _timer;
+  Future<void> playMusic() async {
+    await player.play(
+      UrlSource('https://luan.xyz/files/audio/ambient_c_motion.mp3'),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -35,7 +41,6 @@ class _NotifiableState extends State<Notifiable> {
 
   @override
   void dispose() {
-    // 3. الأهم: تذكر إلغاء المؤقت عند إزالة الويدجت من الشجرة
     _timer.cancel();
     super.dispose();
   }
@@ -53,9 +58,9 @@ class _NotifiableState extends State<Notifiable> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ElevatedButton(
-              onPressed: () async {
+              onPressed: () {
                 print("music playing");
-                await audioPlay.play(AssetSource('sounds/notification.mp3'));
+                playMusic();
               },
               child: Text('Play music'),
             ),

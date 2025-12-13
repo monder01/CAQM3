@@ -21,7 +21,10 @@ dependencies:
   intl: ^0.20.2
   dio: ^5.2.1
   audioplayers: ^6.5.1
-  
+  just_audio: ^0.10.5
+  just_audio_media_kit: ^2.1.0
+  media_kit_libs_windows_audio: ^1.0.9
+
 
 dev_dependencies:
   flutter_test:
