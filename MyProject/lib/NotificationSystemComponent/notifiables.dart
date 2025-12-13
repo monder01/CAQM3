@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:MyCAQM/NotificationSystemComponent/notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class Notifiable extends StatefulWidget {
   const Notifiable({super.key});
@@ -11,6 +11,7 @@ class Notifiable extends StatefulWidget {
 }
 
 class _NotifiableState extends State<Notifiable> {
+  final AudioPlayer audioPlay = AudioPlayer(); // مشغل الصوت
   Notifications notify = Notifications();
   late Timer _timer;
   @override
@@ -52,8 +53,9 @@ class _NotifiableState extends State<Notifiable> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 print("music playing");
+                await audioPlay.play(AssetSource('sounds/notification.mp3'));
               },
               child: Text('Play music'),
             ),
