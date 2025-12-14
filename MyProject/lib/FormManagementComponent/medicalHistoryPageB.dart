@@ -20,6 +20,7 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
   TextEditingController geneticDiseasesController = TextEditingController();
   TextEditingController previousSurgeriesController = TextEditingController();
   TextEditingController otherController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -733,6 +734,22 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                           if (!confirmed) {
                             return; //اذا لم يؤكد المستخدم، لا تفعل شيئًا
                           }
+                          await form.saveToFirebase(
+                            mainComplaint: illComplainController.text,
+                            illnessFree: illnessController.text,
+                            medicineFree: medicineController.text,
+                            allergiesFree: allergiesController.text,
+                            addictionsFree: addictionsController.text,
+                            geneticDiseasesFree: geneticDiseasesController.text,
+                            previousSurgeriesFree:
+                                previousSurgeriesController.text,
+                            otherNotes: otherController.text,
+                            context: context,
+                          );
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("تم حفظ البيانات بنجاح!")),
+                          );
                         },
                       ),
                     ),

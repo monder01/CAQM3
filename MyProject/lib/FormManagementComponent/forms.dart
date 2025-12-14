@@ -1,3 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
 class Forms {
   String? formId;
   List<String> illnessList = [
@@ -67,4 +71,64 @@ class Forms {
   List<String> selectedAddictions = []; // لتخزين الادمان المختار
   List<String> selectedGeneticDiseases = []; // لتخزين المرض الورائي المختارة
   List<String> selectedPreviousSurgeries = []; // لتخزين الحساسيات المختارة
+
+  void reset() {
+    selectedIllnesses.clear();
+    selectedMedicines.clear();
+    selectedAllergies.clear();
+    selectedAddictions.clear();
+    selectedGeneticDiseases.clear();
+    selectedPreviousSurgeries.clear();
+  }
+
+  // دالة الحفظ
+  Future<void> saveToFirebase({
+    required String mainComplaint,
+    required String illnessFree,
+    required String medicineFree,
+    required String allergiesFree,
+    required String addictionsFree,
+    required String geneticDiseasesFree,
+    required String previousSurgeriesFree,
+    required String otherNotes,
+    required BuildContext context,
+  }) async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      print("No user signed in!");
+      return;
+    }
+    TimeOfDay timeNow = TimeOfDay.now();
+    DateTime dateNow = DateTime.now();
+    String formattedTime = timeNow.format(context);
+    String formattedDate = dateNow.toIso8601String().substring(0, 10);
+    String userID = user.uid;
+
+    Map<String, dynamic> formData = {
+      'userID': userID,
+      'mainComplaint': mainComplaint,
+      'illnesses': [...selectedIllnesses, illnessFree],
+      'medicines': [...selectedMedicines, medicineFree],
+      'allergies': [...selectedAllergies, allergiesFree],
+      'addictions': [...selectedAddictions, addictionsFree],
+      'geneticDiseases': [...selectedGeneticDiseases, geneticDiseasesFree],
+      'previousSurgeries': [
+        ...selectedPreviousSurgeries,
+        previousSurgeriesFree,
+      ],
+      'otherNotes': otherNotes,
+      'time': formattedTime,
+      'date': formattedDate,
+    };
+
+    try {
+      await FirebaseFirestore.instance
+          .collection('Medical History Forms')
+          .add(formData);
+      print("Form data saved successfully for user $userID!");
+    } catch (e) {
+      print("Error saving form data: $e");
+    }
+  }
 }
