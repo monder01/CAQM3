@@ -1,3 +1,4 @@
+import 'package:MyCAQM/FormManagementComponent/forms.dart';
 import 'package:MyCAQM/NotificationSystemComponent/notifications.dart';
 import 'package:flutter/material.dart';
 
@@ -10,74 +11,7 @@ class Medicalhistorypageb extends StatefulWidget {
 
 class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
   Notifications notify = Notifications();
-  //String? illComplain;
-  List<String> illnessList = [
-    'السكري',
-    'ضغط الدم',
-    'القلب',
-    'الربو',
-    'الصرع',
-    'السرطان',
-    'الكلى',
-    'الكبد',
-    'الرئة',
-    'فقر الدم',
-  ];
-  List<String> medicineList = [
-    'الإنسولين',
-    'الميتفورمين',
-    'الأسبرين',
-    'باراسيتامول',
-    'أدوية الصرع',
-    'مضادات حيوية',
-    'أملوديبين',
-    'أتينولول',
-    'الكورتيزون',
-  ];
-  List<String> allergiesList = [
-    'حساسية الأدوية',
-    'حساسية الأطعمة',
-    'حساسية الحيوانات',
-    'حساسية أخرى',
-  ];
-  List<String> addictionsList = [
-    'التدخين',
-    'الكحول',
-    'الكافين',
-    'المخدرات',
-    'الأدوية المهدئة',
-    'المسكنات القوية',
-  ];
-  List<String> geneticdiseasesList = [
-    'السكري',
-    'ضغط الدم',
-    'القلب',
-    'الربو',
-    'الصرع',
-    'السرطان',
-    'الكلى',
-    'الكبد',
-    'الرئة',
-    'فقر الدم',
-  ];
-  List<String> previousSurgeriesList = [
-    'استئصال الزائدة الدودية',
-    'استئصال المرارة',
-    'عمليات الفتق',
-    'العمليات القيصرية',
-    'جراحات العظام',
-    'جراحات القلب',
-    'جراحات العيون',
-    'جراحات الأنف والأذن والحنجرة',
-    'استئصال اللوزتين',
-    'عمليات المسالك البولية',
-  ];
-  List<String> selectedIllnesses = []; // لتخزين الأمراض المختارة
-  List<String> selectedMedicines = []; // لتخزين الأدوية المختارة
-  List<String> selectedAllergies = []; // لتخزين الحساسيات المختارة
-  List<String> selectedAddictions = []; // لتخزين الحساسيات المختارة
-  List<String> selectedGeneticDiseases = []; // لتخزين الحساسيات المختارة
-  List<String> selectedPreviousSurgeries = [];
+  Forms form = Forms();
   TextEditingController illComplainController = TextEditingController();
   TextEditingController illnessController = TextEditingController();
   TextEditingController medicineController = TextEditingController();
@@ -156,20 +90,24 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                           shrinkWrap: true,
                                           physics:
                                               NeverScrollableScrollPhysics(),
-                                          children: illnessList.map((item) {
+                                          children: form.illnessList.map((
+                                            item,
+                                          ) {
                                             return CheckboxListTile(
                                               title: Text(item), // اسم العنصر
-                                              value: selectedIllnesses.contains(
-                                                item,
-                                              ), // هل العنصر مختار؟
+                                              value: form.selectedIllnesses
+                                                  .contains(
+                                                    item,
+                                                  ), // هل العنصر مختار؟
                                               onChanged: (checked) {
                                                 setState(() {
                                                   if (checked!) {
-                                                    selectedIllnesses.add(item);
-                                                  } else {
-                                                    selectedIllnesses.remove(
+                                                    form.selectedIllnesses.add(
                                                       item,
                                                     );
+                                                  } else {
+                                                    form.selectedIllnesses
+                                                        .remove(item);
                                                   }
                                                 });
                                               },
@@ -186,7 +124,7 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                         SizedBox(width: 100),
                                         TextButton(
                                           onPressed: () {
-                                            print(selectedIllnesses);
+                                            print(form.selectedIllnesses);
                                             Navigator.pop(context);
                                           },
                                           child: Text("تأكيد"),
@@ -260,20 +198,24 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                           shrinkWrap: true,
                                           physics:
                                               NeverScrollableScrollPhysics(),
-                                          children: medicineList.map((item) {
+                                          children: form.medicineList.map((
+                                            item,
+                                          ) {
                                             return CheckboxListTile(
                                               title: Text(item), // اسم العنصر
-                                              value: selectedMedicines.contains(
-                                                item,
-                                              ), // هل العنصر مختار؟
+                                              value: form.selectedMedicines
+                                                  .contains(
+                                                    item,
+                                                  ), // هل العنصر مختار؟
                                               onChanged: (checked) {
                                                 setState(() {
                                                   if (checked!) {
-                                                    selectedMedicines.add(item);
-                                                  } else {
-                                                    selectedMedicines.remove(
+                                                    form.selectedMedicines.add(
                                                       item,
                                                     );
+                                                  } else {
+                                                    form.selectedMedicines
+                                                        .remove(item);
                                                   }
                                                 });
                                               },
@@ -290,7 +232,7 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                         SizedBox(width: 100),
                                         TextButton(
                                           onPressed: () {
-                                            print(selectedMedicines);
+                                            print(form.selectedMedicines);
                                             Navigator.pop(context);
                                           },
                                           child: Text("تأكيد"),
@@ -364,20 +306,24 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                           shrinkWrap: true,
                                           physics:
                                               NeverScrollableScrollPhysics(),
-                                          children: allergiesList.map((item) {
+                                          children: form.allergiesList.map((
+                                            item,
+                                          ) {
                                             return CheckboxListTile(
                                               title: Text(item), // اسم العنصر
-                                              value: selectedAllergies.contains(
-                                                item,
-                                              ), // هل العنصر مختار؟
+                                              value: form.selectedAllergies
+                                                  .contains(
+                                                    item,
+                                                  ), // هل العنصر مختار؟
                                               onChanged: (checked) {
                                                 setState(() {
                                                   if (checked!) {
-                                                    selectedAllergies.add(item);
-                                                  } else {
-                                                    selectedAllergies.remove(
+                                                    form.selectedAllergies.add(
                                                       item,
                                                     );
+                                                  } else {
+                                                    form.selectedAllergies
+                                                        .remove(item);
                                                   }
                                                 });
                                               },
@@ -394,7 +340,7 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                         SizedBox(width: 100),
                                         TextButton(
                                           onPressed: () {
-                                            print(selectedAllergies);
+                                            print(form.selectedAllergies);
                                             Navigator.pop(context);
                                           },
                                           child: Text("تأكيد"),
@@ -468,23 +414,24 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                           shrinkWrap: true,
                                           physics:
                                               NeverScrollableScrollPhysics(),
-                                          children: addictionsList.map((item) {
+                                          children: form.addictionsList.map((
+                                            item,
+                                          ) {
                                             return CheckboxListTile(
                                               title: Text(item), // اسم العنصر
-                                              value: selectedAddictions
+                                              value: form.selectedAddictions
                                                   .contains(
                                                     item,
                                                   ), // هل العنصر مختار؟
                                               onChanged: (checked) {
                                                 setState(() {
                                                   if (checked!) {
-                                                    selectedAddictions.add(
+                                                    form.selectedAddictions.add(
                                                       item,
                                                     );
                                                   } else {
-                                                    selectedAddictions.remove(
-                                                      item,
-                                                    );
+                                                    form.selectedAddictions
+                                                        .remove(item);
                                                   }
                                                 });
                                               },
@@ -501,7 +448,7 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                         SizedBox(width: 100),
                                         TextButton(
                                           onPressed: () {
-                                            print(selectedAddictions);
+                                            print(form.selectedAddictions);
                                             Navigator.pop(context);
                                           },
                                           child: Text("تأكيد"),
@@ -572,23 +519,23 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                           shrinkWrap: true,
                                           physics:
                                               NeverScrollableScrollPhysics(),
-                                          children: geneticdiseasesList.map((
+                                          children: form.geneticdiseasesList.map((
                                             item,
                                           ) {
                                             return CheckboxListTile(
                                               title: Text(item), // اسم العنصر
-                                              value: selectedGeneticDiseases
+                                              value: form
+                                                  .selectedGeneticDiseases
                                                   .contains(
                                                     item,
                                                   ), // هل العنصر مختار؟
                                               onChanged: (checked) {
                                                 setState(() {
                                                   if (checked!) {
-                                                    selectedGeneticDiseases.add(
-                                                      item,
-                                                    );
+                                                    form.selectedGeneticDiseases
+                                                        .add(item);
                                                   } else {
-                                                    selectedGeneticDiseases
+                                                    form.selectedGeneticDiseases
                                                         .remove(item);
                                                   }
                                                 });
@@ -606,7 +553,7 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                         SizedBox(width: 100),
                                         TextButton(
                                           onPressed: () {
-                                            print(selectedGeneticDiseases);
+                                            print(form.selectedGeneticDiseases);
                                             Navigator.pop(context);
                                           },
                                           child: Text("تأكيد"),
@@ -680,22 +627,23 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                           shrinkWrap: true,
                                           physics:
                                               NeverScrollableScrollPhysics(),
-                                          children: previousSurgeriesList.map((
+                                          children: form.previousSurgeriesList.map((
                                             item,
                                           ) {
                                             return CheckboxListTile(
                                               title: Text(item), // اسم العنصر
-                                              value: selectedPreviousSurgeries
+                                              value: form
+                                                  .selectedPreviousSurgeries
                                                   .contains(
                                                     item,
                                                   ), // هل العنصر مختار؟
                                               onChanged: (checked) {
                                                 setState(() {
                                                   if (checked!) {
-                                                    selectedPreviousSurgeries
+                                                    form.selectedPreviousSurgeries
                                                         .add(item);
                                                   } else {
-                                                    selectedPreviousSurgeries
+                                                    form.selectedPreviousSurgeries
                                                         .remove(item);
                                                   }
                                                 });
@@ -713,7 +661,9 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                         SizedBox(width: 100),
                                         TextButton(
                                           onPressed: () {
-                                            print(selectedPreviousSurgeries);
+                                            print(
+                                              form.selectedPreviousSurgeries,
+                                            );
                                             Navigator.pop(context);
                                           },
                                           child: Text("تأكيد"),
