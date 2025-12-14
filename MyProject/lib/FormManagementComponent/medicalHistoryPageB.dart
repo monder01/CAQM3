@@ -88,8 +88,6 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                         width: double.maxFinite,
                                         child: ListView(
                                           shrinkWrap: true,
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
                                           children: form.illnessList.map((
                                             item,
                                           ) {
@@ -196,8 +194,6 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                         width: double.maxFinite,
                                         child: ListView(
                                           shrinkWrap: true,
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
                                           children: form.medicineList.map((
                                             item,
                                           ) {
@@ -304,8 +300,6 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                         width: double.maxFinite,
                                         child: ListView(
                                           shrinkWrap: true,
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
                                           children: form.allergiesList.map((
                                             item,
                                           ) {
@@ -412,8 +406,6 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                         width: double.maxFinite,
                                         child: ListView(
                                           shrinkWrap: true,
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
                                           children: form.addictionsList.map((
                                             item,
                                           ) {
@@ -517,8 +509,6 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                         width: double.maxFinite,
                                         child: ListView(
                                           shrinkWrap: true,
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
                                           children: form.geneticdiseasesList.map((
                                             item,
                                           ) {
@@ -625,8 +615,6 @@ class _MedicalhistorypagebState extends State<Medicalhistorypageb> {
                                         width: double.maxFinite,
                                         child: ListView(
                                           shrinkWrap: true,
-                                          physics:
-                                              NeverScrollableScrollPhysics(),
                                           children: form.previousSurgeriesList.map((
                                             item,
                                           ) {
