@@ -3,8 +3,10 @@ import 'package:flutter/material.dart'; // استيراد مكتبة الواج�
 import '/UserManagementComponent/users.dart'; // استيراد كلاس المستخدم الأساسي UserC
 
 class Signin extends StatefulWidget {
+  final UserC? user;
   const Signin({
     super.key,
+    this.user,
   }); // ويدجت تسجيل الدخول، من نوع Stateful لأنها تعتمد على مدخلات المستخدم
 
   @override
@@ -12,13 +14,19 @@ class Signin extends StatefulWidget {
 }
 
 class _SigninState extends State<Signin> {
-  UserC user =
-      UserC(); // إنشاء كائن من UserC لتخزين بيانات تسجيل الدخول وتنفيذ وظيفة signin
+  late final UserC
+  user; // إنشاء كائن من UserC لتخزين بيانات تسجيل الدخول وتنفيذ وظيفة signin
   TextEditingController emailController =
       TextEditingController(); // متحكم لحقل إدخال البريد الإلكتروني
   TextEditingController passwordController =
       TextEditingController(); // متحكم لحقل إدخال كلمة المرور
   String? selectedValue; // القيمة المختارة من القائمة المنسدلة
+  @override
+  void initState() {
+    super.initState();
+    user = widget.user ?? UserC();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

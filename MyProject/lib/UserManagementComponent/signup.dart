@@ -5,8 +5,12 @@ import '/UserManagementComponent/patients.dart'; // استيراد كلاس Pati
 import '/UserManagementComponent/users.dart'; // استيراد الكلاس الأساسي UserC المستخدم كأساس لأنواع المستخدمين
 
 class Signup extends StatefulWidget {
+  final Patient? patient;
+  final Notifications? notify;
   const Signup({
     super.key,
+    this.patient,
+    this.notify,
   }); // ويدجت صفحة التسجيل، من نوع Stateful لأنها تعتمد على مدخلات (حالة) قابلة للتغيير
 
   @override
@@ -14,12 +18,10 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
-  Notifications notify =
-      Notifications(); // كائن للتعامل مع رسائل التأكيد/الإشعارات
+  late final Notifications notify; // كائن للتعامل مع رسائل التأكيد/الإشعارات
   UserC user =
       UserC(); // كائن مستخدم عام (قد يُستخدم لوظائف مشتركة بين المستخدمين)
-  Patient patient =
-      Patient(); // كائن يمثل المريض الجديد الذي سيتم إنشاء حساب له
+  late final Patient patient; // كائن يمثل المريض الجديد الذي سيتم إنشاء حساب له
   TextEditingController emailController =
       TextEditingController(); // متحكم لحقل البريد الإلكتروني
   TextEditingController passwordController =
@@ -28,6 +30,13 @@ class _SignupState extends State<Signup> {
       TextEditingController(); // متحكم لحقل رقم الهاتف
   TextEditingController nameController =
       TextEditingController(); // متحكم لحقل الاسم الكامل
+
+  @override
+  void initState() {
+    super.initState();
+    notify = widget.notify ?? Notifications();
+    patient = widget.patient ?? Patient();
+  }
 
   @override
   Widget build(BuildContext context) {
