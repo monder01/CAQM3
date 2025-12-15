@@ -1,3 +1,4 @@
+import 'package:MyCAQM/NotificationSystemComponent/trynote.dart';
 import 'package:MyCAQM/UserManagementComponent/signin.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "My Clinc", // تعيين عنوان التطبيق
       home:
-          Signin(), // تحديد الصفحة الرئيسية التي يتم عرضها عند بدء تشغيل التطبيق
+          Trynote(), // تحديد الصفحة الرئيسية التي يتم عرضها عند بدء تشغيل التطبيق
     );
   }
 }

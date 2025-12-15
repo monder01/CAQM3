@@ -46,7 +46,7 @@ class _ShowappointmentState extends State<Showappointment> {
       currentUser = currentUserId;
     }
     // بدء مؤقت للتحقق من التذكير كل دقيقة
-    reminderTimer = Timer.periodic(Duration(minutes: 2), (timer) {
+    reminderTimer = Timer.periodic(Duration(minutes: 1), (timer) {
       print("currentline: $currentLineNumber , userline: $userLineNumber");
       notifiable.receiveReminder(
         context,
