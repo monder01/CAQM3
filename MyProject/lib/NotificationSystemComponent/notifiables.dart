@@ -1,59 +1,108 @@
-import 'package:MyCAQM/NotificationSystemComponent/notifiables%20copy.dart';
 import 'package:MyCAQM/NotificationSystemComponent/notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'dart:async';
 
-class Notifiable extends StatefulWidget {
-  const Notifiable({super.key});
-
-  @override
-  State<Notifiable> createState() => _NotifiableState();
-}
-
-class _NotifiableState extends State<Notifiable> {
-  Notifiables notes = Notifiables();
+class Notifiables {
+  String message = '';
   Notifications notify = Notifications();
-  @override
-  void initState() {
-    super.initState();
-    notes.showNotification(context);
-    //notifiable.playMusic();
+  final player = AudioPlayer();
+  late Timer timer;
+  //-------------------------------------------------------------
+  Future<void> playMusic() async {
+    await player.play(
+      UrlSource('https://luan.xyz/files/audio/ambient_c_motion.mp3'),
+    );
   }
 
-  @override
-  /*void dispose() {
-    timer.cancel();
-    super.dispose();
-  }*/
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('صفحة الاشعارات'),
-        backgroundColor: Colors.amberAccent[200],
-      ),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ElevatedButton(
+  Future<void> stopMusic() async {
+    print("Attempting to stop reminder music");
+    await player.stop();
+  }
+
+  //--------------------------------------------------------------------------
+  Future<bool> playReminder(
+    BuildContext context, // السياق المطلوب لعرض مربع الحوار
+    String message, // الرسالة التي ستظهر داخل مربع التأكيد
+  ) async {
+    this.message =
+        message; // تخزين الرسالة داخل الكائن لاستخدامها مستقبلاً إن لزم ذلك
+
+    // فتح مربع حوار من نوع AlertDialog وإرجاع قيمة منطقية حسب اختيار المستخدم
+    final result = await showDialog<bool>(
+      context: context,
+      barrierDismissible:
+          true, // السماح بإغلاق مربع الحوار عند الضغط خارجَه أو بالرجوع
+      builder: (context) {
+        return AlertDialog(
+          title: const Text(
+            'بقي على موعدك أقل من 5 دقايق ⌛', // عنوان مربع الحوار
+            textAlign: TextAlign.right, // جعل النص بمحاذاة اليمين (العربية)
+            style: TextStyle(fontWeight: FontWeight.bold), // جعل الخط عريضًا
+          ),
+          content: Text(
+            message, // عرض الرسالة المرسلة للتابع
+            textAlign: TextAlign.right, // محاذاة النص لليمين
+            style: TextStyle(
+              color: Colors.redAccent,
+              fontWeight: FontWeight.bold,
+            ), // لون مميز للرسالة
+          ),
+          actions: [
+            TextButton(
+              // زر الإلغاء
               onPressed: () {
-                TimeOfDay timeNow = TimeOfDay.now();
-                DateTime dateNow = DateTime.now();
-                String formattedTime = timeNow.format(context);
-                String formattedDate = dateNow.toIso8601String().substring(
-                  0,
-                  10,
-                );
-                String tryDate = '2025-12-15';
-                String tryTime = '7:02 PM';
-                print("music playing $formattedTime $formattedDate");
+                stopMusic();
+                Navigator.of(context).pop(true);
               },
-              child: Text('Play music'),
+              // إرجاع true عند الإلغاء
+              child: const Text(
+                'تخطي',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
           ],
-        ),
-      ),
+        );
+      },
     );
+
+    // إذا أغلق المستخدم مربع الحوار بدون اختيار، اعتبر القيمة false
+    return result ?? false;
+  }
+
+  void receiveReminder(
+    BuildContext context,
+    String currentUser,
+    int? currentLineNumber,
+    int? userLineNumber,
+  ) async {
+    if (currentUser.isEmpty) {
+      return;
+    }
+    if (currentLineNumber == userLineNumber) {
+      if (!context.mounted) {
+        return;
+      }
+      await notify.showConfirmationDialog(
+        context,
+        "حان دورك الآن في العيادة. يرجى التوجه إلى الاستقبال.",
+      );
+    }
+  }
+
+  void showNotification(BuildContext context) {
+    timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      TimeOfDay timeNow = TimeOfDay.now();
+      DateTime dateNow = DateTime.now();
+      String formattedTime = timeNow.format(context);
+      String formattedDate = dateNow.toIso8601String().substring(0, 10);
+      String tryDate = '2025-12-15';
+      String tryTime = '7:08 PM';
+      if (formattedTime == tryTime && formattedDate == tryDate) {
+        print('Time: $formattedTime Date: $formattedDate');
+        playReminder(context, 'الرجاء تجهيز نفسك ⏱️ ');
+        playMusic();
+      }
+    });
   }
 }

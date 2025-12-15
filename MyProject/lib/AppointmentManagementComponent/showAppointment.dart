@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:isolate';
+
+import 'package:MyCAQM/NotificationSystemComponent/notifiables.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -27,6 +31,10 @@ class _ShowappointmentState extends State<Showappointment> {
   currentUser; // لتحديد المريض الذي سيتم عرض مواعيده (إما من الأدمن أو من المستخدم الحالي)
 
   String? currentEmail; // متغير يمكن استخدامه لاحقاً للبريد (غير مستخدم حاليًا)
+  late Timer reminderTimer; // مؤقت لتكرار التحقق من التذكير
+  int? currentLineNumber;
+  int? userLineNumber;
+  Notifiables notifiable = Notifiables();
 
   @override
   void initState() {
@@ -37,6 +45,16 @@ class _ShowappointmentState extends State<Showappointment> {
     } else {
       currentUser = currentUserId;
     }
+    // بدء مؤقت للتحقق من التذكير كل دقيقة
+    reminderTimer = Timer.periodic(Duration(minutes: 2), (timer) {
+      print("currentline: $currentLineNumber , userline: $userLineNumber");
+      notifiable.receiveReminder(
+        context,
+        currentUser!,
+        currentLineNumber,
+        userLineNumber,
+      );
+    });
   }
 
   @override
@@ -80,6 +98,7 @@ class _ShowappointmentState extends State<Showappointment> {
                       snapshot.data!.docs.first; // جلب أول وثيقة من المجموعة
                   int todayLine =
                       document["MovingLineNumber"]; // قراءة رقم الدور الحالي من الحقل MovingLineNumber
+                  currentLineNumber = todayLine;
 
                   return Text(
                     todayLine.toString(), // عرض رقم الطابور الحالي كنص
@@ -128,7 +147,7 @@ class _ShowappointmentState extends State<Showappointment> {
                   itemCount: docs.length, // عدد المواعيد
                   itemBuilder: (context, index) {
                     final doc = docs[index]; // الموعد الحالي
-
+                    userLineNumber = doc['LineNumber'];
                     return Card(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
