@@ -54,7 +54,14 @@ class _AdminspageState extends State<Adminspage> {
                   (route) => false, // إرجاع false يعني حذف كل المسارات السابقة
                 );
               },
-              icon: Text("تسجيل خروج"), // نص الزر داخل الـ AppBar (بدل أيقونة)
+              icon: Text(
+                "تسجيل خروج",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ), // نص الزر داخل الـ AppBar (بدل أيقونة)
             ),
           ),
         ],
