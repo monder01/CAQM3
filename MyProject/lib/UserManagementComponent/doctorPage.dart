@@ -1,7 +1,6 @@
+import 'package:MyCAQM/UserManagementComponent/signin.dart';
 import '/NotificationSystemComponent/notifications.dart';
 import '/AppointmentManagementComponent/doctorAppointment.dart';
-import '/homePage.dart';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -43,7 +42,7 @@ class _DoctorpageState extends State<Doctorpage> {
                 // الانتقال إلى صفحة الـ Homepage وحذف كل الصفحات السابقة من الـ stack
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => Homepage()),
+                  MaterialPageRoute(builder: (context) => Signin()),
                   (route) => false, // إرجاع false يعني حذف كل المسارات السابقة
                 );
               },

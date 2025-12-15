@@ -1,8 +1,8 @@
+import 'package:MyCAQM/UserManagementComponent/signin.dart';
 import 'package:flutter/material.dart';
 import '/AppointmentManagementComponent/appointmentPage.dart';
 import '/FormManagementComponent/formPage.dart';
 import '/NotificationSystemComponent/notifications.dart';
-import '/homePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Patientpage extends StatefulWidget {
@@ -57,7 +57,7 @@ class _PatientpageState extends State<Patientpage> {
                 // الانتقال إلى صفحة HomePage مع إزالة جميع الصفحات السابقة من الـ navigator stack
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => Homepage()),
+                  MaterialPageRoute(builder: (context) => Signin()),
                   (route) =>
                       false, // إرجاع false يعني حذف جميع المسارات السابقة
                 );

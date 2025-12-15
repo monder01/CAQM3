@@ -1,4 +1,5 @@
 // lib/pages/signin.dart
+import 'package:MyCAQM/UserManagementComponent/signup.dart';
 import 'package:flutter/material.dart'; // استيراد مكتبة الواجهات الرسومية الخاصة بفلاتر
 import '/UserManagementComponent/users.dart'; // استيراد كلاس المستخدم الأساسي UserC
 
@@ -97,6 +98,16 @@ class _SigninState extends State<Signin> {
                   );
                 },
                 child: Text("تسجيل الدخول"), // نص الزر
+              ),
+              SizedBox(height: 20), // مسافة بين العناصر
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Signup()),
+                  );
+                },
+                child: Text("ليس لديك حساب؟ سجل الآن"),
               ),
             ],
           ), // محتوى الصفحة
