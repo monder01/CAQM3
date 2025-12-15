@@ -15,10 +15,6 @@ class Notifiables {
     );
   }
 
-  Future<void> playAudio() async {
-    await player.play(UrlSource(''));
-  }
-
   Future<void> stopMusic() async {
     print("Attempting to stop reminder music");
     await player.stop();
@@ -80,8 +76,8 @@ class Notifiables {
       DateTime dateNow = DateTime.now();
       String formattedTime = timeNow.format(context);
       String formattedDate = dateNow.toIso8601String().substring(0, 10);
-      String tryDate = '2025-12-14';
-      String tryTime = '12:55 AM';
+      String tryDate = '2025-12-15';
+      String tryTime = '7:08 PM';
       if (formattedTime == tryTime && formattedDate == tryDate) {
         print('Time: $formattedTime Date: $formattedDate');
         playReminder(context, 'الرجاء تجهيز نفسك ⏱️ ');

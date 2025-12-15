@@ -38,7 +38,16 @@ class _NotifiableState extends State<Notifiable> {
           children: [
             ElevatedButton(
               onPressed: () {
-                print("music playing");
+                TimeOfDay timeNow = TimeOfDay.now();
+                DateTime dateNow = DateTime.now();
+                String formattedTime = timeNow.format(context);
+                String formattedDate = dateNow.toIso8601String().substring(
+                  0,
+                  10,
+                );
+                String tryDate = '2025-12-15';
+                String tryTime = '7:02 PM';
+                print("music playing $formattedTime $formattedDate");
               },
               child: Text('Play music'),
             ),
