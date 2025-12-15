@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "My Clinc", // تعيين عنوان التطبيق
       home:
-          Trynote(), // تحديد الصفحة الرئيسية التي يتم عرضها عند بدء تشغيل التطبيق
+          Signin(), // تحديد الصفحة الرئيسية التي يتم عرضها عند بدء تشغيل التطبيق
     );
   }
 }
