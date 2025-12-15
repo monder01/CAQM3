@@ -71,6 +71,7 @@ class Notifiables {
       return;
     }
     if (currentLineNumber == userLineNumber) {
+      playNotification('mixkit.wav');
       if (!context.mounted) {
         return;
       }
@@ -78,7 +79,6 @@ class Notifiables {
         context,
         "حان دورك الآن في العيادة. يرجى التوجه إلى الاستقبال.",
       );
-      playNotification('mixkit.wav');
     }
   }
 }
