@@ -46,6 +46,10 @@ class _ShowappointmentState extends State<Showappointment> {
     }
     // بدء مؤقت للتحقق من التذكير كل دقيقة
     reminderTimer = Timer.periodic(Duration(minutes: 1), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
       print("currentline: $currentLineNumber , userline: $userLineNumber");
       notifiable.receiveReminder(
         context,
@@ -54,6 +58,13 @@ class _ShowappointmentState extends State<Showappointment> {
         userLineNumber,
       );
     });
+  }
+
+  @override
+  void dispose() {
+    // إيقاف المؤقت فوراً عند مغادرة الصفحة لمنع استدعاء context لاحقاً
+    reminderTimer.cancel();
+    super.dispose();
   }
 
   @override

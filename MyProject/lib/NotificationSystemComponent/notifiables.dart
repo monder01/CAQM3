@@ -46,7 +46,9 @@ class Notifiables {
           TextButton(
             onPressed: () {
               stopMusic();
-              if (context.mounted) Navigator.of(context).pop(true);
+              if (Navigator.canPop(context)) {
+                Navigator.of(context).pop(true);
+              }
             },
             child: const Text(
               'تخطي',
@@ -79,6 +81,9 @@ class Notifiables {
         context,
         "حان دورك الآن في العيادة. يرجى التوجه إلى الاستقبال.",
       );
+      if (!context.mounted) {
+        return;
+      }
     }
   }
 }
