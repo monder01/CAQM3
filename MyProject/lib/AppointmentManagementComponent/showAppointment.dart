@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:isolate';
 
 import 'package:MyCAQM/NotificationSystemComponent/notifiables.dart';
 import 'package:flutter/material.dart';

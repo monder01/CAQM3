@@ -2,7 +2,6 @@ import 'package:MyCAQM/UserManagementComponent/signin.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'firebase_options.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // التأكد من تهيئة ربط فلاتر قبل تنفيذ أي عمليات غير متزامنة
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
