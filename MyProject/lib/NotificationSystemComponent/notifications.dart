@@ -2,6 +2,15 @@
 import 'package:flutter/material.dart'; // استيراد مكتبة الواجهة الرسومية في فلاتر
 
 class Notifications {
+  //design pattern singleton لتكوين instance من الكلاس Notifications واحد فقط , وعند استخدامه يتم استخدام نفس الكائن
+  // instance واحد فقط
+  static final Notifications _instance = Notifications._internal();
+  factory Notifications() {
+    return _instance;
+  }
+  Notifications._internal();
+
+  //-------------------------------------------------------------------------------
   String message = ''; // متغير لتخزين الرسالة التي سيتم عرضها داخل مربع الحوار
 
   Future<bool> showConfirmationDialog(

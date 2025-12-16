@@ -5,6 +5,13 @@ import 'dart:async';
 import 'package:just_audio/just_audio.dart';
 
 class Notifiables {
+  //تكوين الكلاس Notifiables للتنبيهات والاشعارات singleton يستعمل نفس الكلاس في جميع الصفحات
+  static final Notifiables _instance = Notifiables._internal();
+
+  factory Notifiables() => _instance;
+
+  Notifiables._internal();
+
   String message = '';
   final player = AudioPlayer();
   late Timer timer;

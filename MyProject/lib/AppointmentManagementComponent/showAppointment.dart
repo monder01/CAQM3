@@ -238,7 +238,6 @@ class _ShowappointmentState extends State<Showappointment> {
                                         .delete();
                                   },
                                 ),
-
                                 // زر تأكيد الوصول
                                 IconButton(
                                   icon: const Icon(
