@@ -1,3 +1,4 @@
+//manageQueuePage.dart
 import 'package:flutter/material.dart'; // استيراد مكتبة واجهة المستخدم من فلاتر
 import '/NotificationSystemComponent/notifications.dart'; // استيراد كلاس الإشعارات/رسائل التأكيد
 import 'package:cloud_firestore/cloud_firestore.dart'; // استيراد مكتبة Cloud Firestore للتعامل مع قاعدة البيانات

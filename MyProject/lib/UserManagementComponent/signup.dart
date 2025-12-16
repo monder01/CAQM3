@@ -1,4 +1,4 @@
-// lib/pages/signup.dart
+//signup.dart
 import 'package:flutter/material.dart'; // استيراد مكتبة واجهة المستخدم في فلاتر
 import '/NotificationSystemComponent/notifications.dart'; // استيراد نظام الإشعارات/الحوارات المخصصة
 import '/UserManagementComponent/patients.dart'; // استيراد كلاس Patient الذي يمثل المريض

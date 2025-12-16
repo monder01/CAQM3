@@ -1,3 +1,4 @@
+//checkInAdmin.dart
 import 'package:cloud_firestore/cloud_firestore.dart'; // استيراد مكتبة Cloud Firestore للتعامل مع قاعدة البيانات السحابية
 import 'package:firebase_auth/firebase_auth.dart'; // استيراد مكتبة Firebase Auth للحصول على المستخدم الحالي
 import 'package:flutter/material.dart'; // استيراد مكتبة الواجهات في فلاتر

@@ -1,3 +1,4 @@
+//formPage.dart
 import 'package:MyCAQM/FormManagementComponent/medicalHistoryPageB.dart';
 import 'package:flutter/material.dart'; // استيراد مكتبة بناء واجهات فلاتر
 import '/FormManagementComponent/insurancePage.dart'; // استيراد صفحة نموذج التأمين

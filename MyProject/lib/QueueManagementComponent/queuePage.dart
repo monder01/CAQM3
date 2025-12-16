@@ -1,3 +1,4 @@
+//queuePage.dart
 import 'package:flutter/material.dart'; // استيراد مكتبة واجهة المستخدم من فلاتر
 import '/QueueManagementComponent/checkInAdmin.dart'; // استيراد صفحة/ويدجت تسجيل وصول المرضى
 import '/QueueManagementComponent/manageQueuePage.dart'; // استيراد صفحة إدارة الطابور للواصلين

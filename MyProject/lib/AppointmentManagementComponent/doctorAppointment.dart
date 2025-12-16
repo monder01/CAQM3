@@ -1,3 +1,4 @@
+//doctorAppointment.dart
 import 'package:flutter/material.dart'; // استيراد مكونات واجهة المستخدم من فلاتر
 import 'package:cloud_firestore/cloud_firestore.dart'; // استيراد مكتبة التعامل مع Cloud Firestore
 import 'package:firebase_auth/firebase_auth.dart'; // استيراد مكتبة المصادقة من Firebase للحصول على المستخدم الحالي

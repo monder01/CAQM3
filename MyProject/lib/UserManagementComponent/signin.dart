@@ -1,4 +1,4 @@
-// lib/pages/signin.dart
+//signin.dart
 import 'package:MyCAQM/UserManagementComponent/signup.dart';
 import 'package:flutter/material.dart'; // استيراد مكتبة الواجهات الرسومية الخاصة بفلاتر
 import '/UserManagementComponent/users.dart'; // استيراد كلاس المستخدم الأساسي UserC

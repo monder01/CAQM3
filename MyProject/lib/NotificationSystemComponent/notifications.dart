@@ -1,3 +1,4 @@
+//notifications.dart
 import 'package:flutter/material.dart'; // استيراد مكتبة الواجهة الرسومية في فلاتر
 
 class Notifications {

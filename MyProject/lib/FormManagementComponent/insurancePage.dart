@@ -1,3 +1,4 @@
+//insurancePage.dart
 import 'package:flutter/material.dart'; // استيراد مكتبة الواجهات في فلاتر
 import 'package:firebase_auth/firebase_auth.dart'; // استيراد مكتبة إدارة المستخدمين من Firebase
 import 'package:cloud_firestore/cloud_firestore.dart'; // استيراد مكتبة Firestore للتعامل مع قاعدة البيانات السحابية
