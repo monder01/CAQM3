@@ -4,6 +4,7 @@ import '/AppointmentManagementComponent/appointments.dart'; // استيراد ك
 import 'package:firebase_auth/firebase_auth.dart'; // استيراد مكتبة المصادقة من Firebase
 import 'package:cloud_firestore/cloud_firestore.dart'; // استيراد مكتبة Cloud Firestore للتعامل مع قاعدة البيانات
 import '/NotificationSystemComponent/notifications.dart'; // استيراد كلاس الإشعارات/رسائل التأكيد
+import 'appointment_factory.dart';
 
 class AddAppointmentPage extends StatefulWidget {
   const AddAppointmentPage({super.key, this.patientIdd});
@@ -140,21 +141,16 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                         ),
                       ],
                       onChanged: (value) {
+                        selectedAppointmentType = value;
                         // عند تغيير نوع الموعد من القائمة المنسدلة
                         setState(() {
-                          selectedAppointmentType =
-                              value; // تخزين النوع المختار
-                          // تحديد تكلفة الموعد حسب النوع
-                          if (selectedAppointmentType == "إستشارة") {
-                            appointmentCost = 30.0;
-                          } else if (selectedAppointmentType == "متابعة") {
-                            appointmentCost = 70.0;
-                          } else if (selectedAppointmentType == "فحص دوري") {
-                            appointmentCost = 50.0;
-                          } else {
-                            appointmentCost =
-                                null; // في حال لم يتم اختيار أي نوع
-                          }
+                          // تحديد النوع المختار
+                          print(selectedAppointmentType);
+                          appointmentCost = (selectedAppointmentType == null)
+                              ? null
+                              : AppointmentFactory.getCost(
+                                  selectedAppointmentType!,
+                                );
                         });
                       },
                     ),
