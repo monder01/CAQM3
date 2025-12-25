@@ -127,25 +127,35 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                       items: const [
                         DropdownMenuItem(
                           value: 'إستشارة',
-                          child: Text(
-                            'إستشارة (السعر 30د.ل)',
-                          ), // نوع الموعد + السعر
+                          child: Text('إستشارة (السعر 30د.ل)'),
                         ),
                         DropdownMenuItem(
                           value: 'متابعة',
-                          child: Text('متابعة (السعر 70د.ل)'),
+                          child: Text('متابعة (السعر 50د.ل)'),
                         ),
                         DropdownMenuItem(
                           value: 'فحص دوري',
-                          child: Text('فحص دوري (السعر 50د.ل)'),
+                          child: Text('فحص دوري (السعر 40د.ل)'),
                         ),
+                        DropdownMenuItem(
+                          value: 'تحاليل',
+                          child: Text('تحاليل (السعر 80د.ل)'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'جراحة',
+                          child: Text('جراحة (السعر 200د.ل)'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'علاج طبيعي',
+                          child: Text('علاج طبيعي (السعر 150د.ل)'),
+                        ),
+                        DropdownMenuItem(value: 'اخرى', child: Text('اخرى')),
                       ],
                       onChanged: (value) {
-                        selectedAppointmentType = value;
-                        // عند تغيير نوع الموعد من القائمة المنسدلة
                         setState(() {
-                          // تحديد النوع المختار
-                          print(selectedAppointmentType);
+                          selectedAppointmentType = value;
+                          // حفظ نوع الموعد المختار
+                          // يمكنك استخدام هذا النوع في تحديد سعر الموعد
                           appointmentCost = (selectedAppointmentType == null)
                               ? null
                               : AppointmentFactory.getCost(

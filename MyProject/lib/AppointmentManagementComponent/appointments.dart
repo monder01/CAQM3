@@ -14,6 +14,16 @@ class Appointment {
   int? lineNumber = 0; // رقم الدور المرتبط بالموعد في الطابور
   String? appointmentType; // نوع الموعد (استشارة، متابعة، فحص دوري...)
   double? cost; // تكلفة الموعد
+  Appointment({
+    this.appointmentType = 'عادي',
+    this.cost = 0.0,
+    this.appointmentId,
+    this.appointmentDate,
+    this.time,
+    this.reason,
+    this.status,
+    this.lineNumber,
+  });
 
   /// التحقق من توفر الوقت
   Future<bool> isTimeAvailable(
