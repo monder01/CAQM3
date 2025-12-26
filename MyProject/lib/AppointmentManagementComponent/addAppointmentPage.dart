@@ -154,8 +154,6 @@ class _AddAppointmentPageState extends State<AddAppointmentPage> {
                       onChanged: (value) {
                         setState(() {
                           selectedAppointmentType = value;
-                          // حفظ نوع الموعد المختار
-                          // يمكنك استخدام هذا النوع في تحديد سعر الموعد
                           appointmentCost = (selectedAppointmentType == null)
                               ? null
                               : AppointmentFactory.getCost(

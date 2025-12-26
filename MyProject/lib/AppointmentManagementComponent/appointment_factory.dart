@@ -21,6 +21,7 @@ class AppointmentFactory {
     }
   }
 
+  // استرجاع تكلفة الموعد بناءً على نوع الموعد
   static double getCost(String type) {
     return create(type).cost ?? 0.0;
   }
