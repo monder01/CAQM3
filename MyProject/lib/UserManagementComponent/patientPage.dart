@@ -1,5 +1,6 @@
 //patientPage.dart
 import 'package:MyCAQM/UserManagementComponent/signin.dart';
+import 'package:MyCAQM/fireBase.dart';
 import 'package:flutter/material.dart';
 import '/AppointmentManagementComponent/appointmentPage.dart';
 import '/FormManagementComponent/formPage.dart';
@@ -52,7 +53,7 @@ class _PatientpageState extends State<Patientpage> {
                   return; // إذا لم يؤكد المستخدم، يتم إلغاء العملية
                 }
 
-                await FirebaseAuth.instance
+                await FirebaseService.instance.auth
                     .signOut(); // تسجيل خروج المستخدم من حساب FirebaseAuth
 
                 // الانتقال إلى صفحة HomePage مع إزالة جميع الصفحات السابقة من الـ navigator stack

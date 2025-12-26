@@ -143,10 +143,8 @@ class _ManagequeuepageState extends State<Managequeuepage> {
                                 ),
                               );
                             }
-
                             final document = snapshot.data!.docs.first;
                             int movingLine = document["MovingLineNumber"] ?? 0;
-
                             return Text(
                               movingLine.toString(),
                               style: const TextStyle(

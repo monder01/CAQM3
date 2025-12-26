@@ -144,14 +144,11 @@ class _ShowappointmentState extends State<Showappointment> {
                   // في حالة تحميل البيانات
                   return Center(child: CircularProgressIndicator());
                 }
-
                 final docs = snapshot.data!.docs; // قائمة المواعيد
-
                 if (docs.isEmpty) {
                   // في حال لم توجد مواعيد للمريض
                   return Center(child: Text("لا توجد مواعيد"));
                 }
-
                 // بناء قائمة المواعيد في ListView
                 return ListView.builder(
                   itemCount: docs.length, // عدد المواعيد
